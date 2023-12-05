@@ -1,7 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+@import url('https://fonts.googleapis.com/css2?family=Rubik+Glitch&display=swap');
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
@@ -18,10 +18,22 @@
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
+  transition: all 2s ease-in-out !important;
+  background: linear-gradient(to bottom,
       transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+      rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
+}
+
+.css-iwcgw7-MuiFormLabel-root-MuiInputLabel-root,
+.css-1x51dt5-MuiInputBase-input-MuiInput-input,
+.css-1717ajk-MuiFormLabel-root-MuiInputLabel-root.Mui-focused {
+  color: white !important
+}
+
+.MuiFormLabel-asterisk {
+  color: red !important
+}
+
+.css-v4u5dn-MuiInputBase-root-MuiInput-root:after{
+  border-bottom: 2px solid white;
 }
