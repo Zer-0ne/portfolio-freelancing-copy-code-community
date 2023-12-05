@@ -17,10 +17,10 @@ export const styles = {
         padding: number;
         cursor: string
     }),
-    glassphorism: (blur = '5px') => ({
+    glassphorism: (blur = '5px', radius = '12px') => ({
         backdropFilter: `blur(${blur}) saturate(187%)`,
         background: 'rgba(0, 0, 0, 0.2)',
-        borderRadius: '12px',
+        borderRadius: radius,
         border: '1px solid rgba(255, 255, 255, 0.125)',
     }),
     iconStyle: () => ({
@@ -35,18 +35,18 @@ export const styles = {
         "::after": {
             content: '""',
             position: 'absolute',
-            width: '45%',
+            width: 60,
             height: '2px',
-            bottom: -8,
+            bottom: -5,
             left: 0,
             background: "green"
         },
         "::before": {
             content: '""',
             position: 'absolute',
-            width: '25%',
+            width: 40,
             height: '2px',
-            bottom: -12,
+            bottom: -9,
             left: 0,
             background: "green"
         }
@@ -56,14 +56,17 @@ export const styles = {
         flexDirection: "column",
         alignItems: "center",
         ...styles.glassphorism(),
-        flex: '1 0 20%',
-        // width: '30%',
+        flex: '1 0 15%',
+        // maxWidth: '90%',
+        // width: '15%',
+        // minWidth: '15%',
         height: 'auto',
         // marginTop: 5,
-        padding: 8,
+        padding: 6,
         pr: 4,
         pl: 4,
-        gap: 1
+        gap: 1.5,
+        position: 'relative'
     }),
     avtarContainer: () => ({
         display: "flex",
@@ -71,5 +74,31 @@ export const styles = {
         alignItems: 'center',
         padding: '0px 0',
         flex: 1
+    }),
+    blogCard: () => ({
+        flex: 1,
+        ...styles.glassphorism(),
+        padding: 4,
+        pl: 4,
+        pr: 4,
+        '::before': {
+            content: '""',
+            position: "absolute",
+            top: '50%',
+            left: -30,
+            transform: "translateY(-50%) rotate(45deg)",
+            width: 12,
+            height: 12,
+            ...styles.glassphorism('', '0px')
+        },
+        '::after': {
+            content: '""',
+            position: 'absolute',
+            top: 'calc(50% - 1px)',
+            left: -(30 - 13),
+            width: (30 - 13),
+            height: '1px',
+            ...styles.glassphorism()
+        }
     })
 }

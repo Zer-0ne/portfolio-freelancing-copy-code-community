@@ -1,4 +1,4 @@
-import { navbar } from "./Interfaces"
+import { coreMember, navbar } from "./Interfaces"
 
 
 // imports icons 
@@ -133,6 +133,55 @@ export const aboutCCC = [
         Education is another key focus. We host workshops, webinars, and learning sessions to help our members enhance their skills and explore new technologies. If you're stuck on a problem or seeking guidance, you can count on the community to provide support. We understand that one of the best ways to learn is by teaching, and our community fosters an environment of mutual support and knowledge exchange.
         
         In essence, Copy Code Community is your digital home for all things tech. It's a place where you can connect, learn, and grow alongside a friendly group of individuals who share your passion for coding and technology. Whether you're here to seek advice, share your experiences, or just enjoy the company of fellow tech enthusiasts, we're excited to have you as part of our coding family!`
+    },
+
+]
+
+export const coreTeamMember: coreMember[] = [
+    {
+        name: 'Sahil khan',
+        role: 'Co-founder & Tech lead',
+        image: 'https://www.osmpic.com/wp-content/uploads/2019/08/Cat-image-for-WhatsApp-dp-min.jpg',
+        LinkedIn: '',
+        GitHub: 'https://github.com/sahilk1234567890',
+        bio: `I am a 2nd year student at the University of Maryland, College Park majoring in Computer Science and minoring in Mathematics`,
+        email: 'sahilk@copycodecommunity.org',
+    },
+    {
+        name: 'Ziya-ul Rehman',
+        role: 'Co-Founder',
+        image: 'https://ih1.redbubble.net/image.487729662.1469/throwpillow,small,1000x-bg,f8f8f8-c,0,200,1000,1000.u2.jpg',
+        LinkedIn: '',
+        GitHub: 'https://github.com/sahilk1234567890',
+        bio: `I am a 2nd year student at the University of Maryland, College Park majoring in Computer Science and minoring in Mathematics`,
+        email: 'sahilk@copycodecommunity.org',
+    },
+    {
+        name: 'Ibrahim Khursheed',
+        role: 'Content Writer',
+        image: 'https://wallpaperaccess.com/full/2133155.jpg',
+        LinkedIn: '',
+        GitHub: 'https://github.com/sahilk1234567890',
+        bio: `I am a 2nd year student at the University of Maryland, College Park majoring in Computer Science and minoring in Mathematics`,
+        email: 'sahilk@copycodecommunity.org',
+    },
+    {
+        name: 'Musab Hussain',
+        role: 'Management lead',
+        image: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwallpapercave.com%2Fwp%2Fwp7380751.jpg&f=1&nofb=1&ipt=92d8bdbdccdc6fb6cfa1759c8e58d34ce5b612b82aff3b022b073885a6730b4c&ipo=images',
+        LinkedIn: '',
+        GitHub: 'https://github.com/sahilk1234567890',
+        bio: `I am a 2nd year student at the University of Maryland, College Park majoring in Computer Science and minoring in Mathematics`,
+        email: 'sahilk@copycodecommunity.org',
+    },
+    {
+        name: 'Ayan',
+        role: 'Mentor',
+        image: 'https://www.osmpic.com/wp-content/uploads/2019/03/PicsArt_03-24-02.06.31-903x1024.jpg',
+        LinkedIn: '',
+        GitHub: 'https://github.com/sahilk1234567890',
+        bio: `I am a 2nd year student at the University of Maryland, College Park majoring in Computer Science and minoring in Mathematics`,
+        email: 'sahilk@copycodecommunity.org',
     },
 
 ]

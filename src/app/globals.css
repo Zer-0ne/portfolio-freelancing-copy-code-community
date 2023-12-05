@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 @import url('https://fonts.googleapis.com/css2?family=Rubik+Glitch&display=swap');
+
+input:focus {
+  outline: none !important;
+}
+
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
@@ -34,6 +39,6 @@ body {
   color: red !important
 }
 
-.css-v4u5dn-MuiInputBase-root-MuiInput-root:after{
+.css-v4u5dn-MuiInputBase-root-MuiInput-root:after {
   border-bottom: 2px solid white;
 }

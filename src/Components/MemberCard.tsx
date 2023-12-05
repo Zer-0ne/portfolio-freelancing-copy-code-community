@@ -1,8 +1,11 @@
 import { Avatar, Box, Typography } from '@mui/material'
 import React from 'react'
 import { styles } from '@/utils/styles'
-
-const MemberCard = () => {
+import { LinkedIn, Instagram, GitHub } from '@mui/icons-material';
+import { coreMember } from '@/utils/Interfaces';
+const MemberCard = ({ item }: {
+    item: coreMember;
+}) => {
     return (
         <>
             <Box
@@ -30,6 +33,7 @@ const MemberCard = () => {
                                 height: 100,
                                 boxShadow: '0 0 10px black'
                             }}
+                            src={item.image}
                         />
                     </Box>
                 </Box>
@@ -47,15 +51,37 @@ const MemberCard = () => {
                     <Typography
                         variant='h5'
                         sx={{
-                            fontWeight: '600'
+                            fontWeight: '600',
+                            fontSize: '1vw'
                         }}
-                    >Sahil khan</Typography>
+                    >
+                        {item.name}
+                    </Typography>
                     <Typography
                         variant='caption'
                         sx={{
-                            fontWeight: '500'
+                            fontWeight: '500',
+                            fontSize:'.6vw'
                         }}
-                    >Sahil khan</Typography>
+                    >
+                        {item.role}
+                    </Typography>
+                </Box>
+
+                {/* social media profile */}
+                <Box
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        flex: 1,
+                        gap: 3,
+                        mt: 2
+                    }}
+                >
+                    <LinkedIn />
+                    <Instagram />
+                    <GitHub />
                 </Box>
             </Box>
         </>

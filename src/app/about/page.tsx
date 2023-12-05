@@ -2,7 +2,7 @@ import { Box, Typography } from '@mui/material'
 import React from 'react'
 import { Kalam, IBM_Plex_Mono } from 'next/font/google';
 import { styles } from '@/utils/styles';
-import { aboutCCC } from '@/utils/constant';
+import { aboutCCC, coreTeamMember } from '@/utils/constant';
 import MemberCard from '@/Components/MemberCard';
 
 const kalam = Kalam({
@@ -100,16 +100,18 @@ const page = () => {
                                 sx={{
                                     display: 'flex',
                                     flexWrap: 'wrap',
-                                    gap: 10,
+                                    gap: { xs: 5, md: 8, xl: 10 },
                                     margin: '10px 0',
                                     flex: 1,
-                                    mt:5
+                                    mt: 5,
+                                    justifyContent: 'center',
                                 }}
                             >
                                 {
-                                    [1, 2, 3, 4, 5, 6, 7, 8].map((item, index) => (
+                                    coreTeamMember.map((item, index) => (
                                         <MemberCard
                                             key={index}
+                                            item={item}
                                         />
                                     ))
                                 }
