@@ -100,5 +100,12 @@ export const styles = {
             height: '1px',
             ...styles.glassphorism()
         }
+    }),
+    containerStyle: () => ({
+        mt: 3,
+        gap: 5,
+        display: 'flex',
+        flexDirection: 'column'
+        , marginBottom: 7
     })
 }

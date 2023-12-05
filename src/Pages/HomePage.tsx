@@ -86,7 +86,7 @@ const HomePage = () => {
                 </Typography>
             </Box>
             <Link
-                href='#'
+                href='/blogs'
                 style={{
                     marginTop: 30,
                     padding: '10px 15px',

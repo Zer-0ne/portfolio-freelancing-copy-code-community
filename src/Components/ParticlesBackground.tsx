@@ -3,14 +3,9 @@ import React from 'react'
 import Particles from 'react-particles'
 import particleConfig from './Config/particles.config'
 import { loadFull } from 'tsparticles'
-import type { Engine } from "tsparticles-engine";
+import type { Engine, ISourceOptions } from "tsparticles-engine";
 
 const ParticlesBackground = (
-  {
-    children
-  }: {
-    children: React.ReactNode,
-  }
 ) => {
   const customInit = async (engine: Engine) => {
     // this adds the bundle to tsParticles
@@ -19,11 +14,9 @@ const ParticlesBackground = (
   return (
     <Particles
       id="tsparticles"
-      options={particleConfig}
+      options={particleConfig as ISourceOptions}
       init={customInit}
-    >
-      {children}
-    </Particles>
+    />
   )
 }
 

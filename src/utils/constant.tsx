@@ -88,7 +88,7 @@ export const navbarContent = [
         icon: <Book
             sx={styles.iconStyle()}
         />,
-        path: `/blog`
+        path: `/blogs`
 
     },
     {

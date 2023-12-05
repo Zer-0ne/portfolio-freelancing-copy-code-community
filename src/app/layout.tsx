@@ -22,9 +22,9 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         <Navbar />
-        <ParticlesBackground>
-        </ParticlesBackground>
-        {children}</body>
+        {/* <ParticlesBackground /> */}
+        {children}
+      </body>
     </html>
   )
 }
