@@ -1,3 +1,4 @@
+import { colors } from "./colors";
 
 export const styles = {
     loginSignUpBtn: (mode: string, item: {
@@ -107,5 +108,59 @@ export const styles = {
         display: 'flex',
         flexDirection: 'column'
         , marginBottom: 7
+    }),
+    dateTimeBox: () => ({
+        padding: '5px 8px 5px 15px',
+        borderRadius: 20,
+        color: 'black',
+        background: colors.dateTimeBoxBackgroundColor,
+        display: 'flex',
+        width: 90,
+        justifyContent: 'center',
+        alignItems: 'center',
+        fontSize: 10,
+        fontWeight: '600',
+        margin: '0 5px',
+        position: 'relative',
+        '::before': {
+            content: '""',
+            background: 'black',
+            position: 'absolute',
+            left: 8,
+            height: '5px',
+            width: '5px',
+            borderRadius: '50%',
+            top: '50%',
+            mt: '-2.5px'
+        }
+    }),
+    eventCard: () => ({
+        padding: 4,
+        ...styles.glassphorism('', '0 12px 12px 0'),
+        cursor:'pointer',
+        position: 'relative',
+        '::before': {
+            content: '""',
+            position: 'absolute',
+            height: '100%',
+            width: 4,
+            background: 'red',
+            left: -2,
+            top: 0,
+            borderRadius: '12px 0 0 12px',
+        },
+        display: 'flex',
+        gap: 3
+    }),
+    eventCardRight: () => ({
+        display: 'flex',
+        flex: 1,
+        padding: 3,
+        position: 'relative',
+        borderLeft: `1px solid ${colors.transparentGrey}`,
+        justifyContent: 'center',
+        alignItems: 'baseline',
+        flexDirection: 'column',
+        gap: 2
     })
 }

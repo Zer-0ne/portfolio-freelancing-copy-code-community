@@ -11,3 +11,14 @@ export interface coreMember {
     bio: string
     email: string;
 };
+export interface EventsInterface {
+    heading: string,
+    description: string,
+    headingDate: string,
+    calenderDate: string,
+    tag: string,
+    mode: string,
+    participants: number,
+    status: string,
+    image: string
+};

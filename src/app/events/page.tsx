@@ -1,5 +1,6 @@
 import BlogEventsStructure from '@/Components/BlogEventsStructure'
 import EventCard from '@/Components/EventCard'
+import { eventsDetails } from '@/utils/constant'
 import { styles } from '@/utils/styles'
 import { Box, Container } from '@mui/material'
 import React from 'react'
@@ -12,9 +13,10 @@ const page = () => {
         btnText='Search'
       >
         {
-          [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item, index) => (
+          eventsDetails.map((item, index) => (
             <EventCard
               key={index}
+              item={item}
             />
           ))
         }
