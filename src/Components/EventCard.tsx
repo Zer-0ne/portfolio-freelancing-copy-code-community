@@ -13,7 +13,7 @@ const EventCard = ({
     return (
         <>
             <Box
-                sx={styles.eventCard()}
+                sx={styles.eventCard(item.label)}
             >
                 {/* image box */}
                 <Box

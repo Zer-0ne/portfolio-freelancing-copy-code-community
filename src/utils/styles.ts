@@ -1,6 +1,20 @@
 import { colors } from "./colors";
 
 export const styles = {
+    navbar: () => ({
+        position: 'sticky',
+        left: 0,
+        right: 0,
+        height: 50,
+        zIndex: 5,
+        top: '10px',
+        padding: 3,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-evenly',
+        ...styles.glassphorism(),
+        margin: '15px 20px'
+    }),
     loginSignUpBtn: (mode: string, item: {
         name: string;
     }) => ({
@@ -18,9 +32,9 @@ export const styles = {
         padding: number;
         cursor: string
     }),
-    glassphorism: (blur = '5px', radius = '12px') => ({
+    glassphorism: (blur = '5px', radius: number | string = '12px', backgroundColor = 'rgba(0, 0, 0, 0.2)') => ({
         backdropFilter: `blur(${blur}) saturate(187%)`,
-        background: 'rgba(0, 0, 0, 0.2)',
+        background: backgroundColor,
         borderRadius: radius,
         border: '1px solid rgba(255, 255, 255, 0.125)',
     }),
@@ -134,10 +148,10 @@ export const styles = {
             mt: '-2.5px'
         }
     }),
-    eventCard: () => ({
+    eventCard: (label: string | undefined) => ({
         padding: 4,
         ...styles.glassphorism('', '0 12px 12px 0'),
-        cursor:'pointer',
+        cursor: 'pointer',
         position: 'relative',
         '::before': {
             content: '""',
@@ -148,6 +162,24 @@ export const styles = {
             left: -2,
             top: 0,
             borderRadius: '12px 0 0 12px',
+        },
+        "::after": {
+            content: `"${label}"`,
+            display: label ? 'flex' : 'none',
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: 2,
+            position: 'absolute',
+            right: -((15) * 3),
+            top: 0,
+            height: '100%',
+            width: 15,
+            writingMode: 'vertical-rl',
+            textOrientation: 'mixed',
+            textTransform: 'uppercase',
+            fontWeight: '700',
+            letterSpacing: 2,
+            ...styles.glassphorism('', 3, colors.darkRedTransparent)
         },
         display: 'flex',
         gap: 3

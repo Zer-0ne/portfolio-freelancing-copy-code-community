@@ -20,5 +20,6 @@ export interface EventsInterface {
     mode: string,
     participants: number,
     status: string,
-    image: string
+    image: string;
+    label?:string
 };

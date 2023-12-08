@@ -196,7 +196,8 @@ export const eventsDetails: EventsInterface[] = [
         mode: 'Online',
         participants: 146,
         status: 'End',
-        image: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.filepicker.io%2Fapi%2Ffile%2F4C6yPDywSUeWYLyg1h9G&f=1&nofb=1&ipt=be055fef91c6c9eb73b7c305ad18a9e55e560b114fa34d2519ce26a985bedee7&ipo=images'
+        image: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.filepicker.io%2Fapi%2Ffile%2F4C6yPDywSUeWYLyg1h9G&f=1&nofb=1&ipt=be055fef91c6c9eb73b7c305ad18a9e55e560b114fa34d2519ce26a985bedee7&ipo=images',
+        label:'Featured'
     },
     {
         heading: 'React Workshop',
@@ -207,7 +208,8 @@ export const eventsDetails: EventsInterface[] = [
         mode: 'Offline',
         participants: 155,
         status: 'End',
-        image: 'https://d112y698adiu2z.cloudfront.net/photos/production/challenge_thumbnails/002/610/587/datas/medium_square.png'
+        image: 'https://d112y698adiu2z.cloudfront.net/photos/production/challenge_thumbnails/002/610/587/datas/medium_square.png',
+        label:'UpComming'
     },
     {
         heading: 'Node Workshop',
@@ -229,6 +231,7 @@ export const eventsDetails: EventsInterface[] = [
         mode: 'Hybrid',
         participants: 500,
         status: 'Upcoming',
-        image: 'https://d112y698adiu2z.cloudfront.net/photos/production/challenge_thumbnails/002/610/587/datas/medium_square.png'
+        image: 'https://d112y698adiu2z.cloudfront.net/photos/production/challenge_thumbnails/002/610/587/datas/medium_square.png',
+        label:'Featured'
     },
 ]
