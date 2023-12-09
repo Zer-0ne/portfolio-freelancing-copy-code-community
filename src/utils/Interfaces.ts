@@ -1,3 +1,5 @@
+import mongoose, { Schema } from "mongoose";
+
 export interface navbar {
     name: string;
     icon: React.ReactNode;
@@ -29,4 +31,28 @@ export interface BlogsInterface {
     description: string;
     date: string;
     tag: string;
+}
+
+export interface UserDocument {
+    name: string;
+    email: string;
+    username: string
+    isAdmin: boolean;
+    followings: {
+        userId: {
+            type: typeof Schema.Types.ObjectId;
+            ref: String;
+        }
+    }[];
+    followers: {
+        userId: {
+            type: typeof Schema.Types.ObjectId;
+            ref: String;
+        }
+    }[];
+    profile: {
+        type: string;
+        required: boolean;
+    },
+    saved?: mongoose.SchemaDefinitionProperty<string[]>
 }
