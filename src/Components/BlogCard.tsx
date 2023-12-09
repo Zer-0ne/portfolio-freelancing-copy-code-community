@@ -1,7 +1,12 @@
 import { Box, Typography } from '@mui/material'
 import React from 'react'
 import { styles } from '@/utils/styles'
-const BlogCard = () => {
+import { BlogsInterface } from '@/utils/Interfaces'
+const BlogCard = ({
+    item
+}: {
+    item: BlogsInterface
+}) => {
     return (
         <>
             <Box
@@ -9,10 +14,26 @@ const BlogCard = () => {
             >
                 <Typography
                     variant='h5'
-                >Hi i am sahil khan</Typography>
+                >
+                    {item.heading}
+                </Typography>
                 <Typography
                     variant='caption'
-                >Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolor accusamus, vero aliquam excepturi fugit id quis possimus quod veniam, voluptatibus ut a eos cupiditate inventore iusto, beatae nostrum accusantium nisi?</Typography>
+                    sx={{
+                        mb:.5,
+                        mt:-1,
+                        ml:1,
+                        opacity:.7,
+                        // alignSelf:'end'
+                    }}
+                >
+                    {item.date}
+                </Typography>
+                <Typography
+                    variant='caption'
+                >
+                    {item.description}
+                </Typography>
             </Box>
         </>
     )

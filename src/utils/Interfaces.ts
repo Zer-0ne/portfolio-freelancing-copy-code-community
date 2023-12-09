@@ -21,5 +21,12 @@ export interface EventsInterface {
     participants: number,
     status: string,
     image: string;
-    label?:string
+    label?: string
 };
+
+export interface BlogsInterface {
+    heading: string;
+    description: string;
+    date: string;
+    tag: string;
+}

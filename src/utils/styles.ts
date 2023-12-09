@@ -94,8 +94,10 @@ export const styles = {
         flex: 1,
         ...styles.glassphorism(),
         padding: 4,
-        pl: 4,
-        pr: 4,
+        pt: 3,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 1,
         '::before': {
             content: '""',
             position: "absolute",
@@ -194,5 +196,12 @@ export const styles = {
         alignItems: 'baseline',
         flexDirection: 'column',
         gap: 2
+    }),
+    customInput: (flex: string | number = 8) => ({
+        flex: flex,
+        background: 'transparent'
+        , border: '1px solid rgba(255,255,255,.25)'
+        , borderRadius: 5
+        , padding: '7px 10px'
     })
 }

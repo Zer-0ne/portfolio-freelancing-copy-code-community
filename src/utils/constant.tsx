@@ -1,4 +1,4 @@
-import { EventsInterface, coreMember, navbar } from "./Interfaces"
+import { BlogsInterface, EventsInterface, coreMember, navbar } from "./Interfaces"
 
 
 // imports icons 
@@ -186,6 +186,33 @@ export const coreTeamMember: coreMember[] = [
 
 ]
 
+export const blogsDetails: BlogsInterface[] = [
+    {
+        heading: 'React Native CheetSheet',
+        description: 'React Native CheetSheet is a library that allows you to create a cheatsheet for your React Native app. It is a simple and easy-to-use',
+        date: '20 jan 2020',
+        tag: 'react_native'
+    },
+    {
+        heading: 'React CheetSheet',
+        description: 'React CheetSheet is a library that allows you to create a cheatsheet for your React app. It is a simple and easy-to-use',
+        date: '20 jun 2021',
+        tag: 'react.js'
+    },
+    {
+        heading: 'Node CheetSheet',
+        description: 'Node CheetSheet is a library that allows you to create a cheatsheet for your Node app. It is a simple and easy-to-use',
+        date: '31 dec 2020',
+        tag: 'node.js'
+    },
+    {
+        heading: 'Next CheetSheet',
+        description: 'Next CheetSheet is a library that allows you to create a cheatsheet for your Next app. It is a simple and easy-to-use',
+        date: '10 oct 2024',
+        tag: 'next.js'
+    },
+]
+
 export const eventsDetails: EventsInterface[] = [
     {
         heading: 'React Native Workshop',
@@ -197,7 +224,7 @@ export const eventsDetails: EventsInterface[] = [
         participants: 146,
         status: 'End',
         image: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.filepicker.io%2Fapi%2Ffile%2F4C6yPDywSUeWYLyg1h9G&f=1&nofb=1&ipt=be055fef91c6c9eb73b7c305ad18a9e55e560b114fa34d2519ce26a985bedee7&ipo=images',
-        label:'Featured'
+        label: 'Featured'
     },
     {
         heading: 'React Workshop',
@@ -209,7 +236,7 @@ export const eventsDetails: EventsInterface[] = [
         participants: 155,
         status: 'End',
         image: 'https://d112y698adiu2z.cloudfront.net/photos/production/challenge_thumbnails/002/610/587/datas/medium_square.png',
-        label:'UpComming'
+        label: 'UpComming'
     },
     {
         heading: 'Node Workshop',
@@ -232,6 +259,6 @@ export const eventsDetails: EventsInterface[] = [
         participants: 500,
         status: 'Upcoming',
         image: 'https://d112y698adiu2z.cloudfront.net/photos/production/challenge_thumbnails/002/610/587/datas/medium_square.png',
-        label:'Featured'
+        label: 'Featured'
     },
 ]

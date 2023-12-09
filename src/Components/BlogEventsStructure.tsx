@@ -1,3 +1,4 @@
+// 'use server'
 import { styles } from '@/utils/styles'
 import { Box, Container } from '@mui/material'
 import React from 'react'
@@ -6,11 +7,15 @@ const BlogEventsStructure = (
     {
         children,
         placeholder,
-        btnText
+        btnText,
+        handleSearch,
+        searchInput
     }: {
         children: React.ReactNode
         placeholder: string;
         btnText: string;
+        searchInput: string;
+        handleSearch: (input: string) => void;
     }
 ) => {
     return (
@@ -29,13 +34,9 @@ const BlogEventsStructure = (
                 >
                     <input
                         placeholder={placeholder}
-                        style={{
-                            flex: 8,
-                            background: 'transparent'
-                            , border: '1px solid rgba(255,255,255,.25)'
-                            , borderRadius: 5
-                            , padding: '7px 10px'
-                        }}
+                        style={styles.customInput()}
+                        value={searchInput}
+                        onChange={e => handleSearch(e.target.value)}
                     />
                     <button
                         style={{
