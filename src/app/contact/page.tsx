@@ -1,6 +1,7 @@
 import { Box, Button, Container, Typography } from '@mui/material'
 import React from 'react'
 import { styles } from '@/utils/styles'
+import { GitHub, Instagram, LinkedIn, WhatsApp } from '@mui/icons-material'
 const page = () => {
     return (
         <Container
@@ -17,7 +18,7 @@ const page = () => {
                 sx={{
                     zIndex: 1,
                     position: 'relative',
-                    width: '50%',
+                    width: { md: '60%', xl: '60%', xs: '80%' },
                     "::before": {
                         content: '""',
                         position: 'absolute',
@@ -87,7 +88,7 @@ const page = () => {
                                 placeholder='Enter first name'
                                 style={{
                                     ...styles.customInput(1),
-                                    width:'50%'
+                                    // width: {md:'50%',xl:'50%',xs}
                                 }}
                             />
                             <input
@@ -95,7 +96,7 @@ const page = () => {
                                 placeholder='Enter last name'
                                 style={{
                                     ...styles.customInput(1),
-                                    width:'50%'
+                                    // Width: '50%'
                                 }}
                             />
                         </Box>
@@ -123,14 +124,77 @@ const page = () => {
                         />
                         <Button
                             sx={{
-                                mt:2,
-                                color:'white',
-                                ':hover':{
-                                    background:'rgba(255,255,255,.1)'
+                                mt: 2,
+                                color: 'white',
+                                ':hover': {
+                                    background: 'rgba(255,255,255,.1)'
                                 }
                             }}
                         >Submit</Button>
                     </form>
+
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            gap: 5,
+                            mt: 2,
+                            flex: 1,
+                            width: '100%',
+                            justifyContent: 'center',
+                            position: 'relative',
+                            ":before": {
+                                content: '"Follow us"',
+                                position: 'absolute',
+                                top: -40,
+                                display: 'flex',
+                                justifyContent: 'center',
+                                left: 0,
+                                right: 0,
+                                opacity: .5
+                            }
+                        }}
+                    >
+                        <WhatsApp
+                            sx={{
+                                cursor: 'pointer',
+                                fontSize: 25,
+                                opacity: .5,
+                                ':hover': {
+                                    opacity: 1
+                                }
+                            }}
+                        />
+                        <LinkedIn
+                            sx={{
+                                cursor: 'pointer',
+                                fontSize: 25,
+                                opacity: .5,
+                                ':hover': {
+                                    opacity: 1
+                                }
+                            }}
+                        />
+                        <GitHub
+                            sx={{
+                                cursor: 'pointer',
+                                fontSize: 25,
+                                opacity: .5,
+                                ':hover': {
+                                    opacity: 1
+                                }
+                            }}
+                        />
+                        <Instagram
+                            sx={{
+                                cursor: 'pointer',
+                                fontSize: 25,
+                                opacity: .5,
+                                ':hover': {
+                                    opacity: 1
+                                }
+                            }}
+                        />
+                    </Box>
                 </Box>
             </Box>
 

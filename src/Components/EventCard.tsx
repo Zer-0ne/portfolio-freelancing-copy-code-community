@@ -19,7 +19,8 @@ const EventCard = ({
                 <Box
                     sx={{
                         display: 'flex',
-                        flex: 1
+                        flex: { xs: 10, md: 1, xl: 1 },
+                        minWidth: 200
                     }}
                 >
                     <Image
@@ -28,6 +29,9 @@ const EventCard = ({
                         width={200}
                         height={200}
                         fill={false}
+                        style={{
+                            flex: 1
+                        }}
                     />
                 </Box>
 
@@ -37,7 +41,7 @@ const EventCard = ({
                         display: 'flex',
                         gap: 1,
                         flex: 5,
-                        flexDirection: 'column'
+                        flexDirection: 'column',
                     }}
                 >
                     {/* Heading */}
@@ -54,8 +58,10 @@ const EventCard = ({
                     <Box
                         sx={{
                             display: 'flex',
-                            gap: 5,
-                            margin: '5px 0'
+                            gap: { xl: 5, md: 5, xs: 2 },
+                            margin: { xl: '5px 0', md: '5px 0', xs: '0 0 5px 0' },
+                            flexWrap: 'wrap',
+                            justifyContent: { xs: 'center', md: 'normal', xl: 'normal' }
                         }}
                     >
                         {/* Date and time */}

@@ -29,7 +29,8 @@ const BlogEventsStructure = (
                     sx={{
                         display: 'flex',
                         justifyContent: 'space-between',
-                        gap: 3
+                        gap: 3,
+                        flexWrap:'wrap'
                     }}
                 >
                     <input

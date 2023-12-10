@@ -32,7 +32,7 @@ export const styles = {
         padding: number;
         cursor: string
     }),
-    glassphorism: (blur = '5px', radius: number | string = '12px', backgroundColor = 'rgba(0, 0, 0, 0.2)') => ({
+    glassphorism: (blur = '5px', radius: number | string | object = '12px', backgroundColor = 'rgba(0, 0, 0, 0.2)') => ({
         backdropFilter: `blur(${blur}) saturate(187%)`,
         background: backgroundColor,
         borderRadius: radius,
@@ -94,6 +94,7 @@ export const styles = {
         flex: 1,
         ...styles.glassphorism(),
         padding: 4,
+        ml: 2,
         pt: 3,
         display: 'flex',
         flexDirection: 'column',
@@ -152,18 +153,21 @@ export const styles = {
     }),
     eventCard: (label: string | undefined) => ({
         padding: 4,
-        ...styles.glassphorism('', '0 12px 12px 0'),
+        ...styles.glassphorism('', { md: '0 12px 12px 0', xl: '0 12px 12px 0', xs: ' 0 0' }),
         cursor: 'pointer',
         position: 'relative',
+        flexWrap: 'wrap',
+        mt: { xs: 8, md: 0, xl: 0 },
+        flexDirection: { xs: 'column', md: 'row', xl: 'row' },
         '::before': {
             content: '""',
             position: 'absolute',
-            height: '100%',
-            width: 4,
+            height: { md: '100%', xl: '100%', xs: 4 },
+            width: { md: 4, xl: 4, xs: '100%' },
             background: 'red',
-            left: -2,
-            top: 0,
-            borderRadius: '12px 0 0 12px',
+            left: { md: -2, xl: -2, xs: 0 },
+            top: { md: 0, xl: 0, xs: "calc(100% - 2px)" },
+            borderRadius: { md: '12px 0 0 12px', xl: '12px 0 0 12px', xs: '0 0 12px 12px' },
         },
         "::after": {
             content: `"${label}"`,
@@ -172,16 +176,16 @@ export const styles = {
             alignItems: 'center',
             padding: 2,
             position: 'absolute',
-            right: -((15) * 3),
-            top: 0,
-            height: '100%',
-            width: 15,
-            writingMode: 'vertical-rl',
+            right: { md: -((15) * 3), xl: -((15) * 3), xs: 0 },
+            top: { md: 0, xl: 0, xs: -((15) * 3) },
+            height: { md: '100%', xl: '100%', xs: 15 },
+            width: { md: 15, xl: 15, xs: '100%' },
+            writingMode: { md: 'vertical-rl', xl: 'vertical-rl', xs: 'horizontal-tb' },
             textOrientation: 'mixed',
             textTransform: 'uppercase',
             fontWeight: '700',
             letterSpacing: 2,
-            ...styles.glassphorism('', 3, colors.darkRedTransparent)
+            ...styles.glassphorism('', { xs: '12px 12px 0 0', md: 3, xl: 3 }, colors.darkRedTransparent)
         },
         display: 'flex',
         gap: 3
@@ -191,11 +195,13 @@ export const styles = {
         flex: 1,
         padding: 3,
         position: 'relative',
-        borderLeft: `1px solid ${colors.transparentGrey}`,
+        borderLeft: { md: `1px solid ${colors.transparentGrey}`, xs: 'none', xl: `1px solid ${colors.transparentGrey}` },
+        borderTop: { xs: `1px solid ${colors.transparentGrey}`, md: 'none', xl: `none` },
         justifyContent: 'center',
         alignItems: 'baseline',
-        flexDirection: 'column',
-        gap: 2
+        flexDirection: { xl: 'column', md: 'column', xs: 'row' },
+        gap: 2,
+        flexWrap: 'wrap'
     }),
     customInput: (flex: string | number = 8) => ({
         flex: flex,

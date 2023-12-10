@@ -39,7 +39,7 @@ const HomePage = () => {
                     flexDirection: 'column',
                     alignItems: 'center',
                     position: 'relative',
-                    height: '20vh',
+                    height: {xl:'20vh',md:'15vh',xs:'10vh'},
                     "::after": {
                         content: '""',
                         width: '50%',
@@ -56,6 +56,7 @@ const HomePage = () => {
                         textTransform: 'capitalize',
                         color: 'green',
                         fontWeight: 800,
+                        fontSize:{xs:'2rem',md:'4rem',xl:'6rem'}
                     }}
                     className={rubikGlitchFont.className}
                 >Copy code community</Typography>
@@ -63,14 +64,14 @@ const HomePage = () => {
                     sx={{
                         color: 'green',
                         textTransform: 'uppercase',
-                        fontSize: 25
+                        fontSize: {xl:25,md:18,xs:12}
                     }}
                     className={ibn.className}
                 >-- Jamia Hamdard --</Typography>
             </Box>
             <Box
                 sx={{
-                    width: '40%',
+                    width: {xl:'40%',xs:'80%',md:'40%'},
                     textAlign: 'center',
                     marginTop: 3
                 }}
@@ -78,7 +79,7 @@ const HomePage = () => {
                 <Typography
                     variant='body1'
                     sx={{
-                        fontSize: 20
+                        fontSize: {xl:20,md:16,xs:10}
                     }}
                     className={smooch.className}
                 >
