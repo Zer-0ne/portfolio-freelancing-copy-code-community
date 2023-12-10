@@ -32,7 +32,15 @@ export const styles = {
         padding: number;
         cursor: string
     }),
-    glassphorism: (blur = '5px', radius: number | string | { xs: string|number; md: string|number; xl: string|number; } = '12px', backgroundColor = 'rgba(0, 0, 0, 0.2)') => ({
+    glassphorism: (
+        blur = '5px',
+        radius: number | string | {
+            xs: string | number;
+            md: string | number;
+            xl: string | number;
+        } = '12px',
+        backgroundColor = 'rgba(0, 0, 0, 0.2)'
+    ) => ({
         backdropFilter: `blur(${blur}) saturate(187%)`,
         background: backgroundColor,
         borderRadius: radius,
@@ -153,7 +161,7 @@ export const styles = {
     }),
     eventCard: (label: string | undefined) => ({
         padding: 4,
-        ...styles.glassphorism('', { md: '0 12px 12px 0', xl: '0 12px 12px 0', xs: ' 0 0' }),
+        ...styles.glassphorism('', { md: '0 12px 12px 0', xl: '0 12px 12px 0', xs: (label) ? ' 0 0' : '12px' }),
         cursor: 'pointer',
         position: 'relative',
         flexWrap: 'wrap',
@@ -203,11 +211,12 @@ export const styles = {
         gap: 2,
         flexWrap: 'wrap'
     }),
-    customInput: (flex: string | number = 8) => ({
+    customInput: (flex: string | number = 8, customStyles?: object,radius=5) => ({
         flex: flex,
         background: 'transparent'
         , border: '1px solid rgba(255,255,255,.25)'
-        , borderRadius: 5
+        , borderRadius: radius
         , padding: '7px 10px'
+        , ...customStyles
     })
 }

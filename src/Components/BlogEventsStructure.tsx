@@ -1,6 +1,7 @@
 // 'use server'
 import { styles } from '@/utils/styles'
 import { Box, Container } from '@mui/material'
+import Link from 'next/link'
 import React from 'react'
 
 const BlogEventsStructure = (
@@ -30,7 +31,7 @@ const BlogEventsStructure = (
                         display: 'flex',
                         justifyContent: 'space-between',
                         gap: 3,
-                        flexWrap:'wrap'
+                        flexWrap: 'wrap'
                     }}
                 >
                     <input
@@ -39,14 +40,17 @@ const BlogEventsStructure = (
                         value={searchInput}
                         onChange={e => handleSearch(e.target.value)}
                     />
-                    <button
+                    <Link
                         style={{
                             background: 'green',
                             padding: '5px 20px',
                             borderRadius: 4,
-                            flex: 1
+                            flex: 1,
+                            textAlign:'center',
+                            fontSize:20
                         }}
-                    >{btnText}</button>
+                        href={'/create'}
+                    >{btnText}</Link>
                 </Box>
                 {children}
             </Container>

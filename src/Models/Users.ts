@@ -1,4 +1,3 @@
-'use server'
 import { UserDocument } from "@/utils/Interfaces"
 import mongoose, { Schema } from "mongoose"
 
@@ -11,6 +10,10 @@ const UserSchema = new Schema<UserDocument>({
         type: String,
         required: true,
         unique: true
+    },
+    password: {
+        type: String,
+        required: true
     },
     email: {
         type: String,
@@ -41,7 +44,8 @@ const UserSchema = new Schema<UserDocument>({
         type: [Schema.Types.ObjectId],
         ref: 'Blog',
         default: [],
-    }
+    },
+    profile: String
 }, {
     timestamps: true
 });

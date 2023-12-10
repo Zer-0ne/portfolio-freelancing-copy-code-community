@@ -13,15 +13,18 @@
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.14.19",
     "@mui/material": "^5.14.19",
+    "bcrypt": "^5.1.1",
     "firebase": "^10.7.1",
     "mongoose": "^8.0.3",
     "next": "14.0.3",
+    "next-auth": "^4.24.5",
     "react": "^18",
     "react-dom": "^18",
     "react-particles": "^2.12.2",
     "tsparticles": "^2.12.0"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

@@ -39,6 +39,13 @@ body {
   color: red !important
 }
 
+.css-v4u5dn-MuiInputBase-root-MuiInput-root::before {
+  border-bottom: 2px solid rgba(255, 255, 255, 0.541);
+}
+.css-v4u5dn-MuiInputBase-root-MuiInput-root:hover {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.342);
+}
+
 .css-v4u5dn-MuiInputBase-root-MuiInput-root:after {
   border-bottom: 2px solid white;
 }

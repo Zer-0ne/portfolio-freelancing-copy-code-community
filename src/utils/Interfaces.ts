@@ -35,6 +35,7 @@ export interface BlogsInterface {
 
 export interface UserDocument {
     name: string;
+    password:string;
     email: string;
     username: string
     isAdmin: boolean;
@@ -55,4 +56,8 @@ export interface UserDocument {
         required: boolean;
     },
     saved?: mongoose.SchemaDefinitionProperty<string[]>
+}
+
+export interface Data {
+    [key: string]: string;
 }

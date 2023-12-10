@@ -20,10 +20,10 @@ export const authMode = [
 ]
 export const Login = [
     {
-        name: 'email',
+        name: 'username',
         required: true,
         type: 'text',
-        label: 'Email',
+        label: 'Username',
     },
     {
         name: 'password',
@@ -46,12 +46,12 @@ export const signup = [
         label: 'Email'
     },
     {
-        name: 'phone_number',
+        name: 'username',
         required: true,
-        type: 'tel',
+        // type: 'tel',
         // pattern: "[0-9]{10}",
         // errorMessage: "Please enter a valid phone number",
-        label: 'Phone Number',
+        label: 'Username',
     },
     {
         name: 'password',
@@ -105,6 +105,34 @@ export const navbarContent = [
         />,
         path: `/contact`
     }
+]
+
+export const createBlog = [
+    {
+        name: 'title',
+        placeholder: 'Title',
+        required: true,
+        size: '2 0 30%'
+    },
+    {
+        name: 'description',
+        placeholder: 'Description',
+        required: true,
+        size: '1 0 30%'
+    },
+    {
+        name: 'tag',
+        placeholder: 'Tags',
+        required: false,
+        size: '1 0 30%'
+    },
+    {
+        name: 'content',
+        placeholder: 'Content',
+        required: true,
+        size: '1 0 100%'
+    }
+
 ]
 
 export const aboutCCC = [

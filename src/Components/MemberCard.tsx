@@ -52,7 +52,7 @@ const MemberCard = ({ item }: {
                         variant='h5'
                         sx={{
                             fontWeight: '600',
-                            fontSize: '1vw'
+                            fontSize: { md: '1vw', xs: '1.9vw' }
                         }}
                     >
                         {item.name}
@@ -61,7 +61,7 @@ const MemberCard = ({ item }: {
                         variant='caption'
                         sx={{
                             fontWeight: '500',
-                            fontSize:'.6vw'
+                            fontSize: {md:'.6vw',xs:'1.3vw'}
                         }}
                     >
                         {item.role}
