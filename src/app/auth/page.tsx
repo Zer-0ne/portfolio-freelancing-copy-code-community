@@ -10,7 +10,7 @@ const page = () => {
     return (
         <>
             <Box
-                style={{
+                sx={{
                     display: "flex",
                     justifyContent: 'center',
                     alignItems: 'center',
@@ -19,7 +19,7 @@ const page = () => {
                 }}
             >
                 <Box
-                    style={{
+                    sx={{
                         ...styles.glassphorism(),
                         padding: 15,
                         width: "30%",
@@ -28,7 +28,7 @@ const page = () => {
                     }}
                 >
                     <Box
-                        style={{
+                        sx={{
                             fontSize: 25,
                             gap: 5,
                             fontWeight: 600,
@@ -49,7 +49,7 @@ const page = () => {
                         }
                     </Box>
                     <Box
-                        style={{
+                        sx={{
                             color: 'white',
                             display: 'flex',
                             flexDirection: 'column',

@@ -32,7 +32,7 @@ export const styles = {
         padding: number;
         cursor: string
     }),
-    glassphorism: (blur = '5px', radius: number | string | object = '12px', backgroundColor = 'rgba(0, 0, 0, 0.2)') => ({
+    glassphorism: (blur = '5px', radius: number | string | { xs: string|number; md: string|number; xl: string|number; } = '12px', backgroundColor = 'rgba(0, 0, 0, 0.2)') => ({
         backdropFilter: `blur(${blur}) saturate(187%)`,
         background: backgroundColor,
         borderRadius: radius,
