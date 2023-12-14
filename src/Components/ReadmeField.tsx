@@ -67,7 +67,7 @@ export const ReadmeField = () => {
         });
     };
 
-    const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { value } = e.target;
         if (isEnter && isTrue) {
 
@@ -117,12 +117,13 @@ export const ReadmeField = () => {
                                 key={index}
                                 onClick={(e) => { handleClick(item.code, item.name, item?.toMoveCursor); console.log(e); setNametoCheck(item.name) }}
                             >
-                                {item.icon(isTrue, data.name,nametoCheck)}
+                                {item.icon(isTrue, data.name, nametoCheck)}
                             </Box>
                         ))
                     }
                 </Box>
-                <textarea
+                <input
+                    type='text'
                     value={markdownContent}
                     placeholder='Write your content here...'
                     ref={editorRef}
