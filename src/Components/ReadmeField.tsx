@@ -1,9 +1,95 @@
-import { Box, Typography } from '@mui/material'
-import React from 'react'
+'use client'
+import { Box } from '@mui/material'
+import React, { useRef, useState } from 'react'
 import { styles } from '@/utils/styles'
-import { CodeRounded, FormatAlignCenterRounded, FormatAlignJustifyRounded, FormatAlignLeftRounded, FormatAlignRightRounded, FormatBoldRounded, FormatItalic, FormatListBulleted, FormatListNumbered, FormatQuoteRounded, FormatStrikethroughRounded, FormatUnderlinedRounded, ImageRounded, LinkRounded } from '@mui/icons-material'
+import { InputToMoveCursor } from '@/utils/Interfaces'
+import { wordEditorFunc } from '@/utils/constant'
 
 export const ReadmeField = () => {
+    const [markdownContent, setMarkdownContent] = useState('');
+    const [isTrue, setIsTrue] = useState(false);
+    const [isEnter, setIsEnter] = useState(false);
+    const [counter, setCounter] = useState(2)
+    const [data, setData] = useState<{
+        name: string,
+        code: string
+    }>({
+        name: '',
+        code: ''
+    })
+    const [nametoCheck, setNametoCheck] = useState<string>('')
+    const editorRef = useRef();
+
+    const moveCursor = async (Length?: number) => {
+        const input = await editorRef?.current as InputToMoveCursor | undefined;
+
+        if (input) {
+            await input?.focus();
+
+            // Move the cursor to the end
+            const length = (!Length) ? input?.value?.length : Length;
+            await input?.setSelectionRange(length, length);
+        }
+    };
+
+    console.log(isTrue)
+
+    // handle click
+    const handleClick = (code: (i?: number) => string, name: string, toMoveCursor?: number) => {
+
+        const codeString = code()
+
+        if (['qoutes', 'ol', 'ul'].includes(name)) {
+            if (!isTrue) {
+                setCounter(2)
+                setMarkdownContent((prevContent: string) => {
+                    return prevContent + codeString;
+                });
+            }
+            setIsTrue((prevState: boolean) => !prevState);
+            setData({
+                name,
+                code: codeString
+            })
+            setIsEnter(false)
+            moveCursor()
+            return
+        }
+
+        // You can implement logic to add bold markdown syntax
+        setMarkdownContent((prevContent: string) => {
+            return prevContent + codeString;
+        });
+
+        // Move cursor after setting the content
+        setMarkdownContent((prevContent) => {
+            (toMoveCursor) ?
+                moveCursor(prevContent.length + toMoveCursor) : moveCursor()
+            return prevContent;
+        });
+    };
+
+    const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        const { value } = e.target;
+        if (isEnter && isTrue) {
+
+            // You can implement logic to add numbered list markdown syntax
+            setMarkdownContent((prevContent: string) => {
+                return prevContent + ((['ul', 'qoutes'].includes(data.name)) ? `\n${data.code}` : `\n${counter}. `);
+            });
+
+            // Move cursor after setting the content
+            setMarkdownContent((prevContent) => {
+                moveCursor();
+                return prevContent;
+            });
+
+        } else {
+            setMarkdownContent(value);
+        }
+
+    }
+
     return (
         <>
             <Box
@@ -27,236 +113,45 @@ export const ReadmeField = () => {
                         justifyContent: 'center',
                     }}
                 >
-                    <FormatBoldRounded
-                        sx={{
-                            padding: '2px 3px',
-                            fontSize: 28,
-                            borderRadius: 1,
-                            ':hover': {
-                                color: 'black',
-                                background: 'white'
-                            }
-                        }}
-                    />
-                    <FormatItalic
-                        sx={{
-                            padding: '2px 3px',
-                            fontSize: 28,
-                            borderRadius: 1,
-                            ':hover': {
-                                color: 'black',
-                                background: 'white'
-                            }
-                        }}
-                    />
-                    <FormatUnderlinedRounded
-                        sx={{
-                            padding: '2px 3px',
-                            fontSize: 28,
-                            borderRadius: 1,
-                            ':hover': {
-                                color: 'black',
-                                background: 'white'
-                            }
-                        }}
-                    />
-                    <ImageRounded
-                        sx={{
-                            padding: '2px 3px',
-                            fontSize: 28,
-                            borderRadius: 1,
-                            ':hover': {
-                                color: 'black',
-                                background: 'white'
-                            }
-                        }}
-                    />
-                    <FormatListBulleted
-                        sx={{
-                            padding: '2px 3px',
-                            fontSize: 28,
-                            borderRadius: 1,
-                            ':hover': {
-                                color: 'black',
-                                background: 'white'
-                            }
-                        }}
-                    />
-                    <FormatListNumbered
-                        sx={{
-                            padding: '2px 3px',
-                            fontSize: 28,
-                            borderRadius: 1,
-                            ':hover': {
-                                color: 'black',
-                                background: 'white'
-                            }
-                        }}
-                    />
-                    <CodeRounded
-                        sx={{
-                            padding: '2px 3px',
-                            fontSize: 28,
-                            borderRadius: 1,
-                            ':hover': {
-                                color: 'black',
-                                background: 'white'
-                            }
-                        }}
-                    />
-                    <FormatAlignCenterRounded
-                        sx={{
-                            padding: '2px 3px',
-                            fontSize: 28,
-                            borderRadius: 1,
-                            ':hover': {
-                                color: 'black',
-                                background: 'white'
-                            }
-                        }}
-                    />
-                    <FormatAlignJustifyRounded
-                        sx={{
-                            padding: '2px 3px',
-                            fontSize: 28,
-                            borderRadius: 1,
-                            ':hover': {
-                                color: 'black',
-                                background: 'white'
-                            }
-                        }}
-                    />
-                    <FormatAlignRightRounded
-                        sx={{
-                            padding: '2px 3px',
-                            fontSize: 28,
-                            borderRadius: 1,
-                            ':hover': {
-                                color: 'black',
-                                background: 'white'
-                            }
-                        }}
-                    />
-                    <FormatAlignLeftRounded
-                        sx={{
-                            padding: '2px 3px',
-                            fontSiz28e: 28,
-                            borderRadius: 1,
-                            ':hover': {
-                                color: 'black',
-                                background: 'white'
-                            }
-                        }}
-                    />
-                    <LinkRounded
-                        sx={{
-                            padding: '2px 3px',
-                            fontSize: 28,
-                            borderRadius: 1,
-                            ':hover': {
-                                color: 'black',
-                                background: 'white'
-                            }
-                        }}
-                    />
-                    <FormatQuoteRounded
-                        sx={{
-                            padding: '2px 3px',
-                            fontSize: 28,
-                            borderRadius: 1,
-                            ':hover': {
-                                color: 'black',
-                                background: 'white'
-                            }
-                        }}
-                    />
-                    <FormatStrikethroughRounded
-                        sx={{
-                            padding: '2px 3px',
-                            fontSize: 28,
-                            borderRadius: 1,
-                            ':hover': {
-                                color: 'black',
-                                background: 'white'
-                            }
-                        }}
-                    />
-                    <Typography variant='caption' sx={{
-                        padding: '2px 3px',
-                        fontSize: 18,
-                        fontWeight: 900,
-                        borderRadius: 1,
-                        ':hover': {
-                            background: 'white',
-                            color: 'black'
-                        }
-                    }}>H1</Typography>
-                    <Typography variant='caption' sx={{
-                        padding: '2px 3px',
-                        fontSize: 18,
-                        fontWeight: 900,
-                        borderRadius: 1,
-                        ':hover': {
-                            background: 'white',
-                            color: 'black'
-                        }
-                    }}>H2</Typography>
-                    <Typography variant='caption' sx={{
-                        padding: '2px 3px',
-                        fontSize: 18,
-                        fontWeight: 900,
-                        borderRadius: 1,
-                        ':hover': {
-                            background: 'white',
-                            color: 'black'
-                        }
-                    }}>H3</Typography>
-                    <Typography variant='caption' sx={{
-                        padding: '2px 3px',
-                        fontSize: 18,
-                        fontWeight: 900,
-                        borderRadius: 1,
-                        ':hover': {
-                            background: 'white',
-                            color: 'black'
-                        }
-                    }}>H4</Typography>
-                    <Typography variant='caption' sx={{
-                        padding: '2px 3px',
-                        fontSize: 18,
-                        fontWeight: 900,
-                        borderRadius: 1,
-                        ':hover': {
-                            background: 'white',
-                            color: 'black'
-                        }
-                    }}>H5</Typography>
-                    <Typography variant='caption' sx={{
-                        padding: '2px 3px',
-                        fontSize: 18,
-                        fontWeight: 900,
-                        borderRadius: 1,
-                        ':hover': {
-                            background: 'white',
-                            color: 'black'
-                        }
-                    }}>H6</Typography>
-                    <Typography variant='caption' sx={{
-                        padding: '2px 3px',
-                        fontSize: 18,
-                        fontWeight: 900,
-                        borderRadius: 1,
-                        ':hover': {
-                            background: 'white',
-                            color: 'black'
-                        }
-                    }}>P</Typography>
+                    {
+                        wordEditorFunc.map((item, index) => {
+                            console.log(nametoCheck, item.name)
+                            return (
+                                <Box
+                                    key={index}
+                                    onClick={(e) => { handleClick(item.code, item.name, item?.toMoveCursor); console.log(e); setNametoCheck(item.name) }}
+                                >
+                                    {item.icon(isTrue, data.name, nametoCheck)}
+                                </Box>
+                            )
+                        })
+                    }
                 </Box>
                 <textarea
+                    value={markdownContent}
+                    placeholder='Write your content here...'
+                    ref={editorRef}
+                    onKeyDown={(event) => {
+
+                        // Check if the pressed key is Enter
+                        if (event.key === 'Enter') {
+
+                            // Your custom logic here
+                            setIsEnter(true);
+                            if (isEnter && isTrue) {
+                                setCounter(prev => prev + 1)
+                            }
+
+                        } else {
+                            setIsEnter(false)
+                        }
+                    }}
+                    onChange={handleChange}
                     style={{
                         flex: 100,
-                        background:'transparent',
-                        resize:'none'
+                        background: 'transparent',
+                        resize: 'none',
+                        padding: 4
                     }}
                 />
             </Box>

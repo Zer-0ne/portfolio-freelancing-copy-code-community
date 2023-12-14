@@ -35,7 +35,7 @@ export interface BlogsInterface {
 
 export interface UserDocument {
     name: string;
-    password:string;
+    password: string;
     email: string;
     username: string
     isAdmin: boolean;
@@ -60,4 +60,12 @@ export interface UserDocument {
 
 export interface Data {
     [key: string]: string;
+}
+
+export interface InputToMoveCursor {
+    focus: () => void;
+    setSelectionRange: (_1: number, _2?: number) => void;
+    value: {
+        length: number
+    }
 }

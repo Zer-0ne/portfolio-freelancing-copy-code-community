@@ -211,12 +211,24 @@ export const styles = {
         gap: 2,
         flexWrap: 'wrap'
     }),
-    customInput: (flex: string | number = 8, customStyles?: object,radius=5) => ({
+    customInput: (flex: string | number = 8, customStyles?: object, radius = 5) => ({
         flex: flex,
         background: 'transparent'
         , border: '1px solid rgba(255,255,255,.25)'
         , borderRadius: radius
         , padding: '7px 10px'
         , ...customStyles
+    }),
+    wordEditorIcon: (fontSize: string | number = 28, customStyle?: object, type?: boolean, name?: string, nameToCheck?: string) => ({
+        padding: '2px 3px',
+        fontSize: fontSize,
+        color: ((name === nameToCheck) && type) ? 'black' : 'white',
+        background: type && 'white',
+        borderRadius: 1,
+        ':hover': {
+            color: 'black',
+            background: 'white'
+        },
+        ...customStyle
     })
 }

@@ -4,12 +4,21 @@ import { BlogsInterface, EventsInterface, coreMember, navbar } from "./Interface
 // imports icons 
 import {
     Book,
+    CodeRounded,
     EmojiEvents,
+    FormatBoldRounded,
+    FormatItalic,
+    FormatListBulletedRounded,
+    FormatListNumberedRounded,
+    FormatQuoteRounded,
     ForumRounded,
     HomeRounded,
+    ImageRounded,
+    LinkRounded,
     Person
 } from '@mui/icons-material';
 import { styles } from "./styles";
+import { Typography } from "@mui/material";
 
 export const authMode = [
     {
@@ -133,6 +142,104 @@ export const createBlog = [
         size: '1 0 100%'
     }
 
+]
+
+export const wordEditorFunc = [
+    {
+        icon: (type?: boolean, name?: string, nametoCheck?: string) => (<FormatBoldRounded
+            sx={styles.wordEditorIcon()}
+        />),
+        name: 'bold',
+        toMoveCursor: -3,
+        code: () => { return ' **** ' }
+    },
+    {
+        icon: (type?: boolean, name?: string, nametoCheck?: string) => (<FormatItalic
+            sx={styles.wordEditorIcon()}
+        />),
+        name: 'italic',
+        toMoveCursor: -2,
+        code: () => { return ' ** ' }
+    },
+    {
+        icon: (type?: boolean, name?: string, nametoCheck?: string) => (<FormatListNumberedRounded
+            sx={styles.wordEditorIcon(26, {}, type, name, nametoCheck)}
+        />),
+        name: 'ol',
+        code: (number: number = 1) => { return `${number}. ` }
+    },
+    {
+        icon: (type?: boolean, name?: string, nametoCheck?: string) => (<FormatListBulletedRounded
+            sx={styles.wordEditorIcon(26, {}, type, name, nametoCheck)}
+        />),
+        name: 'ul',
+        code: () => { return ` * ` }
+    },
+    {
+        name: 'image',
+        icon: (type?: boolean, name?: string, nametoCheck?: string) => (<ImageRounded sx={styles.wordEditorIcon()} />),
+        toMoveCursor: -2,
+        code: () => { return ` ![]() ` }
+    },
+    {
+        name: 'code',
+        icon: (type?: boolean, name?: string, nametoCheck?: string) => <CodeRounded sx={styles.wordEditorIcon()} />,
+        toMoveCursor: -5,
+        code: () => (' ```\n\n``` ')
+    },
+    {
+        name: 'link',
+        icon: (type?: boolean, name?: string, nametoCheck?: string) => <LinkRounded sx={styles.wordEditorIcon()} />,
+        toMoveCursor: -2,
+        code: () => { return ` []() ` }
+    },
+    {
+        name: 'qoutes',
+        icon: (type?: boolean, name?: string, nametoCheck?: string) => <FormatQuoteRounded sx={styles.wordEditorIcon(28, {}, type, name)} />,
+        code: () => { return `> ` }
+    },
+    {
+        name: 'h1',
+        icon: (type?: boolean, name?: string, nametoCheck?: string) => <Typography variant='caption' sx={styles.wordEditorIcon(15, {
+            fontWeight: '700'
+        })}>H1</Typography>,
+        code: () => { return `# ` }
+    },
+    {
+        name: 'h2',
+        icon: (type?: boolean, name?: string, nametoCheck?: string) => <Typography variant='caption' sx={styles.wordEditorIcon(15, {
+            fontWeight: '700'
+        })}>H2</Typography>,
+        code: () => { return `## ` }
+    },
+    {
+        name: 'h3',
+        icon: (type?: boolean, name?: string, nametoCheck?: string) => <Typography variant='caption' sx={styles.wordEditorIcon(15, {
+            fontWeight: '700'
+        })}>H3</Typography>,
+        code: () => { return `### ` }
+    },
+    {
+        name: 'h4',
+        icon: (type?: boolean, name?: string, nametoCheck?: string) => <Typography variant='caption' sx={styles.wordEditorIcon(15, {
+            fontWeight: '700'
+        })}>H4</Typography>,
+        code: () => { return `#### ` }
+    },
+    {
+        name: 'h5',
+        icon: (type?: boolean, name?: string, nametoCheck?: string) => <Typography variant='caption' sx={styles.wordEditorIcon(15, {
+            fontWeight: '700'
+        })}>H5</Typography>,
+        code: () => { return `##### ` }
+    },
+    {
+        name: 'h6',
+        icon: (type?: boolean, name?: string, nametoCheck?: string) => <Typography variant='caption' sx={styles.wordEditorIcon(15, {
+            fontWeight: '700'
+        })}>H6</Typography>,
+        code: () => { return `###### ` }
+    },
 ]
 
 export const aboutCCC = [
