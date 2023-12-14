@@ -1,6 +1,6 @@
 'use client'
 import { Box } from '@mui/material'
-import React, { useRef, useState } from 'react'
+import React, { LegacyRef, MutableRefObject, useRef, useState } from 'react'
 import { styles } from '@/utils/styles'
 import { InputToMoveCursor } from '@/utils/Interfaces'
 import { wordEditorFunc } from '@/utils/constant'
@@ -18,7 +18,7 @@ export const ReadmeField = () => {
         code: ''
     })
     const [nametoCheck, setNametoCheck] = useState<string>('')
-    const editorRef = useRef();
+    const editorRef = useRef<LegacyRef<HTMLTextAreaElement> | undefined>();
 
     const moveCursor = async (Length?: number) => {
         const input = await editorRef?.current as InputToMoveCursor | undefined;
@@ -67,7 +67,7 @@ export const ReadmeField = () => {
         });
     };
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         const { value } = e.target;
         if (isEnter && isTrue) {
 
@@ -122,11 +122,10 @@ export const ReadmeField = () => {
                         ))
                     }
                 </Box>
-                <input
-                    type='text'
+                <textarea
                     value={markdownContent}
                     placeholder='Write your content here...'
-                    ref={editorRef}
+                    ref={editorRef as LegacyRef<HTMLTextAreaElement> | undefined}
                     onKeyDown={(event) => {
 
                         // Check if the pressed key is Enter
