@@ -32,8 +32,6 @@ export const ReadmeField = () => {
         }
     };
 
-    console.log(isTrue)
-
     // handle click
     const handleClick = (code: (i?: number) => string, name: string, toMoveCursor?: number) => {
 
@@ -114,17 +112,14 @@ export const ReadmeField = () => {
                     }}
                 >
                     {
-                        wordEditorFunc.map((item, index) => {
-                            console.log(nametoCheck, item.name)
-                            return (
-                                <Box
-                                    key={index}
-                                    onClick={(e) => { handleClick(item.code, item.name, item?.toMoveCursor); console.log(e); setNametoCheck(item.name) }}
-                                >
-                                    {item.icon(isTrue, data.name, nametoCheck)}
-                                </Box>
-                            )
-                        })
+                        wordEditorFunc.map((item, index) => (
+                            <Box
+                                key={index}
+                                onClick={(e) => { handleClick(item.code, item.name, item?.toMoveCursor); console.log(e); setNametoCheck(item.name) }}
+                            >
+                                {item.icon(isTrue, data.name,nametoCheck)}
+                            </Box>
+                        ))
                     }
                 </Box>
                 <textarea
