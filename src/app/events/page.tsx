@@ -1,7 +1,6 @@
 'use client'
 import BlogEventsStructure from '@/Components/BlogEventsStructure'
 import EventCard from '@/Components/EventCard'
-import { currentSession } from '@/utils/FetchFromApi'
 import { eventsDetails } from '@/utils/constant'
 import { styles } from '@/utils/styles'
 import { Box, Container } from '@mui/material'
@@ -14,7 +13,6 @@ const page = () => {
     setSearchInput(input);
   };
 
-  console.log(currentSession())
   // Filter events based on search input
   const filteredEvents = eventsDetails.filter(
     (item) =>
