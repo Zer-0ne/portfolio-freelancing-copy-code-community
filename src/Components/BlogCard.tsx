@@ -15,15 +15,15 @@ const BlogCard = ({
                 <Typography
                     variant='h5'
                 >
-                    {item.heading}
+                    {item.title}
                 </Typography>
                 <Typography
                     variant='caption'
                     sx={{
-                        mb:.5,
-                        mt:-1,
-                        ml:1,
-                        opacity:.7,
+                        mb: .5,
+                        mt: -1,
+                        ml: 1,
+                        opacity: .7,
                         // alignSelf:'end'
                     }}
                 >

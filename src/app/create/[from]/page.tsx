@@ -1,14 +1,16 @@
 'use client'
 import { ReadmeField } from '@/Components/ReadmeField'
-import { createNewBlog } from '@/utils/FetchFromApi'
+import { createNewBlog, createNewEvent } from '@/utils/FetchFromApi'
 import { Data } from '@/utils/Interfaces'
 import { createBlog, createEvent } from '@/utils/constant'
 import { styles } from '@/utils/styles'
+import { useParams } from 'next/navigation'
 import { Box, Container } from '@mui/material'
 import React from 'react'
 
 const page = () => {
     const [data, setData] = React.useState<Data>()
+    const { from } = useParams()
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -18,7 +20,9 @@ const page = () => {
     const handleSubmit = async (e: any) => {
         e.preventDefault();
         try {
-            await createNewBlog(data as Data)
+            (from === 'blog') ?
+                await createNewBlog(data as Data) :
+                await createNewEvent(data as Data)
         } catch (error) {
             console.log(error)
         }
@@ -46,7 +50,7 @@ const page = () => {
                     >
 
                         {
-                            createBlog.map((item, index) => (
+                            ((from === 'blog') ? createBlog : createEvent).map((item, index) => (
                                 <input
                                     type="text"
                                     style={styles.customInput(item.size)}

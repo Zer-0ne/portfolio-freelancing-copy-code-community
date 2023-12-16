@@ -15,7 +15,8 @@ export const GET = async () => {
 // create blog
 export const POST = async (request: NextRequest) => {
     try {
-        if (!currentSession()) return NextResponse.json({ message: 'Please login' }, { status: 401 })
+        const session = await currentSession();
+        if (!session) return NextResponse.json({ message: 'Please login' }, { status: 401 })
         const {
             title,
             description,
@@ -37,10 +38,9 @@ export const POST = async (request: NextRequest) => {
         // Save the new post to the database
         await newBlog.save();
         return NextResponse.json({ message: 'created secussfully' })
-    } catch (error: {
+    } catch (err: {
         message: string
     } | any) {
-        console.log(error)
-        return NextResponse.json({ message: error.message })
+        return NextResponse.json({ error: err.message }, { status: 500 })
     }
 }

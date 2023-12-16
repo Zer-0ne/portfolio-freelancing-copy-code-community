@@ -1,4 +1,4 @@
-import Blog from "@/Models/Blog";
+import Event from "@/Models/Event";
 import { currentSession } from "@/utils/FetchFromApi";
 import connect from "@/utils/database";
 import { NextRequest, NextResponse } from "next/server";
@@ -8,9 +8,9 @@ export const GET = async (request: NextRequest, { params }: any) => {
     try {
         await connect();
         const { id } = params;
-        const blog = await Blog.findById(id)
+        const blog = await Event.findById(id)
         return NextResponse.json({ blog })
-    }  catch (err: {
+    } catch (err: {
         message: string
     } | any) {
         return NextResponse.json({ error: err.message }, { status: 500 })
@@ -27,10 +27,10 @@ export const DELETE = async (request: NextRequest, { params }: any) => {
         // connect to Database
         await connect();
         const { id } = params
-        const deleteBlog = await Blog.findByIdAndDelete(id)
+        const deleteBlog = await Event.findByIdAndDelete(id)
         if (!deleteBlog) return NextResponse.json({ message: 'Blog not found!' })
         return NextResponse.json({ message: 'Delete seccussfully' })
-    }  catch (err: {
+    } catch (err: {
         message: string
     } | any) {
         return NextResponse.json({ error: err.message }, { status: 500 })
@@ -51,26 +51,32 @@ export const PUT = async (request: NextRequest, { params }: any) => {
             description,
             tag,
             content,
-            comments,
-            authorId
+            mode,
+            participants,
+            status,
+            image,
+            label
         } = await request.json();
         const updatedBlog = {
             title,
             description,
             tag,
             content,
-            comments,
-            authorId
+            mode,
+            participants,
+            status,
+            image,
+            label
         }
         const { id } = params
-        const blog = await Blog.findByIdAndUpdate(
+        const blog = await Event.findByIdAndUpdate(
             id,
             { $set: updatedBlog },
             { new: true }
         );
         if (!blog) return NextResponse.json({ message: 'Blog not found!' })
         return NextResponse.json({ message: 'Blog updated!' })
-    }  catch (err: {
+    } catch (err: {
         message: string
     } | any) {
         return NextResponse.json({ error: err.message }, { status: 500 })

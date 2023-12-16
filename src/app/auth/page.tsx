@@ -1,9 +1,10 @@
 'use client'
-import { createUser, loginUser } from '@/utils/FetchFromApi'
+import { createUser } from '@/utils/FetchFromApi'
 import { Data } from '@/utils/Interfaces'
 import { Login, authMode, signup } from '@/utils/constant'
 import { styles } from '@/utils/styles'
 import { Avatar, Box, Button, TextField, Typography } from '@mui/material'
+import { signIn } from 'next-auth/react'
 import React, { useState } from 'react'
 
 const page = () => {
@@ -31,6 +32,26 @@ const page = () => {
             reader.readAsDataURL(file);
         }
         setData((prevFormData) => ({ ...prevFormData, [name]: value }));
+    }
+
+    const loginUser = async (data: Data) => {
+        try {
+            const {
+                username,
+                password
+            } = data
+            const signin = await signIn('credentials', {
+                redirect: false,
+                username,
+                password
+            })
+            console.log(signin)
+            if (!signin) return
+            return signin
+        }
+        catch (error) {
+            console.error(error)
+        }
     }
 
     const handleSubmit = async (e: any) => {

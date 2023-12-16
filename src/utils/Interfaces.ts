@@ -27,7 +27,7 @@ export interface EventsInterface {
 };
 
 export interface BlogsInterface {
-    heading: string;
+    title: string;
     description: string;
     date: string;
     tag: string;
@@ -76,4 +76,13 @@ export interface Item {
     toMoveCursor: number;
     code: () => string;
     type: (isTrue?: boolean) => boolean;
+}
+
+export interface Session {
+    expires: string;
+    user: {
+        email: string;
+        id: string;
+        name: string;
+    }
 }

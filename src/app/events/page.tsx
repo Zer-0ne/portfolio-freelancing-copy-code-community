@@ -1,6 +1,7 @@
 'use client'
 import BlogEventsStructure from '@/Components/BlogEventsStructure'
 import EventCard from '@/Components/EventCard'
+import { currentSession } from '@/utils/FetchFromApi'
 import { eventsDetails } from '@/utils/constant'
 import { styles } from '@/utils/styles'
 import { Box, Container } from '@mui/material'
@@ -13,6 +14,7 @@ const page = () => {
     setSearchInput(input);
   };
 
+  console.log(currentSession())
   // Filter events based on search input
   const filteredEvents = eventsDetails.filter(
     (item) =>
@@ -20,7 +22,7 @@ const page = () => {
       item.tag.toLowerCase().includes(searchInput.toLowerCase()) ||
       item.description.toLowerCase().includes(searchInput.toLowerCase()) ||
       item.calenderDate.toLowerCase().includes(searchInput.toLowerCase()) ||
-      item.status.toLowerCase().includes(searchInput.toLowerCase()) || 
+      item.status.toLowerCase().includes(searchInput.toLowerCase()) ||
       item.headingDate.toLowerCase().includes(searchInput.toLowerCase()) ||
       item.mode.toLowerCase().includes(searchInput.toLowerCase()) ||
       item.label?.toLowerCase().includes(searchInput.toLowerCase())
@@ -28,6 +30,7 @@ const page = () => {
   return (
     <>
       <BlogEventsStructure
+        from='event'
         placeholder='Search event...'
         btnText='New'
         searchInput={searchInput}

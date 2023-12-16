@@ -1,6 +1,7 @@
 import Event from "@/Models/Event";
 import { currentSession } from "@/utils/FetchFromApi";
 import connect from "@/utils/database";
+import { Session } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
 // Fetching all the events
@@ -15,8 +16,10 @@ export const GET = async () => {
 // create event
 export const POST = async (request: NextRequest) => {
     try {
-        // if not logged in then throw an error
-        if (!currentSession()) return NextResponse.json({ message: 'Please login' }, { status: 401 })
+        // check the session
+        const session = await currentSession() as Session;
+        console.log(session)
+        if (!session) return NextResponse.json({ message: 'Please login' }, { status: 401 })
 
         const {
             title,
@@ -51,10 +54,9 @@ export const POST = async (request: NextRequest) => {
         await newEvent.save();
 
         return NextResponse.json({ message: 'created secussfully' })
-    } catch (error: {
+    } catch (err: {
         message: string
     } | any) {
-        console.log(error)
-        return NextResponse.json({ message: error.message })
+        return NextResponse.json({ error: err.message }, { status: 500 })
     }
 }

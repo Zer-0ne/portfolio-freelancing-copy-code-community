@@ -10,13 +10,15 @@ const BlogEventsStructure = (
         placeholder,
         btnText,
         handleSearch,
-        searchInput
+        searchInput,
+        from
     }: {
         children: React.ReactNode
         placeholder: string;
         btnText: string;
         searchInput: string;
         handleSearch: (input: string) => void;
+        from: string
     }
 ) => {
     return (
@@ -42,7 +44,7 @@ const BlogEventsStructure = (
                     />
                     <Link
                         style={styles.greenBtn() as React.CSSProperties | undefined}
-                        href={'/create'}
+                        href={`/create/${from}`}
                     >{btnText}</Link>
                 </Box>
                 {children}
