@@ -69,3 +69,11 @@ export interface InputToMoveCursor {
         length: number
     }
 }
+
+export interface Item {
+    icon: (type?: boolean | undefined, item?: Data) => React.JSX.Element;
+    name: string;
+    toMoveCursor: number;
+    code: () => string;
+    type: (isTrue?: boolean) => boolean;
+}

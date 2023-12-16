@@ -1,41 +1,55 @@
-import Blog from "@/Models/Blog";
+import Event from "@/Models/Event";
 import { currentSession } from "@/utils/FetchFromApi";
 import connect from "@/utils/database";
 import { NextRequest, NextResponse } from "next/server";
 
-// Fetching all the blog
+// Fetching all the events
 export const GET = async () => {
     await connect();
-    const blog = await Blog.find({});
+    const event = await Event.find({});
     return NextResponse.json({
-        blog,
+        event,
     });
 }
 
-// create blog
+// create event
 export const POST = async (request: NextRequest) => {
     try {
+        // if not logged in then throw an error
         if (!currentSession()) return NextResponse.json({ message: 'Please login' }, { status: 401 })
+
         const {
             title,
             description,
             tag,
             content,
-            comments,
+            mode,
+            participants,
+            status,
+            image,
+            label,
             authorId
         } = await request.json();
+
+        // connect to the database
         await connect();
-        const newBlog = new Blog({
+
+        const newEvent = new Event({
             title,
             description,
             tag,
             content,
-            comments,
+            mode,
+            participants,
+            status,
+            image,
+            label,
             authorId
         });
 
         // Save the new post to the database
-        await newBlog.save();
+        await newEvent.save();
+
         return NextResponse.json({ message: 'created secussfully' })
     } catch (error: {
         message: string

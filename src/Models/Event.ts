@@ -30,6 +30,10 @@ const eventSchema = new Schema({
     content: {
         type: String,
         required: [true, 'Please add content']
+    },
+    authorId: {
+        type: String,
+        required: true
     }
 }, {
     timestamps: true

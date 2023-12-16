@@ -41,14 +41,7 @@ const BlogEventsStructure = (
                         onChange={e => handleSearch(e.target.value)}
                     />
                     <Link
-                        style={{
-                            background: 'green',
-                            padding: '5px 20px',
-                            borderRadius: 4,
-                            flex: 1,
-                            textAlign:'center',
-                            fontSize:20
-                        }}
+                        style={styles.greenBtn() as React.CSSProperties | undefined}
                         href={'/create'}
                     >{btnText}</Link>
                 </Box>

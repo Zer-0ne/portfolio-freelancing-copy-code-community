@@ -42,6 +42,10 @@ const blogSchema = new Schema({
     content: {
         type: String,
         required: [true, 'Please add a content']
+    },
+    draft: {
+        type: Boolean,
+        default: false
     }
 }, {
     timestamps: true

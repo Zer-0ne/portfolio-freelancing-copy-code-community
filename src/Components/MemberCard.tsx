@@ -44,6 +44,7 @@ const MemberCard = ({ item }: {
                         alignItems: 'center',
                         flexDirection: 'column',
                         flex: 1,
+                        position: 'relative',
                         width: '100%'
                     }}
                 >
@@ -52,7 +53,8 @@ const MemberCard = ({ item }: {
                         variant='h5'
                         sx={{
                             fontWeight: '600',
-                            fontSize: { md: '1vw', xs: '1.9vw' }
+                            // position:'absolute',
+                            fontSize: { md: '1rem', xs: '1rem' }
                         }}
                     >
                         {item.name}
@@ -61,7 +63,7 @@ const MemberCard = ({ item }: {
                         variant='caption'
                         sx={{
                             fontWeight: '500',
-                            fontSize: {md:'.6vw',xs:'1.3vw'}
+                            fontSize: { md: '.7rem', xs: '.7rem' }
                         }}
                     >
                         {item.role}

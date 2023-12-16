@@ -1,4 +1,5 @@
 import Blog from "@/Models/Blog";
+import { currentSession } from "@/utils/FetchFromApi";
 import connect from "@/utils/database";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -20,6 +21,7 @@ export const GET = async (request: NextRequest, { params }: any) => {
 // delete one blog
 export const DELETE = async (request: NextRequest, { params }: any) => {
     try {
+        if (!currentSession()) return NextResponse.json({ message: 'Please login' }, { status: 401 })
         await connect();
         const { id } = params
         const deleteBlog = await Blog.findByIdAndDelete(id)
@@ -36,6 +38,7 @@ export const DELETE = async (request: NextRequest, { params }: any) => {
 // edit blog
 export const PUT = async (request: NextRequest, { params }: any) => {
     try {
+        if (!currentSession()) return NextResponse.json({ message: 'Please login' }, { status: 401 })
         await connect();
         const {
             title,

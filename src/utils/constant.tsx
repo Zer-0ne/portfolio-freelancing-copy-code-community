@@ -1,4 +1,4 @@
-import { BlogsInterface, EventsInterface, coreMember, navbar } from "./Interfaces"
+import { BlogsInterface, Data, EventsInterface, Item, coreMember, navbar } from "./Interfaces"
 
 
 // imports icons 
@@ -135,110 +135,153 @@ export const createBlog = [
         required: false,
         size: '1 0 30%'
     },
+
+]
+
+export const createEvent = [
+    ...createBlog,
     {
-        name: 'content',
-        placeholder: 'Content',
+        name: 'mode',
+        placeholder: 'Mode of Event',
         required: true,
-        size: '1 0 100%'
-    }
+        size: 1
+    },
+    {
+        name: 'participants',
+        placeholder: 'participants',
+        required: true,
+        size: 1
+    },
+    {
+        name: 'status',
+        placeholder: 'Status',
+        required: true,
+        size: 1
+    },
+    {
+        name: 'image',
+        placeholder: 'Thumbnail',
+        required: true,
+        size: 1
+    },
+    {
+        name: 'label',
+        placeholder: 'Label',
+        required: false,
+        size: 1
+    },
 
 ]
 
 export const wordEditorFunc = [
     {
-        icon: (type?: boolean, name?: string, nametoCheck?: string) => (<FormatBoldRounded
+        icon: (type?: boolean, item?: Item) => (<FormatBoldRounded
             sx={styles.wordEditorIcon()}
         />),
         name: 'bold',
         toMoveCursor: -3,
-        code: () => { return ' **** ' }
+        code: () => { return ' **** ' },
+        type: (isTrue: boolean = false) => isTrue
     },
     {
-        icon: (type?: boolean, name?: string, nametoCheck?: string) => (<FormatItalic
+        icon: (type?: boolean, item?: Item) => (<FormatItalic
             sx={styles.wordEditorIcon()}
         />),
         name: 'italic',
         toMoveCursor: -2,
-        code: () => { return ' ** ' }
+        code: () => { return ' ** ' },
+        type: (isTrue: boolean = false) => isTrue
     },
     {
-        icon: (type?: boolean, name?: string, nametoCheck?: string) => (<FormatListNumberedRounded
-            sx={styles.wordEditorIcon(26, {}, type, name, nametoCheck)}
+        icon: (type?: boolean, item?: Item) => (<FormatListNumberedRounded
+            sx={styles.wordEditorIcon(26, {}, type, item)}
         />),
         name: 'ol',
-        code: (number: number = 1) => { return `${number}. ` }
+        code: (number: number = 1) => { return `${number}. ` },
+        type: (isTrue: boolean = false) => isTrue
     },
     {
-        icon: (type?: boolean, name?: string, nametoCheck?: string) => (<FormatListBulletedRounded
-            sx={styles.wordEditorIcon(26, {}, type, name, nametoCheck)}
+        icon: (type?: boolean, item?: Item) => (<FormatListBulletedRounded
+            sx={styles.wordEditorIcon(26, {}, type, item)}
         />),
         name: 'ul',
-        code: () => { return ` * ` }
+        code: () => { return ` * ` },
+        type: (isTrue: boolean = false) => isTrue
     },
     {
         name: 'image',
-        icon: (type?: boolean, name?: string, nametoCheck?: string) => (<ImageRounded sx={styles.wordEditorIcon()} />),
+        icon: (type?: boolean, item?: Item) => (<ImageRounded sx={styles.wordEditorIcon()} />),
         toMoveCursor: -2,
-        code: () => { return ` ![]() ` }
+        code: () => { return ` ![]() ` },
+        type: (isTrue: boolean = false) => isTrue
     },
     {
         name: 'code',
-        icon: (type?: boolean, name?: string, nametoCheck?: string) => <CodeRounded sx={styles.wordEditorIcon()} />,
+        icon: (type?: boolean, item?: Item) => <CodeRounded sx={styles.wordEditorIcon()} />,
         toMoveCursor: -5,
-        code: () => (' ```\n\n``` ')
+        code: () => (' ```\n\n``` '),
+        type: (isTrue: boolean = false) => isTrue
     },
     {
         name: 'link',
-        icon: (type?: boolean, name?: string, nametoCheck?: string) => <LinkRounded sx={styles.wordEditorIcon()} />,
+        icon: (type?: boolean, item?: Item) => <LinkRounded sx={styles.wordEditorIcon()} />,
         toMoveCursor: -2,
-        code: () => { return ` []() ` }
+        code: () => { return ` []() ` },
+        type: (isTrue: boolean = false) => isTrue
     },
     {
         name: 'qoutes',
-        icon: (type?: boolean, name?: string, nametoCheck?: string) => <FormatQuoteRounded sx={styles.wordEditorIcon(28, {}, type, name)} />,
-        code: () => { return `> ` }
+        icon: (type?: boolean, item?: Item) => <FormatQuoteRounded sx={styles.wordEditorIcon(28, {}, type, item)} />,
+        code: () => { return `> ` },
+        type: (isTrue: boolean = false) => isTrue
     },
     {
         name: 'h1',
-        icon: (type?: boolean, name?: string, nametoCheck?: string) => <Typography variant='caption' sx={styles.wordEditorIcon(15, {
+        icon: (type?: boolean, item?: Item) => <Typography variant='caption' sx={styles.wordEditorIcon(15, {
             fontWeight: '700'
         })}>H1</Typography>,
-        code: () => { return `# ` }
+        code: () => { return `# ` },
+        type: (isTrue: boolean = false) => isTrue
     },
     {
         name: 'h2',
-        icon: (type?: boolean, name?: string, nametoCheck?: string) => <Typography variant='caption' sx={styles.wordEditorIcon(15, {
+        icon: (type?: boolean, item?: Item) => <Typography variant='caption' sx={styles.wordEditorIcon(15, {
             fontWeight: '700'
         })}>H2</Typography>,
-        code: () => { return `## ` }
+        code: () => { return `## ` },
+        type: (isTrue: boolean = false) => isTrue
     },
     {
         name: 'h3',
-        icon: (type?: boolean, name?: string, nametoCheck?: string) => <Typography variant='caption' sx={styles.wordEditorIcon(15, {
+        icon: (type?: boolean, item?: Item) => <Typography variant='caption' sx={styles.wordEditorIcon(15, {
             fontWeight: '700'
         })}>H3</Typography>,
-        code: () => { return `### ` }
+        code: () => { return `### ` },
+        type: (isTrue: boolean = false) => isTrue
     },
     {
         name: 'h4',
-        icon: (type?: boolean, name?: string, nametoCheck?: string) => <Typography variant='caption' sx={styles.wordEditorIcon(15, {
+        icon: (type?: boolean, item?: Item) => <Typography variant='caption' sx={styles.wordEditorIcon(15, {
             fontWeight: '700'
         })}>H4</Typography>,
-        code: () => { return `#### ` }
+        code: () => { return `#### ` },
+        type: (isTrue: boolean = false) => isTrue
     },
     {
         name: 'h5',
-        icon: (type?: boolean, name?: string, nametoCheck?: string) => <Typography variant='caption' sx={styles.wordEditorIcon(15, {
+        icon: (type?: boolean, item?: Item) => <Typography variant='caption' sx={styles.wordEditorIcon(15, {
             fontWeight: '700'
         })}>H5</Typography>,
-        code: () => { return `##### ` }
+        code: () => { return `##### ` },
+        type: (isTrue: boolean = false) => isTrue
     },
     {
         name: 'h6',
-        icon: (type?: boolean, name?: string, nametoCheck?: string) => <Typography variant='caption' sx={styles.wordEditorIcon(15, {
+        icon: (type?: boolean, item?: Item) => <Typography variant='caption' sx={styles.wordEditorIcon(15, {
             fontWeight: '700'
         })}>H6</Typography>,
-        code: () => { return `###### ` }
+        code: () => { return `###### ` },
+        type: (isTrue: boolean = false) => isTrue
     },
 ]
 

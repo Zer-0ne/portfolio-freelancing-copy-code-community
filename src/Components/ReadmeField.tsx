@@ -1,23 +1,28 @@
 'use client'
-import { Box } from '@mui/material'
+import { Box, Button } from '@mui/material'
 import React, { LegacyRef, MutableRefObject, useRef, useState } from 'react'
 import { styles } from '@/utils/styles'
-import { InputToMoveCursor } from '@/utils/Interfaces'
+import { Data, InputToMoveCursor, Item } from '@/utils/Interfaces'
 import { wordEditorFunc } from '@/utils/constant'
 
-export const ReadmeField = () => {
+export const ReadmeField = ({
+    setdata,
+}: {
+    setdata: React.Dispatch<React.SetStateAction<Data | undefined>>;
+}) => {
     const [markdownContent, setMarkdownContent] = useState('');
     const [isTrue, setIsTrue] = useState(false);
     const [isEnter, setIsEnter] = useState(false);
     const [counter, setCounter] = useState(2)
     const [data, setData] = useState<{
         name: string,
-        code: string
+        code: string,
+        type: boolean
     }>({
         name: '',
-        code: ''
+        code: '',
+        type: false
     })
-    const [nametoCheck, setNametoCheck] = useState<string>('')
     const editorRef = useRef<LegacyRef<HTMLTextAreaElement> | undefined>();
 
     const moveCursor = async (Length?: number) => {
@@ -32,31 +37,37 @@ export const ReadmeField = () => {
         }
     };
 
+
     // handle click
     const handleClick = (code: (i?: number) => string, name: string, toMoveCursor?: number) => {
 
-        const codeString = code()
+
 
         if (['qoutes', 'ol', 'ul'].includes(name)) {
             if (!isTrue) {
                 setCounter(2)
                 setMarkdownContent((prevContent: string) => {
-                    return prevContent + codeString;
+                    return prevContent + code();
                 });
             }
             setIsTrue((prevState: boolean) => !prevState);
+
+            // local this is not sent to blog and event page 
             setData({
                 name,
-                code: codeString
+                code: code(),
+                type: !isTrue
             })
             setIsEnter(false)
             moveCursor()
             return
         }
 
+
+
         // You can implement logic to add bold markdown syntax
         setMarkdownContent((prevContent: string) => {
-            return prevContent + codeString;
+            return prevContent + code();
         });
 
         // Move cursor after setting the content
@@ -71,6 +82,11 @@ export const ReadmeField = () => {
         const { value } = e.target;
         if (isEnter && isTrue) {
 
+            // send the create blog and event page
+            setdata((prevData) => ({
+                ...prevData,
+                content: value
+            }))
             // You can implement logic to add numbered list markdown syntax
             setMarkdownContent((prevContent: string) => {
                 return prevContent + ((['ul', 'qoutes'].includes(data.name)) ? `\n${data.code}` : `\n${counter}. `);
@@ -84,6 +100,12 @@ export const ReadmeField = () => {
 
         } else {
             setMarkdownContent(value);
+
+            // send the create blog and event page
+            setdata((prevData) => ({
+                ...prevData,
+                content: value
+            }))
         }
 
     }
@@ -93,62 +115,77 @@ export const ReadmeField = () => {
             <Box
                 sx={{
                     display: 'flex',
-                    minHeight: '70vh',
-                    ...styles.customInput('', {}, 2),
-                    flexDirection: 'column'
+                    flexDirection: 'column',
+                    mb:3,
+                    gap: 2
                 }}
             >
                 <Box
                     sx={{
                         display: 'flex',
-                        borderBottom: '1px solid rgba(255,255,255,.25)',
-                        flex: 1,
-                        height: 40,
-                        gap: 2.5,
-                        flexWrap: 'wrap',
-                        padding: `0px 10px 10px 10px`,
-                        alignItems: 'center',
-                        justifyContent: 'center',
+                        minHeight: '75vh',
+                        maxHeight:'80vh',
+                        ...styles.customInput('', {}, 2),
+                        flexDirection: 'column',
                     }}
                 >
-                    {
-                        wordEditorFunc.map((item, index) => (
-                            <Box
-                                key={index}
-                                onClick={(e) => { handleClick(item.code, item.name, item?.toMoveCursor); console.log(e); setNametoCheck(item.name) }}
-                            >
-                                {item.icon(isTrue, data.name, nametoCheck)}
-                            </Box>
-                        ))
-                    }
-                </Box>
-                <textarea
-                    value={markdownContent}
-                    placeholder='Write your content here...'
-                    ref={editorRef as LegacyRef<HTMLTextAreaElement> | undefined}
-                    onKeyDown={(event) => {
-
-                        // Check if the pressed key is Enter
-                        if (event.key === 'Enter') {
-
-                            // Your custom logic here
-                            setIsEnter(true);
-                            if (isEnter && isTrue) {
-                                setCounter(prev => prev + 1)
-                            }
-
-                        } else {
-                            setIsEnter(false)
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            borderBottom: '1px solid rgba(255,255,255,.25)',
+                            flex: 1,
+                            height: 40,
+                            gap: 2.5,
+                            flexWrap: 'wrap',
+                            padding: `0px 10px 10px 10px`,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        }}
+                    >
+                        {
+                            wordEditorFunc.map((item, index) => (
+                                <Box
+                                    key={index}
+                                    onClick={(e) => { handleClick(item.code, item.name, item?.toMoveCursor); }}
+                                >
+                                    {item.icon(data.type, item as Item)}
+                                </Box>
+                            ))
                         }
-                    }}
-                    onChange={handleChange}
-                    style={{
-                        flex: 100,
-                        background: 'transparent',
-                        resize: 'none',
-                        padding: 4
-                    }}
-                />
+                    </Box>
+                    <textarea
+                        value={markdownContent}
+                        placeholder='Write your content here...'
+                        ref={editorRef as LegacyRef<HTMLTextAreaElement> | undefined}
+                        onKeyDown={(event) => {
+
+                            // Check if the pressed key is Enter
+                            if (event.key === 'Enter') {
+
+                                // Your custom logic here
+                                setIsEnter(true);
+                                if (isEnter && isTrue) {
+                                    setCounter(prev => prev + 1)
+                                }
+
+                            } else {
+                                setIsEnter(false)
+                            }
+                        }}
+                        onChange={handleChange}
+                        style={{
+                            flex: 100,
+                            background: 'transparent',
+                            resize: 'none',
+                            padding: 4
+                        }}
+                    />
+
+                </Box>
+                <button
+                    type='submit'
+                    style={styles.greenBtn() as React.CSSProperties | undefined}
+                >Post</button>
             </Box>
         </>
     )

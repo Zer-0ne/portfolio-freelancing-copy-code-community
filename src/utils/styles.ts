@@ -1,3 +1,4 @@
+import { Data, Item } from "./Interfaces";
 import { colors } from "./colors";
 
 export const styles = {
@@ -219,16 +220,24 @@ export const styles = {
         , padding: '7px 10px'
         , ...customStyles
     }),
-    wordEditorIcon: (fontSize: string | number = 28, customStyle?: object, type?: boolean, name?: string, nameToCheck?: string) => ({
+    wordEditorIcon: (fontSize: string | number = 28, customStyle?: object, type?: boolean, item?: Item) => ({
         padding: '2px 3px',
         fontSize: fontSize,
-        color: ((name === nameToCheck) && type) ? 'black' : 'white',
-        background: type && 'white',
+        // color: (item?.type()) ? 'black' : 'white',
+        // background: (type) ? 'white' : 'transparent',
         borderRadius: 1,
         ':hover': {
             color: 'black',
             background: 'white'
         },
         ...customStyle
+    }),
+    greenBtn: () => ({
+        background: 'green',
+        padding: '5px 20px',
+        borderRadius: 4,
+        flex: 1,
+        textAlign: 'center',
+        fontSize: 20
     })
 }
