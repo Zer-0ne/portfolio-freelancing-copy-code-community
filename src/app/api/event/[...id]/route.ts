@@ -1,5 +1,5 @@
 import Event from "@/Models/Event";
-import { currentSession } from "@/utils/FetchFromApi";
+import { currentSession } from "@/utils/Session";
 import connect from "@/utils/database";
 import { NextRequest, NextResponse } from "next/server";
 

@@ -12,11 +12,11 @@ const Navbar = () => {
             >
                 {
                     navbarContent.map((item, index) => (
-                        <>
-                            <Link href={`${item.path}`} key={index}>
-                                {item.icon}
-                            </Link>
-                        </>
+
+                        <Link href={`${item.path}`} key={index}>
+                            {item.icon}
+                        </Link>
+
                     ))
                 }
             </Box>

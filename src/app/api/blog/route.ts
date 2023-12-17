@@ -1,5 +1,7 @@
 import Blog from "@/Models/Blog";
-import { currentSession } from "@/utils/FetchFromApi";
+import { userInfo } from "@/utils/FetchFromApi";
+import { Session } from "@/utils/Interfaces";
+import { currentSession } from "@/utils/Session";
 import connect from "@/utils/database";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -15,8 +17,10 @@ export const GET = async () => {
 // create blog
 export const POST = async (request: NextRequest) => {
     try {
-        const session = await currentSession();
+        const session = await currentSession() as Session;
         if (!session) return NextResponse.json({ message: 'Please login' }, { status: 401 })
+        const user = await userInfo(session?.user?.id)
+        if (user.isAdmin === false) return NextResponse.json({ message: 'Your are not Authorized!' }, { status: 401 })
         const {
             title,
             description,

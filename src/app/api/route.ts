@@ -1,5 +1,5 @@
 'use server'
-import { currentSession } from "@/utils/FetchFromApi";
+import { currentSession } from "@/utils/Session";
 import connect from "@/utils/database";
 import { NextResponse } from "next/server";
 

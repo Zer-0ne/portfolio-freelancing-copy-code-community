@@ -118,6 +118,7 @@ export const navbarContent = [
 
 export const createBlog = [
     {
+        type: 'text',
         name: 'title',
         placeholder: 'Title',
         required: true,
@@ -125,6 +126,7 @@ export const createBlog = [
     },
     {
         name: 'description',
+        type: 'text',
         placeholder: 'Description',
         required: true,
         size: '1 0 30%'
@@ -132,6 +134,7 @@ export const createBlog = [
     {
         name: 'tag',
         placeholder: 'Tags',
+        type: 'text',
         required: false,
         size: '1 0 30%'
     },
@@ -142,12 +145,15 @@ export const createEvent = [
     ...createBlog,
     {
         name: 'mode',
+        type: 'text',
         placeholder: 'Mode of Event',
+
         required: true,
         size: 1
     },
     {
         name: 'participants',
+        type: 'number',
         placeholder: 'participants',
         required: true,
         size: 1
@@ -155,21 +161,31 @@ export const createEvent = [
     {
         name: 'status',
         placeholder: 'Status',
+        type: 'text',
         required: true,
         size: 1
     },
     {
         name: 'image',
         placeholder: 'Thumbnail',
+        type: 'file',
         required: true,
-        size: 1
+        size: 10
     },
     {
         name: 'label',
         placeholder: 'Label',
+        type: 'text',
         required: false,
         size: 1
     },
+    {
+        name: 'date',
+        type: 'date',
+        placeholder: "Select a date",
+        required: true,
+        size: '1 0 150px'
+    }
 
 ]
 
@@ -393,7 +409,7 @@ export const blogsDetails: BlogsInterface[] = [
 
 export const eventsDetails: EventsInterface[] = [
     {
-        heading: 'React Native Workshop',
+        title: 'React Native Workshop',
         description: 'This is the tamplate description of React native workshop',
         headingDate: '10 Jan 2023',
         calenderDate: 'Oct 24, 2023',
@@ -405,7 +421,7 @@ export const eventsDetails: EventsInterface[] = [
         label: 'Featured'
     },
     {
-        heading: 'React Workshop',
+        title: 'React Workshop',
         description: 'This is the tamplate description of React workshop',
         headingDate: '10 June 2023',
         calenderDate: 'Dec 24, 2023',
@@ -417,7 +433,7 @@ export const eventsDetails: EventsInterface[] = [
         label: 'UpComming'
     },
     {
-        heading: 'Node Workshop',
+        title: 'Node Workshop',
         description: 'This is the tamplate description of Node workshop',
         headingDate: '10 July 2023',
         calenderDate: 'Nov 24, 2023',
@@ -428,7 +444,7 @@ export const eventsDetails: EventsInterface[] = [
         image: 'https://d112y698adiu2z.cloudfront.net/photos/production/challenge_thumbnails/002/610/587/datas/medium_square.png'
     },
     {
-        heading: 'Next Workshop',
+        title: 'Next Workshop',
         description: 'This is the tamplate description of Next workshop',
         headingDate: '10 Nov 2024',
         calenderDate: 'Dec 31, 2024',

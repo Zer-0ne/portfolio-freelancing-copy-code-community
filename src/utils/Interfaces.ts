@@ -14,7 +14,7 @@ export interface coreMember {
     email: string;
 };
 export interface EventsInterface {
-    heading: string,
+    title: string,
     description: string,
     headingDate: string,
     calenderDate: string,
@@ -84,5 +84,6 @@ export interface Session {
         email: string;
         id: string;
         name: string;
+        image: string
     }
 }

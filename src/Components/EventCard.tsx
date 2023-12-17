@@ -51,7 +51,7 @@ const EventCard = ({
                             fontWeight: '500'
                         }}
                     >
-                        {item.heading}
+                        {item.title}
                     </Typography>
 
                     {/* Details modes participants */}

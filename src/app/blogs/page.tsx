@@ -10,7 +10,7 @@ import { BlogsInterface } from '@/utils/Interfaces';
 
 const page = () => {
   const [searchInput, setSearchInput] = useState<string>('');
-  const [data, setData] = useState<BlogsInterface[]>()
+  const [data, setData] = useState<BlogsInterface[]>([])
 
   const handleSearch = (input: string) => {
     setSearchInput(input);

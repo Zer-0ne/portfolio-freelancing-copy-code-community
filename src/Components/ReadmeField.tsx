@@ -4,6 +4,7 @@ import React, { LegacyRef, MutableRefObject, useRef, useState } from 'react'
 import { styles } from '@/utils/styles'
 import { Data, InputToMoveCursor, Item } from '@/utils/Interfaces'
 import { wordEditorFunc } from '@/utils/constant'
+import { storeImage } from '@/utils/FetchFromApi'
 
 export const ReadmeField = ({
     setdata,
@@ -77,9 +78,26 @@ export const ReadmeField = ({
             return prevContent;
         });
     };
+    const extractImageLinks = (content: string): string[] => {
+        // Regular expression to extract image links from Markdown-style image syntax
+        const regex = /!\[.*?\]\('([^']+)'\)/g;
+        const matches = [...content.matchAll(regex)];
 
-    const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        // Extract image links from the matched groups
+        const imageLinks = matches.map(match => match[1]);
+
+        return imageLinks;
+    };
+
+
+    const handleChange = async (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         const { value } = e.target;
+        // Parse the content to extract image links
+        // const imageLinks = extractImageLinks(markdownContent);
+        // console.log(imageLinks)
+        // imageLinks.map(async(item,index)=>{
+        //     await storeImage(item,'Content',`${index}`)
+        // })
         if (isEnter && isTrue) {
 
             // send the create blog and event page
@@ -110,13 +128,14 @@ export const ReadmeField = ({
 
     }
 
+
     return (
         <>
             <Box
                 sx={{
                     display: 'flex',
                     flexDirection: 'column',
-                    mb:3,
+                    mb: 3,
                     gap: 2
                 }}
             >
@@ -124,7 +143,7 @@ export const ReadmeField = ({
                     sx={{
                         display: 'flex',
                         minHeight: '75vh',
-                        maxHeight:'80vh',
+                        maxHeight: '80vh',
                         ...styles.customInput('', {}, 2),
                         flexDirection: 'column',
                     }}

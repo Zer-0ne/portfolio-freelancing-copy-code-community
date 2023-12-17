@@ -34,6 +34,10 @@ const eventSchema = new Schema({
     authorId: {
         type: String,
         required: true
+    },
+    date: {
+        type: Date,
+        required: [true, 'Please add organized date']
     }
 }, {
     timestamps: true

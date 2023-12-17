@@ -1,5 +1,5 @@
 import Event from "@/Models/Event";
-import { currentSession } from "@/utils/FetchFromApi";
+import { currentSession } from "@/utils/Session";
 import connect from "@/utils/database";
 import { Session } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
@@ -18,8 +18,10 @@ export const POST = async (request: NextRequest) => {
     try {
         // check the session
         const session = await currentSession() as Session;
-        console.log(session)
         if (!session) return NextResponse.json({ message: 'Please login' }, { status: 401 })
+
+        // connect to the database
+        await connect();
 
         const {
             title,
@@ -34,16 +36,14 @@ export const POST = async (request: NextRequest) => {
             authorId
         } = await request.json();
 
-        // connect to the database
-        await connect();
-
+        const participantsInt = Number(participants)
         const newEvent = new Event({
             title,
             description,
             tag,
             content,
             mode,
-            participants,
+            participants: participantsInt,
             status,
             image,
             label,

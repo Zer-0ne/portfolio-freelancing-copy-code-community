@@ -1,5 +1,7 @@
 import Blog from "@/Models/Blog";
-import { currentSession } from "@/utils/FetchFromApi";
+import { userInfo } from "@/utils/FetchFromApi";
+import { Session } from "@/utils/Interfaces";
+import { currentSession } from "@/utils/Session";
 import connect from "@/utils/database";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -10,7 +12,7 @@ export const GET = async (request: NextRequest, { params }: any) => {
         const { id } = params;
         const blog = await Blog.findById(id)
         return NextResponse.json({ blog })
-    }  catch (err: {
+    } catch (err: {
         message: string
     } | any) {
         return NextResponse.json({ error: err.message }, { status: 500 })
@@ -21,8 +23,12 @@ export const GET = async (request: NextRequest, { params }: any) => {
 export const DELETE = async (request: NextRequest, { params }: any) => {
     try {
         // check the session
-        const session = await currentSession();
+        const session = await currentSession() as Session;
         if (!session) return NextResponse.json({ message: 'Please login' }, { status: 401 })
+
+        // check the user is admin or not 
+        const user = await userInfo(session?.user?.id)
+        if (user.isAdmin === false) return NextResponse.json({ message: 'Your are not Authorized!' }, { status: 401 })
 
         // connect to Database
         await connect();
@@ -30,7 +36,7 @@ export const DELETE = async (request: NextRequest, { params }: any) => {
         const deleteBlog = await Blog.findByIdAndDelete(id)
         if (!deleteBlog) return NextResponse.json({ message: 'Blog not found!' })
         return NextResponse.json({ message: 'Delete seccussfully' })
-    }  catch (err: {
+    } catch (err: {
         message: string
     } | any) {
         return NextResponse.json({ error: err.message }, { status: 500 })
@@ -41,8 +47,12 @@ export const DELETE = async (request: NextRequest, { params }: any) => {
 export const PUT = async (request: NextRequest, { params }: any) => {
     try {
         // check the session
-        const session = await currentSession();
+        const session = await currentSession() as Session;
         if (!session) return NextResponse.json({ message: 'Please login' }, { status: 401 })
+
+        // check the user is admin or not 
+        const user = await userInfo(session?.user?.id)
+        if (user.isAdmin === false) return NextResponse.json({ message: 'Your are not Authorized!' }, { status: 401 })
 
         // connect to Database
         await connect();
@@ -70,7 +80,7 @@ export const PUT = async (request: NextRequest, { params }: any) => {
         );
         if (!blog) return NextResponse.json({ message: 'Blog not found!' })
         return NextResponse.json({ message: 'Blog updated!' })
-    }  catch (err: {
+    } catch (err: {
         message: string
     } | any) {
         return NextResponse.json({ error: err.message }, { status: 500 })
