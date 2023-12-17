@@ -164,7 +164,7 @@ export const editBlog = async (id: string, data: Data) => {
 // get all the event
 export const allEvent = async () => {
     try {
-        const response = await fetch('http://localhost:3000/api/event/', {
+        const response = await fetch('/api/event/', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
