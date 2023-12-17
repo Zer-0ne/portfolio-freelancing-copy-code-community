@@ -45,7 +45,7 @@ export const LoginUser = async (data: Data) => {
 // get all the blog
 export const allBlog = async () => {
     try {
-        const response = await fetch('http://localhost:3000/api/blog/', {
+        const response = await fetch('/api/blog/', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -63,7 +63,7 @@ export const allBlog = async () => {
 // getting the user info
 export const userInfo = async (id: string) => {
     try {
-        const user = await fetch(`http://localhost:3000/api/user/${id}`, {
+        const user = await fetch(`/api/user/${id}`, {
             method: 'GET'
         })
         if (user.ok) {
