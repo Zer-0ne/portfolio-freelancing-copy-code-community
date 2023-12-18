@@ -2,7 +2,7 @@
 import { signIn, useSession } from "next-auth/react";
 import { Data, Session } from "./Interfaces";
 import { currentSession } from "./Session";
-import { deleteObject, getDownloadURL, ref, uploadString } from "firebase/storage";
+import { deleteObject, getDownloadURL, listAll, ref, uploadString } from "firebase/storage";
 import { storage } from "./Firebase";
 
 // create user 
@@ -85,6 +85,29 @@ export const storeImage = async (image: string, folder: string, fileName: string
 export const deleteImageFromFirestore = async (imageId: string) => {
     const storageRef = ref(storage, imageId);
     await deleteObject(storageRef);
+}
+
+// fetch all the image of any folder
+export const imagesInFolder = async (folderName: string, imageLinks: string[]) => {
+    const storageRef = ref(storage, folderName);
+    try {
+        const result = await listAll(storageRef);
+
+        // Iterate through each item in the folder
+        await Promise.all(result.items.map(async (imageRef) => {
+            // Get the download URL for the image
+            const downloadURL = await getDownloadURL(imageRef);
+            console.log(downloadURL, imageLinks)
+            // Check if the download URL is present in the imageLinks array
+            if (!imageLinks.includes(downloadURL)) {
+                // Delete the image if it's not in the imageLinks array
+                await deleteObject(imageRef);
+                console.log(`Deleted ${downloadURL}`);
+            }
+        }));
+    } catch (error) {
+        console.error('Error deleting images:', error);
+    }
 }
 
 // create a new blog

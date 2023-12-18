@@ -82,8 +82,7 @@ export const ReadmeField = ({
     };
     const extractImageLinks = (content: string): string[] => {
         // Regular expression to extract image links from Markdown-style image syntax
-        // const regex = /!\[.*?\]\('([^']+)'\)/g;
-        const regex = /\!\[(\d+)\]\('https:\/\/firebasestorage\.googleapis\.com\/v0\/b\/copycodecommunity-a082f\.appspot\.com\/o\/content%2F(\d+)\?alt=media&token=[\w-]+'\)/g;
+        const regex = /!\[.*?\]\('([^']+)'\)/g;
         const matches = [...content.matchAll(regex)];
 
         // Extract image links from the matched groups
@@ -97,7 +96,6 @@ export const ReadmeField = ({
         const { value } = e.target;
         // Parse the content to extract image links
         const imageLinks: string[] = extractImageLinks(markdownContent);
-        console.log(imageLinks)
 
         if (isEnter && isTrue) {
 

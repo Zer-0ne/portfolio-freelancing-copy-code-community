@@ -1,21 +1,32 @@
 'use client'
 import { ReadmeField } from '@/Components/ReadmeField'
-import { createNew, storeImage } from '@/utils/FetchFromApi'
-import { Data } from '@/utils/Interfaces'
+import { createNew, imagesInFolder, storeImage, userInfo } from '@/utils/FetchFromApi'
+import { Data, Session } from '@/utils/Interfaces'
 import { createBlog, createEvent } from '@/utils/constant'
 import { styles } from '@/utils/styles'
 import { useParams } from 'next/navigation'
 import { Box, Container, Typography } from '@mui/material'
-import React from 'react'
+import React, { useEffect } from 'react'
 import DropDown from '@/Components/DropDown'
 import { AddAPhotoRounded } from '@mui/icons-material'
 import Image from 'next/image'
+import { currentSession } from '@/utils/Session'
 
 const page = () => {
     const [data, setData] = React.useState<Data>()
+    const [isAdmin, setIsAdmin] = React.useState<boolean>()
     const { from } = useParams()
     const inputRef = React.useRef<HTMLDivElement>(null)
+    useEffect(() => {
+        const user = async () => {
+            const session = await currentSession() as Session
+            const currUser = await userInfo(session?.user.id);
+            (currUser.isAdmin) && setIsAdmin(true)
+        }
+        user()
+    }, [])
 
+    if (!isAdmin) return <Typography>Not found</Typography>
     const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         if (name === 'image') {
@@ -37,12 +48,13 @@ const page = () => {
         }
         setData((prevFormData) => ({ ...prevFormData, [name]: value }));
     }
-    console.log(data)
+
 
     // handle submit to the api
     const handleSubmit = async (e: any) => {
         e.preventDefault();
         try {
+            (data?.contentImages) && await imagesInFolder('content/', data?.contentImages as string[])
             await createNew(data as Data, from as string)
         } catch (error) {
             console.log(error)
