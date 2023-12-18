@@ -5,7 +5,7 @@ import React, { useState } from 'react'
 import { styles } from '@/utils/styles';
 import BlogEventsStructure from '@/Components/BlogEventsStructure';
 import { blogsDetails } from '@/utils/constant';
-import { allBlog } from '@/utils/FetchFromApi';
+import { allPost } from '@/utils/FetchFromApi';
 import { BlogsInterface } from '@/utils/Interfaces';
 
 const page = () => {
@@ -19,7 +19,7 @@ const page = () => {
   // fetch all the blogs
   const fetchData = async () => {
     try {
-      const fetchedData: BlogsInterface[] = await allBlog();
+      const fetchedData: BlogsInterface[] = await allPost('blog');
       setData(fetchedData)
     } catch (error) {
       console.log(error)
@@ -36,10 +36,10 @@ const page = () => {
   // Filter events based on search input
   const filteredEvents = data?.filter(
     (item) =>
-      item.title.toLowerCase().includes(searchInput.toLowerCase()) ||
-      item.tag.toLowerCase().includes(searchInput.toLowerCase()) ||
-      item.description.toLowerCase().includes(searchInput.toLowerCase()) ||
-      item.date.toLowerCase().includes(searchInput.toLowerCase())
+      item?.title?.toLowerCase().includes(searchInput.toLowerCase()) ||
+      item?.tag?.toLowerCase().includes(searchInput.toLowerCase()) ||
+      item?.description?.toLowerCase().includes(searchInput.toLowerCase()) ||
+      item?.updatedAt?.toLowerCase().includes(searchInput.toLowerCase())
   );
   return (
     <>

@@ -1,4 +1,6 @@
 import Event from "@/Models/Event";
+import { userInfo } from "@/utils/FetchFromApi";
+import { Session } from "@/utils/Interfaces";
 import { currentSession } from "@/utils/Session";
 import connect from "@/utils/database";
 import { NextRequest, NextResponse } from "next/server";
@@ -20,9 +22,13 @@ export const GET = async (request: NextRequest, { params }: any) => {
 // delete one blog
 export const DELETE = async (request: NextRequest, { params }: any) => {
     try {
-        // check the session
-        const session = await currentSession();
+        const session = await currentSession() as Session;
         if (!session) return NextResponse.json({ message: 'Please login' }, { status: 401 })
+
+        // check the user is admin or not 
+        const user = await userInfo(session?.user?.id)
+        if (user?.isAdmin === false) return NextResponse.json({ message: 'Your are not Authorized!' }, { status: 401 })
+
 
         // connect to Database
         await connect();
@@ -40,9 +46,13 @@ export const DELETE = async (request: NextRequest, { params }: any) => {
 // edit blog
 export const PUT = async (request: NextRequest, { params }: any) => {
     try {
-        // check the session
-        const session = await currentSession();
+        const session = await currentSession() as Session;
         if (!session) return NextResponse.json({ message: 'Please login' }, { status: 401 })
+
+        // check the user is admin or not 
+        const user = await userInfo(session?.user?.id)
+        if (user?.isAdmin === false) return NextResponse.json({ message: 'Your are not Authorized!' }, { status: 401 })
+
 
         // connect to Database
         await connect();

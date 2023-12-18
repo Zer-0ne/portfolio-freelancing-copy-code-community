@@ -103,7 +103,7 @@ const page = () => {
                             {(!isLogin) &&
                                 <Avatar
                                     onClick={() => { inputRef.current && inputRef.current?.click() }}
-                                    src={data?.profile}
+                                    src={data?.profile as string}
                                     sx={{
                                         display: isLogin ? 'none' : 'flex',
                                         width: 100,

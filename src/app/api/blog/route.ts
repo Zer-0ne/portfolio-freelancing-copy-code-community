@@ -20,14 +20,16 @@ export const POST = async (request: NextRequest) => {
         const session = await currentSession() as Session;
         if (!session) return NextResponse.json({ message: 'Please login' }, { status: 401 })
         const user = await userInfo(session?.user?.id)
-        if (user.isAdmin === false) return NextResponse.json({ message: 'Your are not Authorized!' }, { status: 401 })
+        console.log(user)
+        if (user?.isAdmin === false) return NextResponse.json({ message: 'Your are not Authorized!' }, { status: 401 })
         const {
             title,
             description,
             tag,
             content,
             comments,
-            authorId
+            authorId,
+            contentImage
         } = await request.json();
         await connect();
         const newBlog = new Blog({
@@ -36,7 +38,8 @@ export const POST = async (request: NextRequest) => {
             tag,
             content,
             comments,
-            authorId
+            authorId,
+            contentImage
         });
 
         // Save the new post to the database

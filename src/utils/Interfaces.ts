@@ -29,7 +29,7 @@ export interface EventsInterface {
 export interface BlogsInterface {
     title: string;
     description: string;
-    date: string;
+    updatedAt: string;
     tag: string;
 }
 
@@ -59,7 +59,7 @@ export interface UserDocument {
 }
 
 export interface Data {
-    [key: string]: string;
+    [key: string]: string | string[];
 }
 
 export interface InputToMoveCursor {

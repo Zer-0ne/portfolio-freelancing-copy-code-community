@@ -35,6 +35,7 @@ const eventSchema = new Schema({
         type: String,
         required: true
     },
+    contentImage: Array,
     date: {
         type: Date,
         required: [true, 'Please add organized date']

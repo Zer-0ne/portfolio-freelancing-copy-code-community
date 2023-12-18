@@ -22,12 +22,12 @@ const BlogCard = ({
                     sx={{
                         mb: .5,
                         mt: -1,
-                        ml: 1,
+                        ml: 0,
                         opacity: .7,
                         // alignSelf:'end'
                     }}
                 >
-                    {item.date}
+                    {item.updatedAt?.slice(0,10)}
                 </Typography>
                 <Typography
                     variant='caption'

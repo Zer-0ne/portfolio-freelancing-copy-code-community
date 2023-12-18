@@ -1,7 +1,8 @@
 import Event from "@/Models/Event";
+import { userInfo } from "@/utils/FetchFromApi";
+import { Session } from "@/utils/Interfaces";
 import { currentSession } from "@/utils/Session";
 import connect from "@/utils/database";
-import { Session } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
 // Fetching all the events
@@ -16,9 +17,13 @@ export const GET = async () => {
 // create event
 export const POST = async (request: NextRequest) => {
     try {
-        // check the session
         const session = await currentSession() as Session;
         if (!session) return NextResponse.json({ message: 'Please login' }, { status: 401 })
+
+        // check the user is admin or not 
+        const user = await userInfo(session?.user?.id)
+        if (user?.isAdmin === false) return NextResponse.json({ message: 'Your are not Authorized!' }, { status: 401 })
+
 
         // connect to the database
         await connect();
@@ -33,7 +38,8 @@ export const POST = async (request: NextRequest) => {
             status,
             image,
             label,
-            authorId
+            authorId,
+            contentImage
         } = await request.json();
 
         const participantsInt = Number(participants)
@@ -47,7 +53,8 @@ export const POST = async (request: NextRequest) => {
             status,
             image,
             label,
-            authorId
+            authorId,
+            contentImage
         });
 
         // Save the new post to the database

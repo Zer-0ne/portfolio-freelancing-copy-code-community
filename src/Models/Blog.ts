@@ -43,6 +43,7 @@ const blogSchema = new Schema({
         type: String,
         required: [true, 'Please add a content']
     },
+    contentImage: Array,
     draft: {
         type: Boolean,
         default: false

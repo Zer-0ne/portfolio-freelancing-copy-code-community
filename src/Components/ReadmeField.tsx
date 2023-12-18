@@ -14,6 +14,7 @@ export const ReadmeField = ({
     const [markdownContent, setMarkdownContent] = useState('');
     const [isTrue, setIsTrue] = useState(false);
     const [isEnter, setIsEnter] = useState(false);
+    const inputRef = React.useRef<HTMLDivElement>(null)
     const [counter, setCounter] = useState(2)
     const [data, setData] = useState<{
         name: string,
@@ -40,9 +41,7 @@ export const ReadmeField = ({
 
 
     // handle click
-    const handleClick = (code: (i?: number) => string, name: string, toMoveCursor?: number) => {
-
-
+    const handleClick = async (code: ((number?: number) => string) | ((image?: string) => string), name: string, toMoveCursor?: number) => {
 
         if (['qoutes', 'ol', 'ul'].includes(name)) {
             if (!isTrue) {
@@ -64,23 +63,27 @@ export const ReadmeField = ({
             return
         }
 
+        if (['image'].includes(name)) {
+            await inputRef.current && inputRef.current?.click()
+        } else {
 
+            // You can implement logic to add bold markdown syntax
+            setMarkdownContent((prevContent: string) => {
+                return prevContent + code();
+            });
 
-        // You can implement logic to add bold markdown syntax
-        setMarkdownContent((prevContent: string) => {
-            return prevContent + code();
-        });
-
-        // Move cursor after setting the content
-        setMarkdownContent((prevContent) => {
-            (toMoveCursor) ?
-                moveCursor(prevContent.length + toMoveCursor) : moveCursor()
-            return prevContent;
-        });
+            // Move cursor after setting the content
+            setMarkdownContent((prevContent) => {
+                (toMoveCursor) ?
+                    moveCursor(prevContent.length + toMoveCursor) : moveCursor()
+                return prevContent;
+            });
+        }
     };
     const extractImageLinks = (content: string): string[] => {
         // Regular expression to extract image links from Markdown-style image syntax
-        const regex = /!\[.*?\]\('([^']+)'\)/g;
+        // const regex = /!\[.*?\]\('([^']+)'\)/g;
+        const regex = /\!\[(\d+)\]\('https:\/\/firebasestorage\.googleapis\.com\/v0\/b\/copycodecommunity-a082f\.appspot\.com\/o\/content%2F(\d+)\?alt=media&token=[\w-]+'\)/g;
         const matches = [...content.matchAll(regex)];
 
         // Extract image links from the matched groups
@@ -93,17 +96,16 @@ export const ReadmeField = ({
     const handleChange = async (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         const { value } = e.target;
         // Parse the content to extract image links
-        // const imageLinks = extractImageLinks(markdownContent);
-        // console.log(imageLinks)
-        // imageLinks.map(async(item,index)=>{
-        //     await storeImage(item,'Content',`${index}`)
-        // })
+        const imageLinks: string[] = extractImageLinks(markdownContent);
+        console.log(imageLinks)
+
         if (isEnter && isTrue) {
 
             // send the create blog and event page
             setdata((prevData) => ({
                 ...prevData,
-                content: value
+                content: value,
+                contentImages: imageLinks
             }))
             // You can implement logic to add numbered list markdown syntax
             setMarkdownContent((prevContent: string) => {
@@ -122,7 +124,8 @@ export const ReadmeField = ({
             // send the create blog and event page
             setdata((prevData) => ({
                 ...prevData,
-                content: value
+                content: value,
+                contentImages: imageLinks
             }))
         }
 
@@ -139,6 +142,30 @@ export const ReadmeField = ({
                     gap: 2
                 }}
             >
+                <input
+                    ref={inputRef as React.RefObject<HTMLInputElement>}
+                    type='file'
+                    style={{ display: 'none' }}
+                    onChange={async (e: React.ChangeEvent<HTMLInputElement>) => {
+                        // const { name, value } = e?.target
+                        if (!e.target.files) return;
+                        const file: File | null = e?.target.files[0];
+                        const reader = new FileReader();
+                        reader.onload = async (event) => {
+                            if (event.target && event.target.result) {
+                                const dataURL = await event.target.result.toString();
+                                const uid = new Date().getTime().toString()
+                                const imageUrl = await storeImage(dataURL, 'content', uid) as string
+                                setMarkdownContent((prevContent: string) => {
+                                    return prevContent + `![${uid}]('${imageUrl}')`;
+                                })
+                            }
+                        };
+                        console.log(reader.readAsDataURL(file))
+                        await reader.readAsDataURL(file);
+                    }}
+                // accept="image/*"
+                />
                 <Box
                     sx={{
                         display: 'flex',

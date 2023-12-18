@@ -1,6 +1,6 @@
 'use client'
 import { ReadmeField } from '@/Components/ReadmeField'
-import { createNewBlog, createNewEvent, storeImage } from '@/utils/FetchFromApi'
+import { createNew, storeImage } from '@/utils/FetchFromApi'
 import { Data } from '@/utils/Interfaces'
 import { createBlog, createEvent } from '@/utils/constant'
 import { styles } from '@/utils/styles'
@@ -37,15 +37,13 @@ const page = () => {
         }
         setData((prevFormData) => ({ ...prevFormData, [name]: value }));
     }
-
+    console.log(data)
 
     // handle submit to the api
     const handleSubmit = async (e: any) => {
         e.preventDefault();
         try {
-            (from === 'blog') ?
-                await createNewBlog(data as Data) :
-                await createNewEvent(data as Data)
+            await createNew(data as Data, from as string)
         } catch (error) {
             console.log(error)
         }
@@ -105,7 +103,7 @@ const page = () => {
                                             {
                                                 (data?.image) ? <>
                                                     <Image
-                                                        src={data?.image}
+                                                        src={data?.image as string}
                                                         alt='img'
                                                         width={50}
                                                         height={50}

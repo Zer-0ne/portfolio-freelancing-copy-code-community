@@ -1,7 +1,7 @@
 'use client'
 import BlogEventsStructure from '@/Components/BlogEventsStructure'
 import EventCard from '@/Components/EventCard'
-import { allEvent } from '@/utils/FetchFromApi'
+import { allPost } from '@/utils/FetchFromApi'
 import { EventsInterface } from '@/utils/Interfaces'
 import { eventsDetails } from '@/utils/constant'
 import { styles } from '@/utils/styles'
@@ -19,7 +19,7 @@ const page = () => {
   // fetch all the events
   const fetchData = async () => {
     try {
-      const fetchedData: EventsInterface[] = await allEvent();
+      const fetchedData: EventsInterface[] = await allPost('event');
       setData(fetchedData)
     } catch (error) {
       console.log(error)
