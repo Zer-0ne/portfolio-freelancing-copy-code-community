@@ -63,8 +63,10 @@ export const allPost = async (route: string) => {
 // getting the user info
 export const userInfo = async (id: string) => {
     try {
+        // await new Promise((resolve: TimerHandler) => setTimeout(resolve, 3000))
+
         const user = await fetch(`/api/user/${id}`, {
-            method: 'GET'
+            method: 'GET',
         })
         if (user.ok) {
             return await user.json()
@@ -110,7 +112,7 @@ export const imagesInFolder = async (folderName: string, imageLinks: string[]) =
     }
 }
 
-// create a new blog
+// create a new post
 export const createNew = async (data: Data, route: string) => {
     try {
         // check the session
@@ -142,7 +144,7 @@ export const createNew = async (data: Data, route: string) => {
 }
 
 // delete the post
-export const deleteBlog = async (id: string, route: string) => {
+export const deletePost = async (id: string, route: string) => {
     try {
         // check the session
         const session = await currentSession() as Session;
@@ -151,7 +153,7 @@ export const deleteBlog = async (id: string, route: string) => {
         // check the user is admin or not 
         const user = await userInfo(session?.user?.id)
         if (user.isAdmin === false) return 'Your are not Authorized!'
-        const res = await fetch(`http://localhost:3000/api/${route}/${id}`, { method: 'DELETE' });
+        const res = await fetch(`/api/${route}/${id}`, { method: 'DELETE' });
         if (res.ok) {
             return 'Deleted!';
         }

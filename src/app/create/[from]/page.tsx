@@ -4,7 +4,7 @@ import { createNew, imagesInFolder, storeImage, userInfo } from '@/utils/FetchFr
 import { Data, Session } from '@/utils/Interfaces'
 import { createBlog, createEvent } from '@/utils/constant'
 import { styles } from '@/utils/styles'
-import { useParams } from 'next/navigation'
+import { notFound,  useParams, useRouter } from 'next/navigation'
 import { Box, Container, Typography } from '@mui/material'
 import React, { useEffect } from 'react'
 import DropDown from '@/Components/DropDown'
@@ -14,19 +14,21 @@ import { currentSession } from '@/utils/Session'
 
 const page = () => {
     const [data, setData] = React.useState<Data>()
-    const [isAdmin, setIsAdmin] = React.useState<boolean>()
+    const [isAdmin, setIsAdmin] = React.useState<boolean>(true)
     const { from } = useParams()
+    const router = useRouter()
     const inputRef = React.useRef<HTMLDivElement>(null)
     useEffect(() => {
         const user = async () => {
             const session = await currentSession() as Session
             const currUser = await userInfo(session?.user.id);
-            (currUser.isAdmin) && setIsAdmin(true)
+            (currUser.isAdmin) ? setIsAdmin(true) : setIsAdmin(false)
+            return (currUser.isAdmin) ? true : false;
         }
         user()
     }, [])
 
-    if (!isAdmin) return <Typography>Not found</Typography>
+    if (!isAdmin) return notFound()
     const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         if (name === 'image') {
@@ -56,6 +58,7 @@ const page = () => {
         try {
             (data?.contentImages) && await imagesInFolder('content/', data?.contentImages as string[])
             await createNew(data as Data, from as string)
+            router.push('/blogs')
         } catch (error) {
             console.log(error)
         }

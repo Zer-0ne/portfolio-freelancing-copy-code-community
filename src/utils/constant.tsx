@@ -380,32 +380,32 @@ export const coreTeamMember: coreMember[] = [
 
 ]
 
-export const blogsDetails: BlogsInterface[] = [
-    {
-        title: 'React Native CheetSheet',
-        description: 'React Native CheetSheet is a library that allows you to create a cheatsheet for your React Native app. It is a simple and easy-to-use',
-        updatedAt: '20 jan 2020',
-        tag: 'react_native'
-    },
-    {
-        title: 'React CheetSheet',
-        description: 'React CheetSheet is a library that allows you to create a cheatsheet for your React app. It is a simple and easy-to-use',
-        updatedAt: '20 jun 2021',
-        tag: 'react.js'
-    },
-    {
-        title: 'Node CheetSheet',
-        description: 'Node CheetSheet is a library that allows you to create a cheatsheet for your Node app. It is a simple and easy-to-use',
-        updatedAt: '31 dec 2020',
-        tag: 'node.js'
-    },
-    {
-        title: 'Next CheetSheet',
-        description: 'Next CheetSheet is a library that allows you to create a cheatsheet for your Next app. It is a simple and easy-to-use',
-        updatedAt: '10 oct 2024',
-        tag: 'next.js'
-    },
-]
+// export const blogsDetails: BlogsInterface[] = [
+//     {
+//         title: 'React Native CheetSheet',
+//         description: 'React Native CheetSheet is a library that allows you to create a cheatsheet for your React Native app. It is a simple and easy-to-use',
+//         updatedAt: '20 jan 2020',
+//         tag: 'react_native'
+//     },
+//     {
+//         title: 'React CheetSheet',
+//         description: 'React CheetSheet is a library that allows you to create a cheatsheet for your React app. It is a simple and easy-to-use',
+//         updatedAt: '20 jun 2021',
+//         tag: 'react.js'
+//     },
+//     {
+//         title: 'Node CheetSheet',
+//         description: 'Node CheetSheet is a library that allows you to create a cheatsheet for your Node app. It is a simple and easy-to-use',
+//         updatedAt: '31 dec 2020',
+//         tag: 'node.js'
+//     },
+//     {
+//         title: 'Next CheetSheet',
+//         description: 'Next CheetSheet is a library that allows you to create a cheatsheet for your Next app. It is a simple and easy-to-use',
+//         updatedAt: '10 oct 2024',
+//         tag: 'next.js'
+//     },
+// ]
 
 export const eventsDetails: EventsInterface[] = [
     {

@@ -31,6 +31,7 @@ export interface BlogsInterface {
     description: string;
     updatedAt: string;
     tag: string;
+    _id: string
 }
 
 export interface UserDocument {

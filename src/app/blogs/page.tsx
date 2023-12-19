@@ -4,7 +4,7 @@ import { Box, Container } from '@mui/material'
 import React, { useState } from 'react'
 import { styles } from '@/utils/styles';
 import BlogEventsStructure from '@/Components/BlogEventsStructure';
-import { blogsDetails } from '@/utils/constant';
+// import { blogsDetails } from '@/utils/constant';
 import { allPost } from '@/utils/FetchFromApi';
 import { BlogsInterface } from '@/utils/Interfaces';
 
@@ -31,7 +31,6 @@ const page = () => {
     fetchData()
   }, [])
 
-  console.log(data)
 
   // Filter events based on search input
   const filteredEvents = data?.filter(
@@ -62,6 +61,7 @@ const page = () => {
           {
             filteredEvents?.map((item, index) => (
               <BlogCard
+                fetchData={fetchData}
                 key={index}
                 item={item}
               />
