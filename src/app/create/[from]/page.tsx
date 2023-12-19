@@ -4,7 +4,7 @@ import { createNew, imagesInFolder, storeImage, userInfo } from '@/utils/FetchFr
 import { Data, Session } from '@/utils/Interfaces'
 import { createBlog, createEvent } from '@/utils/constant'
 import { styles } from '@/utils/styles'
-import { notFound,  useParams, useRouter } from 'next/navigation'
+import { notFound, useParams, useRouter } from 'next/navigation'
 import { Box, Container, Typography } from '@mui/material'
 import React, { useEffect } from 'react'
 import DropDown from '@/Components/DropDown'
@@ -22,7 +22,7 @@ const page = () => {
         const user = async () => {
             const session = await currentSession() as Session
             const currUser = await userInfo(session?.user.id);
-            (currUser.isAdmin) ? setIsAdmin(true) : setIsAdmin(false)
+            (session && currUser.isAdmin) ? setIsAdmin(true) : setIsAdmin(false)
             return (currUser.isAdmin) ? true : false;
         }
         user()
