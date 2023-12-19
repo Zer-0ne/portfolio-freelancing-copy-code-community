@@ -24,17 +24,18 @@ const page = () => {
     try {
       const fetchedData: EventsInterface[] = await allPost('event');
       setData(fetchedData)
+      setIsLoading(false)
     } catch (error) {
       console.log(error)
     }
   }
 
-  
+
   // useEffect
   React.useEffect(() => {
     fetchData()
   }, [])
-  
+
   if (isLoading) return <Loading />
   // Filter events based on search input
   const filteredEvents = eventsDetails?.filter(
