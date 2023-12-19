@@ -63,13 +63,13 @@ export const AuthOptions: NextAuthOptions = {
         secret: process.env.JWT_SECRET,
     },
     callbacks: {
-        async signIn({ user, account }: { user: any, account: Account | null; }){
+        async signIn({ user, account }: { user: any, account: Account | null; }) {
             try {
                 if (account?.provider === 'google') {
                     await connect()
                     const checkUser = await user.id
                     const isExist = await Users.findOne<any>({ checkUser });
-                    if (isExist) return false
+                    if (isExist) return user
                     await createUser({
                         username: user?.id as string,
                         name: user?.name as string,
@@ -77,9 +77,9 @@ export const AuthOptions: NextAuthOptions = {
                         email: user?.email as string,
                         password: `${new Date().getTime().toString()}${process.env.random_char}` as string
                     } as Data)
-                    return true
+                    return user
                 }
-                return false
+                return user
             } catch (error) {
                 return false
             }
