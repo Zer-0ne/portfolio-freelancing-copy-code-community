@@ -11,23 +11,26 @@ import DropDown from '@/Components/DropDown'
 import { AddAPhotoRounded } from '@mui/icons-material'
 import Image from 'next/image'
 import { currentSession } from '@/utils/Session'
+import Loading from '@/Components/Loading'
 
 const page = () => {
     const [data, setData] = React.useState<Data>()
     const [isAdmin, setIsAdmin] = React.useState<boolean>(true)
+    const [isloading, setIsloading] = React.useState<boolean>(true)
     const { from } = useParams()
     const router = useRouter()
     const inputRef = React.useRef<HTMLDivElement>(null)
     useEffect(() => {
         const user = async () => {
             const session = await currentSession() as Session
-            const currUser = await userInfo(session?.user.id);
-            (session && currUser.isAdmin) ? setIsAdmin(true) : setIsAdmin(false)
+            const currUser = await userInfo(session?.user.email);
+            (session && currUser.isAdmin === true) ? setIsAdmin(true) : setIsAdmin(false)
+            setIsloading(false)
             return (currUser.isAdmin) ? true : false;
         }
         user()
     }, [])
-
+    if (isloading) return <Loading />
     if (!isAdmin) return notFound()
     const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;

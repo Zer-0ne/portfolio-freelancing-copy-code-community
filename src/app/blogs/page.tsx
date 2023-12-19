@@ -7,10 +7,13 @@ import BlogEventsStructure from '@/Components/BlogEventsStructure';
 // import { blogsDetails } from '@/utils/constant';
 import { allPost } from '@/utils/FetchFromApi';
 import { BlogsInterface } from '@/utils/Interfaces';
+import { loadingState } from '@/utils/constant';
+import Loading from '@/Components/Loading';
 
 const page = () => {
   const [searchInput, setSearchInput] = useState<string>('');
   const [data, setData] = useState<BlogsInterface[]>([])
+  const [isLoading, setIsLoading] = useState(true)
 
   const handleSearch = (input: string) => {
     setSearchInput(input);
@@ -21,10 +24,13 @@ const page = () => {
     try {
       const fetchedData: BlogsInterface[] = await allPost('blog');
       setData(fetchedData)
+      setIsLoading(false)
     } catch (error) {
       console.log(error)
     }
   }
+
+  if (isLoading) return <Loading />
 
   // useEffect
   React.useEffect(() => {

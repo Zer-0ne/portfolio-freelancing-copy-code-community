@@ -20,7 +20,7 @@ export default function RootLayout({
     <html lang="en" style={{ position: 'relative' }}>
       <head>
       </head>
-      <body className={inter.className} >
+      <body className={inter.className}  >
         <NextAuthProvider>
           <Navbar />
           {children}

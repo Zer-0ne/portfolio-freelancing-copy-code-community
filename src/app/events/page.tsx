@@ -1,6 +1,7 @@
 'use client'
 import BlogEventsStructure from '@/Components/BlogEventsStructure'
 import EventCard from '@/Components/EventCard'
+import Loading from '@/Components/Loading'
 import { allPost } from '@/utils/FetchFromApi'
 import { EventsInterface } from '@/utils/Interfaces'
 import { eventsDetails } from '@/utils/constant'
@@ -11,6 +12,8 @@ import React, { useState } from 'react'
 const page = () => {
   const [searchInput, setSearchInput] = useState<string>('');
   const [data, setData] = useState<EventsInterface[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+
 
   const handleSearch = (input: string) => {
     setSearchInput(input);
@@ -25,6 +28,8 @@ const page = () => {
       console.log(error)
     }
   }
+
+  if (isLoading) return <Loading />
 
   // useEffect
   React.useEffect(() => {
