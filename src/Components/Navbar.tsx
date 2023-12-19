@@ -35,19 +35,19 @@ const Navbar = () => {
                 gap={1}
                 justifyContent={'space-around'}
             > */}
-            <form onSubmit={handleSubmit}>
-                <Box
-                    sx={styles.navbar()}
-                >
-                    {
-                        navbarContent.map((item, index) => (
+            <Box
+                sx={styles.navbar()}
+            >
+                {
+                    navbarContent.map((item, index) => (
 
-                            <Link href={`${item.path}`} key={index}>
-                                {item.icon}
-                            </Link>
+                        <Link href={`${item.path}`} key={index}>
+                            {item.icon}
+                        </Link>
 
-                        ))
-                    }
+                    ))
+                }
+                <form onSubmit={handleSubmit}>
                     <DropDownSkelenton
                         session={session as Session}
                         status={status}
@@ -125,8 +125,8 @@ const Navbar = () => {
                         }
 
                     </DropDownSkelenton>
-                </Box>
-            </form>
+                </form>
+            </Box>
             {/* </Box> */}
         </>
     )
