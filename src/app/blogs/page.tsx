@@ -7,7 +7,6 @@ import BlogEventsStructure from '@/Components/BlogEventsStructure';
 // import { blogsDetails } from '@/utils/constant';
 import { allPost } from '@/utils/FetchFromApi';
 import { BlogsInterface } from '@/utils/Interfaces';
-import { loadingState } from '@/utils/constant';
 import Loading from '@/Components/Loading';
 
 const page = () => {
@@ -30,13 +29,13 @@ const page = () => {
     }
   }
 
-  if (isLoading) return <Loading />
-
+  
   // useEffect
   React.useEffect(() => {
     fetchData()
   }, [])
-
+  
+  if (isLoading) return <Loading />
 
   // Filter events based on search input
   const filteredEvents = data?.filter(

@@ -29,13 +29,13 @@ const page = () => {
     }
   }
 
-  if (isLoading) return <Loading />
-
+  
   // useEffect
   React.useEffect(() => {
     fetchData()
   }, [])
-
+  
+  if (isLoading) return <Loading />
   // Filter events based on search input
   const filteredEvents = eventsDetails?.filter(
     (item) =>
