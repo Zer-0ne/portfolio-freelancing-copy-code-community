@@ -8,7 +8,7 @@ export const styles = {
         right: 0,
         height: 50,
         zIndex: 5,
-        flex:1,
+        flex: 1,
         top: '10px',
         padding: 3,
         display: 'flex',
@@ -109,7 +109,7 @@ export const styles = {
         display: 'flex',
         flexDirection: 'column',
         gap: 1,
-        position:'relative',
+        position: 'relative',
         '::before': {
             content: '""',
             position: "absolute",
@@ -241,5 +241,13 @@ export const styles = {
         flex: 1,
         textAlign: 'center',
         fontSize: 20
+    }),
+    socialMediaIcon:() => ({
+        cursor: 'pointer',
+        fontSize: 25,
+        opacity: .5,
+        ':hover': {
+            opacity: 1
+        }
     })
 }

@@ -19,6 +19,7 @@ import {
 } from '@mui/icons-material';
 import { styles } from "./styles";
 import { Typography } from "@mui/material";
+import { signOut } from "next-auth/react";
 
 export const authMode = [
     {
@@ -455,4 +456,20 @@ export const eventsDetails: EventsInterface[] = [
         image: 'https://d112y698adiu2z.cloudfront.net/photos/production/challenge_thumbnails/002/610/587/datas/medium_square.png',
         label: 'Featured'
     },
+]
+
+// dropdownContent of sessions
+export const sessionAction = [
+    {
+        name: 'Profile',
+        action: () => { }
+    },
+    {
+        name: 'Log Out',
+        action: async () => {
+            return await signOut({
+                redirect: false
+            })
+        }
+    }
 ]

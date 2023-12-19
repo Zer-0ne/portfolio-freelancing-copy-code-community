@@ -1,5 +1,5 @@
 'use client'
-import { Box, Button } from '@mui/material'
+import { Box, Button, LinearProgress } from '@mui/material'
 import React, { LegacyRef, MutableRefObject, useRef, useState } from 'react'
 import { styles } from '@/utils/styles'
 import { Data, InputToMoveCursor, Item } from '@/utils/Interfaces'
@@ -16,6 +16,7 @@ export const ReadmeField = ({
     const [isEnter, setIsEnter] = useState(false);
     const inputRef = React.useRef<HTMLDivElement>(null)
     const [counter, setCounter] = useState(2)
+    const [progress, setProgress] = useState(0)
     const [data, setData] = useState<{
         name: string,
         code: string,
@@ -146,17 +147,22 @@ export const ReadmeField = ({
                     style={{ display: 'none' }}
                     onChange={async (e: React.ChangeEvent<HTMLInputElement>) => {
                         // const { name, value } = e?.target
-                        if (!e.target.files) return;
+                        setProgress(10)
+                        if (!e.target.files) return setProgress(0);
                         const file: File | null = e?.target.files[0];
                         const reader = new FileReader();
                         reader.onload = async (event) => {
+                            setProgress(20)
                             if (event.target && event.target.result) {
                                 const dataURL = await event.target.result.toString();
                                 const uid = new Date().getTime().toString()
+                                setProgress(60)
                                 const imageUrl = await storeImage(dataURL, 'content', uid) as string
+                                setProgress(80)
                                 setMarkdownContent((prevContent: string) => {
                                     return prevContent + `![${uid}]('${imageUrl}')`;
                                 })
+                                setProgress(100)
                             }
                         };
                         console.log(reader.readAsDataURL(file))
@@ -224,7 +230,20 @@ export const ReadmeField = ({
                             padding: 4
                         }}
                     />
+                    <Box
+                        sx={{
+                            flex: 1,
+                            display: 'flex',
+                            justifyContent: 'flex-end',
+                            width: '100%',
+                            height: '10px'
+                        }}
+                    >
+                        <LinearProgress variant="buffer" value={progress} valueBuffer={progress + 10} sx={{
+                            width: 150, transition: 'all .3s ease-in-out', transform: (progress === 0 || progress === 100) ? 'scale(0)' : 'scale(1)',
 
+                        }} />
+                    </Box>
                 </Box>
                 <button
                     type='submit'

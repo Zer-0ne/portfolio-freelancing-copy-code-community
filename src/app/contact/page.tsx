@@ -155,44 +155,16 @@ const page = () => {
                         }}
                     >
                         <WhatsApp
-                            sx={{
-                                cursor: 'pointer',
-                                fontSize: 25,
-                                opacity: .5,
-                                ':hover': {
-                                    opacity: 1
-                                }
-                            }}
+                            sx={styles.socialMediaIcon()}
                         />
                         <LinkedIn
-                            sx={{
-                                cursor: 'pointer',
-                                fontSize: 25,
-                                opacity: .5,
-                                ':hover': {
-                                    opacity: 1
-                                }
-                            }}
+                            sx={styles.socialMediaIcon()}
                         />
                         <GitHub
-                            sx={{
-                                cursor: 'pointer',
-                                fontSize: 25,
-                                opacity: .5,
-                                ':hover': {
-                                    opacity: 1
-                                }
-                            }}
+                            sx={styles.socialMediaIcon()}
                         />
                         <Instagram
-                            sx={{
-                                cursor: 'pointer',
-                                fontSize: 25,
-                                opacity: .5,
-                                ':hover': {
-                                    opacity: 1
-                                }
-                            }}
+                            sx={styles.socialMediaIcon()}
                         />
                     </Box>
                 </Box>
