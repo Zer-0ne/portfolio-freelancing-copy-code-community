@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
-import ParticlesBackground from '@/Components/ParticlesBackground'
 import Navbar from '@/Components/Navbar'
 import NextAuthProvider from '@/provider/SessionProvider'
 
@@ -18,13 +17,12 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="en" style={{ position: 'relative' }}>
       <head>
       </head>
-      <body className={inter.className}>
+      <body className={inter.className} >
         <NextAuthProvider>
           <Navbar />
-          {/* <ParticlesBackground /> */}
           {children}
         </NextAuthProvider>
       </body>
