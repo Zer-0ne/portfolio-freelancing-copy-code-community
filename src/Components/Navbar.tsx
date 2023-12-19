@@ -5,7 +5,7 @@ import { styles } from '@/utils/styles'
 import { Login, navbarContent, sessionAction } from '@/utils/constant'
 import Link from 'next/link'
 import DropDownSkelenton from './DropDownSkelenton'
-import { useSession } from 'next-auth/react'
+import { signIn, useSession } from 'next-auth/react'
 import { Data, Session } from '@/utils/Interfaces'
 import { GitHub, Google } from '@mui/icons-material'
 import { LoginUser } from '@/utils/FetchFromApi'
@@ -115,6 +115,7 @@ const Navbar = () => {
                                     >
                                         <Google
                                             sx={styles.socialMediaIcon()}
+                                            onClick={() => signIn('google')}
                                         />
                                         <GitHub
                                             sx={styles.socialMediaIcon()}

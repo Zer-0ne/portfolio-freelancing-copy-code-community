@@ -8,7 +8,8 @@ import { storage } from "./Firebase";
 // create user 
 export const createUser = async (data: Data) => {
     try {
-        const response = await fetch('/api/auth/signup', {
+        console.log(data)
+        const response = await fetch('http://localhost:3000/api/auth/signup', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

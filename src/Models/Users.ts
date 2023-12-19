@@ -4,20 +4,20 @@ import mongoose, { Schema } from "mongoose"
 const UserSchema = new Schema<UserDocument>({
     name: {
         type: String,
-        required: true
+        required: [true,'Please add name']
     },
     username: {
         type: String,
-        required: true,
+        required: [true,'Please add username'],
         unique: true
     },
     password: {
         type: String,
-        required: true
+        required: [true,'Please add password']
     },
     email: {
         type: String,
-        required: true,
+        required: [true,'Please add email'],
         unique: true
     },
     isAdmin: {
@@ -45,7 +45,7 @@ const UserSchema = new Schema<UserDocument>({
         ref: 'Blog',
         default: [],
     },
-    profile: String
+    image: String
 }, {
     timestamps: true
 });

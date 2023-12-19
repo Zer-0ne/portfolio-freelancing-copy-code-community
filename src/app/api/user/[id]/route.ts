@@ -6,7 +6,7 @@ export const GET = async (request: NextRequest, { params }: any) => {
     try {
         await connect()
         const { id } = params
-        const user = await Users.findById(id)
+        const user = await Users.findOne({ id })
         if (!user) return NextResponse.json({ message: 'User not found!' }, { status: 400 });
         return NextResponse.json(user)
     } catch (error) {

@@ -52,7 +52,7 @@ export interface UserDocument {
             ref: String;
         }
     }[];
-    profile: {
+    image: {
         type: string;
         required: boolean;
     },

@@ -461,10 +461,6 @@ export const eventsDetails: EventsInterface[] = [
 // dropdownContent of sessions
 export const sessionAction = [
     {
-        name: 'Profile',
-        action: () => { }
-    },
-    {
         name: 'Log Out',
         action: async () => {
             return await signOut({

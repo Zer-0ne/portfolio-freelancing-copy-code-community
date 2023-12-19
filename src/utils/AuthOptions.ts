@@ -1,21 +1,23 @@
 
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from 'bcrypt';
-import { NextAuthOptions } from "next-auth";
+import { Account, Awaitable, NextAuthOptions } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import { JWT } from "next-auth/jwt";
 import GoogleProvider from "next-auth/providers/google";
 import Users from "@/Models/Users";
 import connect from "./database";
+import { createUser } from "./FetchFromApi";
+import { Data } from "./Interfaces";
 export const AuthOptions: NextAuthOptions = {
     session: {
         strategy: 'jwt',
     },
     providers: [
-        // GoogleProvider({
-        //     clientId: process.env.GOOGLE_CLIENT_ID,
-        //     clientSecret: process.env.GOOGLE_CLIENT_SECRET
-        // }),
+        GoogleProvider({
+            clientId: process.env.GOOGLE_CLIENT_ID as string,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+        }),
         CredentialsProvider({
             name: 'Credentials',
             credentials: {
@@ -34,13 +36,14 @@ export const AuthOptions: NextAuthOptions = {
                     const user = await Users.findOne<any>({ username });
 
                     if (!user) {
+
                         return Promise.resolve(null)
                     }
 
                     // Compare passwords
                     const isPasswordValid = await bcrypt.compare(password, user.password);
                     if (!isPasswordValid) {
-                        
+
                         return Promise.resolve(null)
                     }
 
@@ -60,6 +63,24 @@ export const AuthOptions: NextAuthOptions = {
         secret: process.env.JWT_SECRET,
     },
     callbacks: {
+        async signIn({ user, account }: { user: any, account: Account | null; }): Promise<string | boolean> {
+            try {
+                if (account?.provider === 'google') {
+                    await connect()
+                    console.log(user)
+                    await createUser({
+                        username: user?.id as string ,
+                        name: user?.name as string ,
+                        image: user?.image as string ,
+                        email: user?.email as string,
+                        password: `${new Date().getTime().toString()}${process.env.random_char}` as string
+                    } as Data)
+                    return true
+                }
+            } catch (error) {
+                return false
+            }
+        },
         async jwt({ token, user }) {
             // Access the user information stored in the token
             // console.log(user);

@@ -14,7 +14,7 @@ export const POST = async (request: NextRequest) => {
             email,
             password,
             isAdmin,
-            profile,
+            image,
         } = await request.json()
         const existingUser = await Users.findOne({ username })
         if (existingUser) return NextResponse.json({ message: 'User Already exists' })
@@ -23,24 +23,20 @@ export const POST = async (request: NextRequest) => {
         const salt = await bcrypt.genSalt(10);
         const hashPassword = await bcrypt.hash(password, salt);
 
-        // save the profile image firbase storage
-        const storageRef = ref(storage, `profiles/${username}`)
-        const snapshot = await uploadString(storageRef, profile, 'data_url')
-        const imageUrl = await getDownloadURL(snapshot.ref)
 
         const user = new Users({
             username,
             name,
             password: hashPassword,
             email,
-            profile: imageUrl
+            image
         })
         await user.save()
         return NextResponse.json({ message: 'User Created!' })
     } catch (error: {
         message: string
     } | any) {
-        console.log(error)
+        console.log(error.message)
         return NextResponse.json({ message: error.message })
     }
 }

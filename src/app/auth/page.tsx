@@ -1,5 +1,5 @@
 'use client'
-import { LoginUser, createUser } from '@/utils/FetchFromApi'
+import { LoginUser, createUser, storeImage } from '@/utils/FetchFromApi'
 import { Data } from '@/utils/Interfaces'
 import { Login, authMode, signup } from '@/utils/constant'
 import { styles } from '@/utils/styles'
@@ -18,12 +18,13 @@ const page = () => {
             if (!e.target.files) return;
             const file: File | null = e?.target.files[0];
             const reader = new FileReader();
-            reader.onload = (event) => {
+            reader.onload = async (event) => {
                 if (event.target && event.target.result) {
                     const dataURL = event.target.result.toString();
+                    const imageUrl = await storeImage(dataURL, 'profiles', data?.username as string)
                     setData((prevData) => ({
                         ...prevData,
-                        profile: dataURL
+                        profile: imageUrl
                     }));
                 }
             };
