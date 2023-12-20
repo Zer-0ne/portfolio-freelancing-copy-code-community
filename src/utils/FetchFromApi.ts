@@ -155,19 +155,22 @@ export const deletePost = async (id: string, route: string, item: BlogsInterface
         const user = await userInfo(session?.user?.username)
         if (user.isAdmin === false) return 'Your are not Authorized!'
 
-        const storageRef = ref(storage, `/content/${item.title}`);
-        const result = await listAll(storageRef);
+        if (item.contentImage.length) {
 
-        // Iterate through each item in the folder
-        await Promise.all(result.items.map(async (imageRef) => {
-            // Get the download URL for the image
-            const downloadURL = await getDownloadURL(imageRef);
-            // Check if the download URL is present in the imageLinks array
-            // Delete the image if it's not in the imageLinks array
-            await deleteObject(imageRef);
-            console.log(`Deleted ${downloadURL}`);
+            const storageRef = ref(storage, `/content/${item.title}`);
+            const result = await listAll(storageRef);
 
-        }));
+            // Iterate through each item in the folder
+            await Promise.all(result.items.map(async (imageRef) => {
+                // Get the download URL for the image
+                const downloadURL = await getDownloadURL(imageRef);
+                // Check if the download URL is present in the imageLinks array
+                // Delete the image if it's not in the imageLinks array
+                await deleteObject(imageRef);
+                console.log(`Deleted ${downloadURL}`);
+
+            }));
+        }
 
         const res = await fetch(`/api/${route}/${id}`, { method: 'DELETE' });
         if (res.ok) {
