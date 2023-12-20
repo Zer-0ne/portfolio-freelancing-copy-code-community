@@ -37,6 +37,7 @@ const BlogCard = ({
                             fontSize: 25,
                             padding: .5,
                             borderRadius: '50%',
+                            cursor:'pointer',
                             ':hover': {
                                 background: 'white',
                                 color: 'black'
@@ -49,6 +50,7 @@ const BlogCard = ({
                             fontSize: 25,
                             padding: .5,
                             borderRadius: '50%',
+                            cursor:'pointer',
                             ':hover': {
                                 background: 'red',
                                 color: 'white'
