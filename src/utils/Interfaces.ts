@@ -20,16 +20,19 @@ export interface EventsInterface {
     calenderDate: string,
     tag: string,
     mode: string,
+    contentImage: string[];
     participants: number,
     status: string,
     image: string;
     label?: string
+    _id: string
 };
 
 export interface BlogsInterface {
     title: string;
     description: string;
     updatedAt: string;
+    contentImage: string[];
     tag: string;
     _id: string
 }
@@ -85,6 +88,7 @@ export interface Session {
         email: string;
         id: string;
         name: string;
-        image: string
+        image: string;
+        username: string
     }
 }

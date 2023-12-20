@@ -21,7 +21,7 @@ export const POST = async (request: NextRequest) => {
         if (!session) return NextResponse.json({ message: 'Please login' }, { status: 401 })
 
         // check the user is admin or not 
-        const user = await userInfo(session?.user?.id)
+        const user = await userInfo(session?.user?.username)
         if (user?.isAdmin === false) return NextResponse.json({ message: 'Your are not Authorized!' }, { status: 401 })
 
 

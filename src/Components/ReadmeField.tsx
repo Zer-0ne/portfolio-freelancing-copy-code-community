@@ -8,8 +8,10 @@ import { storeImage } from '@/utils/FetchFromApi'
 
 export const ReadmeField = ({
     setdata,
+    propsData
 }: {
     setdata: React.Dispatch<React.SetStateAction<Data | undefined>>;
+    propsData: Data
 }) => {
     const [markdownContent, setMarkdownContent] = useState('');
     const [isTrue, setIsTrue] = useState(false);
@@ -157,7 +159,7 @@ export const ReadmeField = ({
                                 const dataURL = await event.target.result.toString();
                                 const uid = new Date().getTime().toString()
                                 setProgress(60)
-                                const imageUrl = await storeImage(dataURL, 'content', uid) as string
+                                const imageUrl = await storeImage(dataURL, `content/${propsData.title}`, uid) as string
                                 setProgress(80)
                                 setMarkdownContent((prevContent: string) => {
                                     return prevContent + `![${uid}]('${imageUrl}')`;

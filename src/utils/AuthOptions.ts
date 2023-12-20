@@ -91,6 +91,7 @@ export const AuthOptions: NextAuthOptions = {
             if (user) {
                 // Update the token with the user information
                 token.id = user.id;
+                token.username = (user as any).username
             }
 
             return token;
@@ -98,6 +99,7 @@ export const AuthOptions: NextAuthOptions = {
         async session({ session, token }) {
             session.user = session.user ?? {};
             (session.user as any).id = token?.id;
+            (session.user as any).username = token?.username;
             return session;
         },
     },

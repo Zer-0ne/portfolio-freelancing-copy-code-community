@@ -23,7 +23,7 @@ const page = () => {
     useEffect(() => {
         const user = async () => {
             const session = await currentSession() as Session
-            const currUser = await userInfo(session?.user.email);
+            const currUser = await userInfo(session?.user.username);
             (session && currUser.isAdmin === true) ? setIsAdmin(true) : setIsAdmin(false)
             setIsloading(false)
             return (currUser.isAdmin) ? true : false;
@@ -158,6 +158,7 @@ const page = () => {
 
                     <ReadmeField
                         setdata={setData}
+                        propsData={data as Data}
                     />
                 </Container>
             </form>

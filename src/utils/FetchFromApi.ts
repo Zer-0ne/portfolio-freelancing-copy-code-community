@@ -1,6 +1,6 @@
 
 import { signIn, useSession } from "next-auth/react";
-import { Data, Session } from "./Interfaces";
+import { BlogsInterface, Data, EventsInterface, Session } from "./Interfaces";
 import { currentSession } from "./Session";
 import { deleteObject, getDownloadURL, listAll, ref, uploadString } from "firebase/storage";
 import { storage } from "./Firebase";
@@ -121,7 +121,7 @@ export const createNew = async (data: Data, route: string) => {
         if (!session) return 'Please login'
 
         // check the user is admin or not 
-        const user = await userInfo(session?.user?.id)
+        const user = await userInfo(session?.user?.username)
         if (user.isAdmin === false) return 'Your are not Authorized!'
 
 
@@ -145,15 +145,30 @@ export const createNew = async (data: Data, route: string) => {
 }
 
 // delete the post
-export const deletePost = async (id: string, route: string) => {
+export const deletePost = async (id: string, route: string, item: BlogsInterface | EventsInterface) => {
     try {
         // check the session
         const session = await currentSession() as Session;
         if (!session) return 'Please login'
 
         // check the user is admin or not 
-        const user = await userInfo(session?.user?.id)
+        const user = await userInfo(session?.user?.username)
         if (user.isAdmin === false) return 'Your are not Authorized!'
+
+        const storageRef = ref(storage, `/content/${item.title}`);
+        const result = await listAll(storageRef);
+
+        // Iterate through each item in the folder
+        await Promise.all(result.items.map(async (imageRef) => {
+            // Get the download URL for the image
+            const downloadURL = await getDownloadURL(imageRef);
+            // Check if the download URL is present in the imageLinks array
+            // Delete the image if it's not in the imageLinks array
+            await deleteObject(imageRef);
+            console.log(`Deleted ${downloadURL}`);
+
+        }));
+
         const res = await fetch(`/api/${route}/${id}`, { method: 'DELETE' });
         if (res.ok) {
             return 'Deleted!';
@@ -171,7 +186,7 @@ export const editPost = async (id: string, data: Data, route: string) => {
         if (!session) return 'Please login'
 
         // check the user is admin or not 
-        const user = await userInfo(session?.user?.id)
+        const user = await userInfo(session?.user?.username)
         if (user.isAdmin === false) return 'Your are not Authorized!'
 
         const res = await fetch(`http://localhost:3000/api/${route}/${id}`, {

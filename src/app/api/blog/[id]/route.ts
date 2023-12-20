@@ -27,7 +27,7 @@ export const DELETE = async (request: NextRequest, { params }: any) => {
         if (!session) return NextResponse.json({ message: 'Please login' }, { status: 401 })
 
         // check the user is admin or not 
-        const user = await userInfo(session?.user?.id)
+        const user = await userInfo(session?.user?.username)
         if (user?.isAdmin === false) return NextResponse.json({ message: 'Your are not Authorized!' }, { status: 401 })
 
         // connect to Database
@@ -51,7 +51,7 @@ export const PUT = async (request: NextRequest, { params }: any) => {
         if (!session) return NextResponse.json({ message: 'Please login' }, { status: 401 })
 
         // check the user is admin or not 
-        const user = await userInfo(session?.user?.id)
+        const user = await userInfo(session?.user?.username)
         if (user?.isAdmin === false) return NextResponse.json({ message: 'Your are not Authorized!' }, { status: 401 })
 
         // connect to Database

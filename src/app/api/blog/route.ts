@@ -19,7 +19,7 @@ export const POST = async (request: NextRequest) => {
     try {
         const session = await currentSession() as Session;
         if (!session) return NextResponse.json({ message: 'Please login' }, { status: 401 })
-        const user = await userInfo(session?.user?.id)
+        const user = await userInfo(session?.user?.username)
         console.log(user)
         if (user?.isAdmin === false) return NextResponse.json({ message: 'Your are not Authorized!' }, { status: 401 })
         const {

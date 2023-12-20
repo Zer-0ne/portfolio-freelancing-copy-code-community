@@ -12,7 +12,7 @@ const BlogCard = ({
     fetchData: () => Promise<void>;
 }) => {
     const deleteBlog = async () => {
-        await deletePost(item?._id, 'blog')
+        await deletePost(item?._id, 'blog', item)
         await fetchData()
     }
     return (
