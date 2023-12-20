@@ -408,7 +408,7 @@ export const coreTeamMember: coreMember[] = [
 //     },
 // ]
 
-export const eventsDetails: EventsInterface[] = [
+export const eventsDetails: Data[] = [
     {
         title: 'React Native Workshop',
         description: 'This is the tamplate description of React native workshop',
@@ -416,10 +416,10 @@ export const eventsDetails: EventsInterface[] = [
         calenderDate: 'Oct 24, 2023',
         tag: 'React_native',
         mode: 'Online',
-        participants: 146,
+        participants: '146',
         status: 'End',
         image: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.filepicker.io%2Fapi%2Ffile%2F4C6yPDywSUeWYLyg1h9G&f=1&nofb=1&ipt=be055fef91c6c9eb73b7c305ad18a9e55e560b114fa34d2519ce26a985bedee7&ipo=images',
-        label: 'Featured'
+        label: 'Featured',
     },
     {
         title: 'React Workshop',
@@ -428,10 +428,10 @@ export const eventsDetails: EventsInterface[] = [
         calenderDate: 'Dec 24, 2023',
         tag: 'React',
         mode: 'Offline',
-        participants: 155,
+        participants: '155',
         status: 'End',
         image: 'https://d112y698adiu2z.cloudfront.net/photos/production/challenge_thumbnails/002/610/587/datas/medium_square.png',
-        label: 'UpComming'
+        label: 'UpComming',
     },
     {
         title: 'Node Workshop',
@@ -440,9 +440,9 @@ export const eventsDetails: EventsInterface[] = [
         calenderDate: 'Nov 24, 2023',
         tag: 'Node.js',
         mode: 'Offline',
-        participants: 200,
+        participants: '200',
         status: 'End',
-        image: 'https://d112y698adiu2z.cloudfront.net/photos/production/challenge_thumbnails/002/610/587/datas/medium_square.png'
+        image: 'https://d112y698adiu2z.cloudfront.net/photos/production/challenge_thumbnails/002/610/587/datas/medium_square.png',
     },
     {
         title: 'Next Workshop',
@@ -451,10 +451,10 @@ export const eventsDetails: EventsInterface[] = [
         calenderDate: 'Dec 31, 2024',
         tag: 'Next.js',
         mode: 'Hybrid',
-        participants: 500,
+        participants: '500',
         status: 'Upcoming',
         image: 'https://d112y698adiu2z.cloudfront.net/photos/production/challenge_thumbnails/002/610/587/datas/medium_square.png',
-        label: 'Featured'
+        label: 'Featured',
     },
 ]
 
