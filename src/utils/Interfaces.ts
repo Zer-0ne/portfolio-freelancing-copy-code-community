@@ -16,8 +16,8 @@ export interface coreMember {
 export interface EventsInterface {
     title: string,
     description: string,
-    headingDate: string,
-    calenderDate: string,
+    headingDate: string ,
+    eventDate: string ,
     tag: string,
     mode: string,
     contentImage: string[];

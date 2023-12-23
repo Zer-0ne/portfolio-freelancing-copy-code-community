@@ -11,7 +11,7 @@ import React, { useState } from 'react'
 
 const page = () => {
   const [searchInput, setSearchInput] = useState<string>('');
-  const [data, setData] = useState<EventsInterface[]>([])
+  const [data, setData] = useState<EventsInterface[]>()
   const [isLoading, setIsLoading] = useState(true)
 
 
@@ -35,15 +35,17 @@ const page = () => {
   React.useEffect(() => {
     fetchData()
   }, [])
+  console.log(data)
 
   if (isLoading) return <Loading />
+
   // Filter events based on search input
-  const filteredEvents = eventsDetails?.filter(
+  const filteredEvents = data?.filter(
     (item) =>
       item.title.toLowerCase().includes(searchInput.toLowerCase()) ||
       item.tag.toLowerCase().includes(searchInput.toLowerCase()) ||
       item.description.toLowerCase().includes(searchInput.toLowerCase()) ||
-      item.calenderDate.toLowerCase().includes(searchInput.toLowerCase()) ||
+      item.eventDate.toLowerCase().includes(searchInput.toLowerCase()) ||
       item.status.toLowerCase().includes(searchInput.toLowerCase()) ||
       item.headingDate.toLowerCase().includes(searchInput.toLowerCase()) ||
       item.mode.toLowerCase().includes(searchInput.toLowerCase()) ||
@@ -59,12 +61,16 @@ const page = () => {
         handleSearch={handleSearch}
       >
         {
-          filteredEvents?.map((item, index) => (
-            <EventCard
-              key={index}
-              item={item}
-            />
-          ))
+          !data?.length ? <>
+            No Events Yet!
+          </> :
+            filteredEvents?.map((item, index) => (
+              <EventCard
+                fetchData={fetchData}
+                key={index}
+                item={item}
+              />
+            ))
         }
       </BlogEventsStructure>
     </>

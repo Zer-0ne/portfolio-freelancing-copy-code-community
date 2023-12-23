@@ -181,7 +181,7 @@ export const createEvent = [
         size: 1
     },
     {
-        name: 'date',
+        name: 'eventDate',
         type: 'date',
         placeholder: "Select a date",
         required: true,
@@ -413,7 +413,7 @@ export const eventsDetails: EventsInterface[] = [
         title: 'React Native Workshop',
         description: 'This is the tamplate description of React native workshop',
         headingDate: '10 Jan 2023',
-        calenderDate: 'Oct 24, 2023',
+        eventDate: 'Oct 24, 2023',
         tag: 'React_native',
         mode: 'Online',
         participants: 146,
@@ -421,13 +421,13 @@ export const eventsDetails: EventsInterface[] = [
         image: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.filepicker.io%2Fapi%2Ffile%2F4C6yPDywSUeWYLyg1h9G&f=1&nofb=1&ipt=be055fef91c6c9eb73b7c305ad18a9e55e560b114fa34d2519ce26a985bedee7&ipo=images',
         label: 'Featured',
         _id: 'sahi',
-        contentImage:['']
+        contentImage: ['']
     },
     {
         title: 'React Workshop',
         description: 'This is the tamplate description of React workshop',
         headingDate: '10 June 2023',
-        calenderDate: 'Dec 24, 2023',
+        eventDate: 'Dec 24, 2023',
         tag: 'React',
         mode: 'Offline',
         participants: 155,
@@ -435,26 +435,26 @@ export const eventsDetails: EventsInterface[] = [
         image: 'https://d112y698adiu2z.cloudfront.net/photos/production/challenge_thumbnails/002/610/587/datas/medium_square.png',
         label: 'UpComming',
         _id: 'sas',
-        contentImage:['']
+        contentImage: ['']
     },
     {
         title: 'Node Workshop',
         description: 'This is the tamplate description of Node workshop',
         headingDate: '10 July 2023',
-        calenderDate: 'Nov 24, 2023',
+        eventDate: 'Nov 24, 2023',
         tag: 'Node.js',
         mode: 'Offline',
         participants: 200,
         status: 'End',
         image: 'https://d112y698adiu2z.cloudfront.net/photos/production/challenge_thumbnails/002/610/587/datas/medium_square.png',
         _id: 'shi',
-        contentImage:['']
+        contentImage: ['']
     },
     {
         title: 'Next Workshop',
         description: 'This is the tamplate description of Next workshop',
         headingDate: '10 Nov 2024',
-        calenderDate: 'Dec 31, 2024',
+        eventDate: 'Dec 31, 2024',
         tag: 'Next.js',
         mode: 'Hybrid',
         participants: 500,
@@ -462,7 +462,7 @@ export const eventsDetails: EventsInterface[] = [
         image: 'https://d112y698adiu2z.cloudfront.net/photos/production/challenge_thumbnails/002/610/587/datas/medium_square.png',
         label: 'Featured',
         _id: 'nami',
-        contentImage:['']
+        contentImage: ['']
     },
 ]
 

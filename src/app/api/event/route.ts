@@ -39,8 +39,10 @@ export const POST = async (request: NextRequest) => {
             image,
             label,
             authorId,
-            contentImage
+            contentImage,
+            eventDate
         } = await request.json();
+        console.log(eventDate)
 
         const participantsInt = Number(participants)
         const newEvent = new Event({
@@ -54,7 +56,8 @@ export const POST = async (request: NextRequest) => {
             image,
             label,
             authorId,
-            contentImage
+            contentImage,
+            eventDate
         });
 
         // Save the new post to the database

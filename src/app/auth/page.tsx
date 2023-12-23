@@ -1,16 +1,34 @@
 'use client'
-import { LoginUser, createUser, storeImage } from '@/utils/FetchFromApi'
-import { Data } from '@/utils/Interfaces'
+import Loading from '@/Components/Loading'
+import { LoginUser, createUser, storeImage, userInfo } from '@/utils/FetchFromApi'
+import { Data, Session } from '@/utils/Interfaces'
+import { currentSession } from '@/utils/Session'
 import { Login, authMode, signup } from '@/utils/constant'
 import { styles } from '@/utils/styles'
 import { Avatar, Box, Button, TextField, Typography } from '@mui/material'
-import React, { useState } from 'react'
+import { notFound } from 'next/navigation'
+import React, { useEffect, useState } from 'react'
 
 const page = () => {
     const [isLogin, setIsLogin] = React.useState(true);
+    const [isAdmin, setIsAdmin] = React.useState<boolean>(true)
+    const [isloading, setIsloading] = React.useState<boolean>(true)
     const [mode, setMode] = useState('login')
     const [data, setData] = useState<Data>({})
     const inputRef = React.useRef<HTMLDivElement>(null)
+
+    useEffect(() => {
+        const user = async () => {
+            const session = await currentSession() as Session
+            const currUser = await userInfo(session?.user.username);
+            (session && currUser.isAdmin === true) ? setIsAdmin(true) : setIsAdmin(false)
+            setIsloading(false)
+            return (currUser.isAdmin) ? true : false;
+        }
+        user()
+    }, [])
+    if (isloading) return <Loading />
+    if (!isAdmin) return notFound()
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -46,6 +64,10 @@ const page = () => {
     return (
         <>
             <form
+                style={{
+                    width: '100%',
+                    height: '90vh'
+                }}
                 onSubmit={handleSubmit}
             >
                 <Box

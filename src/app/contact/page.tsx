@@ -2,6 +2,7 @@ import { Box, Button, Container, Typography } from '@mui/material'
 import React from 'react'
 import { styles } from '@/utils/styles'
 import { GitHub, Instagram, LinkedIn, WhatsApp } from '@mui/icons-material'
+import Link from 'next/link'
 const page = () => {
     return (
         <Container
@@ -143,7 +144,7 @@ const page = () => {
                             justifyContent: 'center',
                             position: 'relative',
                             ":before": {
-                                content: '"Follow us"',
+                                content: '"Connect us"',
                                 position: 'absolute',
                                 top: -40,
                                 display: 'flex',
@@ -154,18 +155,24 @@ const page = () => {
                             }
                         }}
                     >
-                        <WhatsApp
-                            sx={styles.socialMediaIcon()}
-                        />
-                        <LinkedIn
-                            sx={styles.socialMediaIcon()}
-                        />
+                        <Link href={`https://chat.whatsapp.com/FH1jEnRUd3g7G8Om32u8Ka`} target='_blank' >
+                            <WhatsApp
+                                sx={styles.socialMediaIcon()}
+                            />
+                        </Link>
+                        <Link href={`https://www.linkedin.com/company/copy-code-community/`} target='_blank'>
+                            <LinkedIn
+                                sx={styles.socialMediaIcon()}
+                            />
+                        </Link>
                         <GitHub
                             sx={styles.socialMediaIcon()}
                         />
-                        <Instagram
-                            sx={styles.socialMediaIcon()}
-                        />
+                        <Link href={`https://www.instagram.com/copy_code_/`} target='_blank'>
+                            <Instagram
+                                sx={styles.socialMediaIcon()}
+                            />
+                        </Link>
                     </Box>
                 </Box>
             </Box>

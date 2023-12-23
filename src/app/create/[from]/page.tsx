@@ -59,9 +59,10 @@ const page = () => {
     const handleSubmit = async (e: any) => {
         e.preventDefault();
         try {
+            console.log(data);
             (data?.contentImages) && await imagesInFolder('content/', data?.contentImages as string[])
             await createNew(data as Data, from as string)
-            router.push('/blogs')
+            router.push((from === 'blog') ? '/blogs' : '/events')
         } catch (error) {
             console.log(error)
         }

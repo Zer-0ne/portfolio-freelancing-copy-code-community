@@ -11,7 +11,7 @@ import Loading from '@/Components/Loading';
 
 const page = () => {
   const [searchInput, setSearchInput] = useState<string>('');
-  const [data, setData] = useState<BlogsInterface[]>([])
+  const [data, setData] = useState<BlogsInterface[]>()
   const [isLoading, setIsLoading] = useState(true)
 
   const handleSearch = (input: string) => {
@@ -29,12 +29,12 @@ const page = () => {
     }
   }
 
-  
+
   // useEffect
   React.useEffect(() => {
     fetchData()
   }, [])
-  
+
   if (isLoading) return <Loading />
 
   // Filter events based on search input
@@ -64,13 +64,16 @@ const page = () => {
           }}
         >
           {
-            filteredEvents?.map((item, index) => (
-              <BlogCard
-                fetchData={fetchData}
-                key={index}
-                item={item}
-              />
-            ))
+            !data?.length ? <>
+              No blog yet!
+            </> :
+              filteredEvents?.map((item, index) => (
+                <BlogCard
+                  fetchData={fetchData}
+                  key={index}
+                  item={item}
+                />
+              ))
           }
         </Box>
       </BlogEventsStructure>

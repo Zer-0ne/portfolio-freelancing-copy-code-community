@@ -50,8 +50,11 @@ export const styles = {
     }),
     iconStyle: () => ({
         opacity: 0.8,
+        color: 'white',
         ":hover": {
-            color: 'red'
+            color: 'black',
+            filter: 'drop-shadow(0px 0px 2px green)',
+            // color: 'green'
         }
     }),
     heading1: (font = 30) => ({
@@ -107,8 +110,9 @@ export const styles = {
         ml: 2,
         pt: 3,
         display: 'flex',
+        boxShadow: '0px 0px 0px green',
         flexDirection: 'column',
-        gap: 1,
+        gap: 1.5,
         position: 'relative',
         '::before': {
             content: '""',
@@ -242,7 +246,7 @@ export const styles = {
         textAlign: 'center',
         fontSize: 20
     }),
-    socialMediaIcon:() => ({
+    socialMediaIcon: () => ({
         cursor: 'pointer',
         fontSize: 25,
         opacity: .5,

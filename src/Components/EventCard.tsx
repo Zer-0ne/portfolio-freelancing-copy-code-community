@@ -2,19 +2,92 @@ import { Box, Typography } from '@mui/material'
 import React from 'react'
 import { styles } from '@/utils/styles'
 import Image from 'next/image'
-import { AssistantPhotoRounded, CalendarToday, LanguageOutlined, LocalOfferRounded } from '@mui/icons-material'
+import { AssistantPhotoRounded, CalendarToday, DeleteRounded, EditRounded, LanguageOutlined, LocalOfferRounded } from '@mui/icons-material'
 import { colors } from '@/utils/colors'
 import { EventsInterface } from '@/utils/Interfaces'
+import { deletePost } from '@/utils/FetchFromApi'
 const EventCard = ({
-    item
+    item,
+    fetchData
 }: {
-    item: EventsInterface
+    item: EventsInterface;
+    fetchData: () => Promise<void>
 }) => {
+
+    const getRelativeDate = (targetDate: Date | string) => {
+        const currentDate = new Date() as any;
+
+        // Parse the target date
+        const parsedTargetDate = new Date(targetDate);
+
+        // Calculate the difference in milliseconds
+        const timeDifference = parsedTargetDate as any - currentDate as any;
+
+        // Calculate the difference in days
+        const daysDifference = Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
+
+        if (daysDifference > 0) {
+            // Target date is in the future, return days left
+            return `${daysDifference} day${daysDifference !== 1 ? 's' : ''} left`;
+        } else if (daysDifference < 0) {
+            // Target date is in the past, return days ago
+            return `${-daysDifference} day${-daysDifference !== 1 ? 's' : ''} ago`;
+        } else {
+            // Target date is today
+            return 'Today';
+        }
+    }
+
+    const deleteEvent = async () => {
+        await deletePost(item?._id, 'event', item)
+        await fetchData()
+    }
+
     return (
         <>
             <Box
                 sx={styles.eventCard(item.label)}
             >
+                {/* edit nd delete btn */}
+                <Box
+                    sx={{
+                        position: 'absolute',
+                        top: 10,
+                        right: 10,
+                        display: 'flex',
+                        gap: 1,
+                        opacity: .5,
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                    }}
+                >
+                    <EditRounded
+                        sx={{
+                            fontSize: 25,
+                            padding: .5,
+                            borderRadius: '50%',
+                            cursor: 'pointer',
+                            ':hover': {
+                                background: 'white',
+                                color: 'black'
+                            }
+                        }}
+                    />
+                    <DeleteRounded
+                        onClick={deleteEvent}
+                        sx={{
+                            fontSize: 25,
+                            padding: .5,
+                            borderRadius: '50%',
+                            cursor: 'pointer',
+                            ':hover': {
+                                background: 'red',
+                                color: 'white'
+                            }
+                        }}
+                    />
+                </Box>
+
                 {/* image box */}
                 <Box
                     sx={{
@@ -68,7 +141,7 @@ const EventCard = ({
                         <Box
                             sx={styles.dateTimeBox()}
                         >
-                            {item.headingDate}
+                            {getRelativeDate(item.eventDate)}
                         </Box>
 
                         {/* mode of the events online or offline  */}
@@ -173,7 +246,7 @@ const EventCard = ({
                             fontSize={15}
 
                         >
-                            {item.calenderDate}
+                            {item.eventDate}
                         </Typography>
                     </Box>
 

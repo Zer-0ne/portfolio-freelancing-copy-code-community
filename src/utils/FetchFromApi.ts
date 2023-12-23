@@ -53,8 +53,12 @@ export const allPost = async (route: string) => {
             },
         })
         if (response.ok) {
-            const { blog } = await response.json();
-            return blog
+            if (route === 'blog') {
+                const { blog } = await response.json()
+                return blog
+            }
+            const { event } = await response.json();
+            return event
         }
     } catch (error) {
         console.log(error)
