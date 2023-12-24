@@ -1,9 +1,29 @@
+'use client'
 import { Box, Button, Container, Typography } from '@mui/material'
-import React from 'react'
+import React, { useState } from 'react'
 import { styles } from '@/utils/styles'
 import { GitHub, Instagram, LinkedIn, WhatsApp } from '@mui/icons-material'
 import Link from 'next/link'
+import { Data } from '@/utils/Interfaces'
+import { createNewContact } from '@/utils/FetchFromApi'
 const page = () => {
+    const [isDisabled, setIsDisabled] = React.useState(false)
+    const [data, setData] = useState<Data>()
+
+    // handle change
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
+        const { name, value } = e.target;
+        setData((prevFormData) => ({ ...prevFormData, [name]: value }));
+    }
+
+    const handleSubmit = async (e: any) => {
+        e.preventDefault();
+        try {
+            return await createNewContact(data as Data, setIsDisabled)
+        } catch (error) {
+            console.error(error)
+        }
+    }
     return (
         <Container
             sx={{
@@ -68,6 +88,7 @@ const page = () => {
                     >Contact Us</Typography>
 
                     <form
+                        onSubmit={handleSubmit}
                         style={{
                             flex: 1,
                             display: 'flex',
@@ -75,6 +96,7 @@ const page = () => {
                             flexDirection: 'column'
                         }}
                     >
+
                         <Box
                             sx={{
                                 display: 'flex',
@@ -85,15 +107,17 @@ const page = () => {
                             }}
                         >
                             <input
-                                name='fname'
+                                name='firstname'
                                 placeholder='Enter first name'
+                                onChange={handleChange}
                                 style={{
                                     ...styles.customInput(1),
                                     // width: {md:'50%',xl:'50%',xs}
                                 }}
                             />
                             <input
-                                name='lname'
+                                name='lastname'
+                                onChange={handleChange}
                                 placeholder='Enter last name'
                                 style={{
                                     ...styles.customInput(1),
@@ -104,26 +128,32 @@ const page = () => {
                         <input
                             name='email'
                             placeholder='Enter email'
+                            onChange={handleChange}
                             style={{
                                 ...styles.customInput(1)
                             }}
                         />
                         <input
                             name='phone'
+                            onChange={handleChange}
                             placeholder='Enter phone number'
                             style={{
                                 ...styles.customInput(1)
                             }}
                         />
                         <textarea
+                            onChange={handleChange}
                             placeholder='Enter your message...'
                             rows={4}
+                            name='content'
                             style={{
                                 resize: 'none',
                                 ...styles.customInput(1)
                             }}
                         />
+
                         <Button
+                            disabled={isDisabled}
                             sx={{
                                 mt: 2,
                                 color: 'white',
@@ -131,7 +161,12 @@ const page = () => {
                                     background: 'rgba(255,255,255,.1)'
                                 }
                             }}
-                        >Submit</Button>
+                            type='submit'
+                        >
+                            {
+                                isDisabled ? 'Submiting...' : 'Submit'
+                            }
+                        </Button>
                     </form>
 
                     <Box
@@ -175,9 +210,9 @@ const page = () => {
                         </Link>
                     </Box>
                 </Box>
-            </Box>
+            </Box >
 
-        </Container>
+        </Container >
     )
 }
 

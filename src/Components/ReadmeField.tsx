@@ -8,10 +8,12 @@ import { storeImage } from '@/utils/FetchFromApi'
 
 export const ReadmeField = ({
     setdata,
-    propsData
+    propsData,
+    isDisabled
 }: {
     setdata: React.Dispatch<React.SetStateAction<Data | undefined>>;
-    propsData: Data
+    propsData: Data,
+    isDisabled: boolean
 }) => {
     const [markdownContent, setMarkdownContent] = useState('');
     const [isTrue, setIsTrue] = useState(false);
@@ -249,8 +251,13 @@ export const ReadmeField = ({
                 </Box>
                 <button
                     type='submit'
+                    disabled={isDisabled}
                     style={styles.greenBtn() as React.CSSProperties | undefined}
-                >Post</button>
+                >
+                    {
+                        (isDisabled) ? 'Posting...' : 'Post'
+                    }
+                </button>
             </Box>
         </>
     )

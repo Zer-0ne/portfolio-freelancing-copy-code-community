@@ -17,6 +17,7 @@ const page = () => {
     const [data, setData] = React.useState<Data>()
     const [isAdmin, setIsAdmin] = React.useState<boolean>(true)
     const [isloading, setIsloading] = React.useState<boolean>(true)
+    const [isDisabled, setIsDisabled] = React.useState(false)
     const { from } = useParams()
     const router = useRouter()
     const inputRef = React.useRef<HTMLDivElement>(null)
@@ -59,9 +60,8 @@ const page = () => {
     const handleSubmit = async (e: any) => {
         e.preventDefault();
         try {
-            console.log(data);
             (data?.contentImages) && await imagesInFolder('content/', data?.contentImages as string[])
-            await createNew(data as Data, from as string)
+            await createNew(data as Data, from as string,setIsDisabled)
             router.push((from === 'blog') ? '/blogs' : '/events')
         } catch (error) {
             console.log(error)
@@ -160,6 +160,7 @@ const page = () => {
                     <ReadmeField
                         setdata={setData}
                         propsData={data as Data}
+                        isDisabled={isDisabled}
                     />
                 </Container>
             </form>

@@ -16,8 +16,8 @@ export interface coreMember {
 export interface EventsInterface {
     title: string,
     description: string,
-    headingDate: string ,
-    eventDate: string ,
+    headingDate: string,
+    eventDate: string,
     tag: string,
     mode: string,
     contentImage: string[];
@@ -43,6 +43,7 @@ export interface UserDocument {
     email: string;
     username: string
     isAdmin: boolean;
+    role: string;
     followings: {
         userId: {
             type: typeof Schema.Types.ObjectId;

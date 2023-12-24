@@ -4,21 +4,25 @@ import mongoose, { Schema } from "mongoose"
 const UserSchema = new Schema<UserDocument>({
     name: {
         type: String,
-        required: [true,'Please add name']
+        required: [true, 'Please add name']
     },
     username: {
         type: String,
-        required: [true,'Please add username'],
+        required: [true, 'Please add username'],
         unique: true
     },
     password: {
         type: String,
-        required: [true,'Please add password']
+        required: [true, 'Please add password']
     },
     email: {
         type: String,
-        required: [true,'Please add email'],
+        required: [true, 'Please add email'],
         unique: true
+    },
+    role: {
+        type: String,
+        default: 'user'
     },
     isAdmin: {
         type: Boolean,

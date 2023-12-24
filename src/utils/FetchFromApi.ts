@@ -118,7 +118,7 @@ export const imagesInFolder = async (folderName: string, imageLinks: string[]) =
 }
 
 // create a new post
-export const createNew = async (data: Data, route: string) => {
+export const createNew = async (data: Data, route: string, setIsDisabled: React.Dispatch<React.SetStateAction<boolean>>) => {
     try {
         // check the session
         const session = await currentSession() as Session;
@@ -129,6 +129,7 @@ export const createNew = async (data: Data, route: string) => {
         if (user.isAdmin === false) return 'Your are not Authorized!'
 
 
+        setIsDisabled(true)
         const response = await fetch(`/api/${route}/`, {
             method: "POST",
             headers: {
@@ -141,9 +142,42 @@ export const createNew = async (data: Data, route: string) => {
         })
         if (response.ok) {
             console.log('success')
+            setIsDisabled(false)
             return
         }
+        setIsDisabled(false)
+        return
     } catch (error) {
+        setIsDisabled(false)
+        console.log(error)
+    }
+}
+
+export const createNewContact = async (data: Data, setIsDisabled: React.Dispatch<React.SetStateAction<boolean>>) => {
+    try {
+        setIsDisabled(true)
+        // check the session
+        const session = await currentSession() as Session;
+        if (!session) { setIsDisabled(false); return 'Please login' }
+
+        const response = await fetch(`/api/contact/`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                ...data
+            })
+        })
+        if (response.ok) {
+            console.log('success')
+            setIsDisabled(false)
+            return
+        }
+        setIsDisabled(false)
+        return
+    } catch (error) {
+        setIsDisabled(false)
         console.log(error)
     }
 }

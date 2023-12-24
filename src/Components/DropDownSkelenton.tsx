@@ -42,7 +42,7 @@ const DropDownSkelenton = (
                         backdropFilter: `blur(5px) saturate(187%)`,
                         flex: 1,
                         gap: 1,
-                        zIndex: 10
+                        zIndex: 50
                     }, 1),
 
                 }}
@@ -50,12 +50,14 @@ const DropDownSkelenton = (
                 {children}
             </Box>
             <Box
-                sx={styles?.customInput('', {
+                sx={styles?.customInput(8, {
                     textTransform: 'capitalize',
+                    position:'relative',
                     cursor: 'pointer',
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center',
+                    zIndex: 0
                 }, 1)}
                 onClick={() => setIsTrue(prev => !prev)}
             >

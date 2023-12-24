@@ -1,9 +1,7 @@
 
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from 'bcrypt';
-import { Account, Awaitable, NextAuthOptions } from "next-auth";
-import { NextRequest, NextResponse } from "next/server";
-import { JWT } from "next-auth/jwt";
+import { Account,  NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import Users from "@/Models/Users";
 import connect from "./database";

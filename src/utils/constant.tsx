@@ -477,3 +477,37 @@ export const sessionAction = [
         }
     }
 ]
+
+// contact form 
+export const contactForm = [
+    {
+        name: 'firstname',
+        placeholder: 'Enter your firstname name',
+        required: true,
+        type: 'text'
+    },
+    {
+        name: 'lastname',
+        placeholder: 'Enter your last name',
+        required: false,
+        type: 'text'
+    },
+    {
+        name: 'email',
+        placeholder: 'Enter your email address',
+        required: true,
+        type: 'email'
+    },
+    {
+        name: 'phone',
+        placeholder: 'Enter your phone number',
+        required: true,
+        type: 'tel'
+    },
+    {
+        name: 'content',
+        placeholder: 'Write your message...',
+        required: true,
+        type: 'text'
+    }
+]
