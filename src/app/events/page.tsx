@@ -4,9 +4,6 @@ import EventCard from '@/Components/EventCard'
 import Loading from '@/Components/Loading'
 import { allPost } from '@/utils/FetchFromApi'
 import { EventsInterface } from '@/utils/Interfaces'
-import { eventsDetails } from '@/utils/constant'
-import { styles } from '@/utils/styles'
-import { Box, Container } from '@mui/material'
 import React, { useState } from 'react'
 
 const page = () => {
