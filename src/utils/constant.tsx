@@ -345,7 +345,7 @@ export const coreTeamMember: coreMember[] = [
     {
         name: 'Ziya-ul Rehman',
         role: 'Co-Founder',
-        image: 'https://ih1.redbubble.net/image.487729662.1469/throwpillow,small,1000x-bg,f8f8f8-c,0,200,1000,1000.u2.jpg',
+        image: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.osmpic.com%2Fwp-content%2Fuploads%2F2019%2F03%2FPicsArt_03-24-02.06.31.jpg&f=1&nofb=1&ipt=219ded931b3ef72de49a868c76adae6aec420ab1379c3d0b7392426e9f336a13&ipo=images',
         LinkedIn: '',
         GitHub: 'https://github.com/sahilk1234567890',
         bio: `I am a 2nd year student at the University of Maryland, College Park majoring in Computer Science and minoring in Mathematics`,
@@ -370,8 +370,8 @@ export const coreTeamMember: coreMember[] = [
         email: 'sahilk@copycodecommunity.org',
     },
     {
-        name: 'Ayan',
-        role: 'Mentor',
+        name: 'Azmat',
+        role: 'Technical member',
         image: 'https://www.osmpic.com/wp-content/uploads/2019/03/PicsArt_03-24-02.06.31-903x1024.jpg',
         LinkedIn: '',
         GitHub: 'https://github.com/sahilk1234567890',
