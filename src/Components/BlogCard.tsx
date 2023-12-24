@@ -5,6 +5,7 @@ import { BlogsInterface } from '@/utils/Interfaces'
 import { DeleteRounded, EditRounded } from '@mui/icons-material'
 import { deletePost } from '@/utils/FetchFromApi'
 import { IBM_Plex_Mono, Kalam, Libre_Baskerville } from 'next/font/google'
+import Link from 'next/link'
 
 const kalam = Kalam({
     subsets: ['latin'],
@@ -37,114 +38,116 @@ const BlogCard = ({
     }
     return (
         <>
-            <Box
-                sx={styles.blogCard()}
-            >
+            <Link href={`/blogs/${item._id}`}>
                 <Box
-                    sx={{
-                        position: 'absolute',
-                        top: 10,
-                        right: 10,
-                        display: 'flex',
-                        gap: 1,
-                        opacity: .5,
-                        justifyContent: 'center',
-                        alignItems: 'center'
-                    }}
+                    sx={styles.blogCard()}
                 >
-                    <EditRounded
+                    <Box
                         sx={{
-                            fontSize: 25,
-                            padding: .5,
-                            borderRadius: '50%',
-                            cursor: 'pointer',
-                            ':hover': {
-                                background: 'white',
-                                color: 'black'
-                            }
-                        }}
-                    />
-                    <DeleteRounded
-                        onClick={deleteBlog}
-                        sx={{
-                            fontSize: 25,
-                            padding: .5,
-                            borderRadius: '50%',
-                            cursor: 'pointer',
-                            ':hover': {
-                                background: 'red',
-                                color: 'white'
-                            }
-                        }}
-                    />
-                </Box>
-                <Typography
-                    variant='h5'
-                    className={libre_Baskerville.className}
-                >
-                    {item.title}
-                </Typography>
-                <Box
-                    sx={{
-                        display: 'flex',
-                        gap: 2,
-                        alignItems: 'center',
-                        ml: .5
-                    }}
-                >
-                    <Typography
-                        variant='caption'
-                        sx={{
-                            mb: .7,
-                            mt: 0,
-                            ml: 0,
+                            position: 'absolute',
+                            top: 10,
+                            right: 10,
                             display: 'flex',
-                            alignItems: 'center',
+                            gap: 1,
+                            opacity: .5,
                             justifyContent: 'center',
-                            gap: .8,
-                            position: 'relative',
-                            '::after': {
-                                content: '""',
-                                position: 'absolute',
-                                width: 3,
-                                height: 3,
-                                borderRadius: '50%',
-                                right: -9.5,
-                                top: '50%',
-                                bottom: '50%',
-                                background: 'white',
-                                opacity: .7
-                            }
-                            // alignSelf:'end'
+                            alignItems: 'center'
                         }}
-                        className={ibn.className}
                     >
-                        <Avatar
-                            sx={{ width: 22, height: 22 }}
+                        <EditRounded
+                            sx={{
+                                fontSize: 25,
+                                padding: .5,
+                                borderRadius: '50%',
+                                cursor: 'pointer',
+                                ':hover': {
+                                    background: 'white',
+                                    color: 'black'
+                                }
+                            }}
                         />
-                        Sahil khan
+                        <DeleteRounded
+                            onClick={deleteBlog}
+                            sx={{
+                                fontSize: 25,
+                                padding: .5,
+                                borderRadius: '50%',
+                                cursor: 'pointer',
+                                ':hover': {
+                                    background: 'red',
+                                    color: 'white'
+                                }
+                            }}
+                        />
+                    </Box>
+                    <Typography
+                        variant='h5'
+                        className={libre_Baskerville.className}
+                    >
+                        {item.title}
                     </Typography>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            gap: 2,
+                            alignItems: 'center',
+                            ml: .5
+                        }}
+                    >
+                        <Typography
+                            variant='caption'
+                            sx={{
+                                mb: .7,
+                                mt: 0,
+                                ml: 0,
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: .8,
+                                position: 'relative',
+                                '::after': {
+                                    content: '""',
+                                    position: 'absolute',
+                                    width: 3,
+                                    height: 3,
+                                    borderRadius: '50%',
+                                    right: -9.5,
+                                    top: '50%',
+                                    bottom: '50%',
+                                    background: 'white',
+                                    opacity: .7
+                                }
+                                // alignSelf:'end'
+                            }}
+                            className={ibn.className}
+                        >
+                            <Avatar
+                                sx={{ width: 22, height: 22 }}
+                            />
+                            Sahil khan
+                        </Typography>
+                        <Typography
+                            variant='caption'
+                            sx={{
+                                mb: .5,
+                                mt: 0,
+                                ml: 0,
+                                opacity: .7,
+                                // alignSelf:'end'
+                            }}
+                            className={ibn.className}
+                        >
+                            {item.updatedAt?.slice(0, 10)}
+                        </Typography>
+                    </Box>
                     <Typography
                         variant='caption'
-                        sx={{
-                            mb: .5,
-                            mt: 0,
-                            ml: 0,
-                            opacity: .7,
-                            // alignSelf:'end'
-                        }}
                         className={ibn.className}
                     >
-                        {item.updatedAt?.slice(0, 10)}
+                        {item.description}
                     </Typography>
                 </Box>
-                <Typography
-                    variant='caption'
-                    className={ibn.className}
-                >
-                    {item.description}
-                </Typography>
-            </Box>
+            </Link>
         </>
     )
 }

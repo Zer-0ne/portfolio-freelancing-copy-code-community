@@ -10,8 +10,8 @@ export const GET = async (request: NextRequest, { params }: any) => {
     try {
         await connect();
         const { id } = params;
-        const blog = await Event.findById(id)
-        return NextResponse.json({ blog })
+        const event = await Event.findById(id)
+        return NextResponse.json({ event })
     } catch (err: {
         message: string
     } | any) {

@@ -42,7 +42,6 @@ export const POST = async (request: NextRequest) => {
             contentImage,
             eventDate
         } = await request.json();
-        console.log(eventDate)
 
         const participantsInt = Number(participants)
         const newEvent = new Event({

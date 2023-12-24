@@ -43,7 +43,7 @@ export const LoginUser = async (data: Data) => {
     }
 }
 
-// get all the blog
+// get all the posts
 export const allPost = async (route: string) => {
     try {
         const response = await fetch(`/api/${route}/`, {
@@ -56,6 +56,27 @@ export const allPost = async (route: string) => {
             if (route === 'blog') {
                 const { blog } = await response.json()
                 return blog
+            }
+            const { event } = await response.json();
+            return event
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+// get a post
+export const Post = async (route: string, id: string) => {
+    try {
+        const response = await fetch(`/api/${route}/${id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+        if (response.ok) {
+            if (route === 'blog') {
+                const { blog } = await response.json()
+                return blog;
             }
             const { event } = await response.json();
             return event

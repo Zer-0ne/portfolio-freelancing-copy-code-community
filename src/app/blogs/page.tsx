@@ -60,7 +60,7 @@ const page = () => {
           sx={{
             display: 'flex',
             gap: 2,
-            flexDirection: 'column'
+            flexDirection: 'column-reverse'
           }}
         >
           {

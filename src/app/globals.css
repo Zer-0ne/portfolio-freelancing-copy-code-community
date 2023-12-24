@@ -42,10 +42,32 @@ body {
 .css-v4u5dn-MuiInputBase-root-MuiInput-root::before {
   border-bottom: 2px solid rgba(255, 255, 255, 0.541);
 }
+
 .css-v4u5dn-MuiInputBase-root-MuiInput-root:hover {
   border-bottom: 1px solid rgba(255, 255, 255, 0.342);
 }
 
 .css-v4u5dn-MuiInputBase-root-MuiInput-root:after {
   border-bottom: 2px solid white;
+}
+
+.list,.olist{
+  margin-left: 50px;
+}
+blockquote{
+  font-style: italic;
+  opacity: .8;
+  margin-left: 30px;
+}
+
+.list {
+  list-style: disc !important;
+}
+.olist {
+  list-style: decimal !important;
+}
+
+.image {
+  width: 100% !important;
+  height: auto !important;
 }

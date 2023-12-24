@@ -138,7 +138,7 @@ export const styles = {
         mt: 3,
         gap: 5,
         display: 'flex',
-        flexDirection: 'column'
+        flexDirection: 'column-reverse'
         , marginBottom: 7
     }),
     dateTimeBox: () => ({
@@ -172,7 +172,7 @@ export const styles = {
         cursor: 'pointer',
         position: 'relative',
         flexWrap: 'wrap',
-        mt: { xs: 8, md: 0, xl: 0 },
+        mt: { xs: 4, md: 0, xl: 0 },
         flexDirection: { xs: 'column', md: 'row', xl: 'row' },
         '::before': {
             content: '""',
@@ -252,6 +252,32 @@ export const styles = {
         opacity: .5,
         ':hover': {
             opacity: 1
+        }
+    }),
+    codeBox: () => ({
+        padding: '16px',
+        overflow: 'auto',
+        fontSize: '85%',
+        lineHeight: '1.45',
+        color: '#e6edf3',
+        backgroundColor: '#161b22',
+        borderRadius: '6px',
+        margin: '1rem',
+        position: 'relative'
+    }),
+    heading: (size: string | number = 50, weight: string | number = '800') => ({
+        fontSize: size,
+        fontWeight: weight,
+        position: 'relative',
+        mb: 3,
+        '::after': {
+            content: `""`,
+            height: '2px',
+            background: 'grey',
+            position: 'absolute',
+            left: 0, right: 0,
+            bottom: -2.5,
+            opacity: .6
         }
     })
 }

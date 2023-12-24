@@ -13,9 +13,12 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+  params
 }: {
-  children: React.ReactNode
+  children: React.ReactNode,
+  params: { slug: string };
 }) {
+  console.log(params)
   return (
     <html lang="en" style={{ position: 'relative' }}>
       <head>

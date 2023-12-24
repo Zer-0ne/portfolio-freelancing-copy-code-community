@@ -6,6 +6,7 @@ import { AssistantPhotoRounded, CalendarToday, DeleteRounded, EditRounded, Langu
 import { colors } from '@/utils/colors'
 import { EventsInterface } from '@/utils/Interfaces'
 import { deletePost } from '@/utils/FetchFromApi'
+import Link from 'next/link'
 const EventCard = ({
     item,
     fetchData
@@ -45,6 +46,7 @@ const EventCard = ({
 
     return (
         <>
+            <Link href={`/events/${item._id}`}>
             <Box
                 sx={styles.eventCard(item.label)}
             >
@@ -281,6 +283,7 @@ const EventCard = ({
                     </Box>
                 </Box>
             </Box>
+            </Link>
         </>
     )
 }

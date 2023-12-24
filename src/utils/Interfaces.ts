@@ -25,7 +25,8 @@ export interface EventsInterface {
     status: string,
     image: string;
     label?: string
-    _id: string
+    _id: string;
+    content: string
 };
 
 export interface BlogsInterface {
@@ -34,7 +35,8 @@ export interface BlogsInterface {
     updatedAt: string;
     contentImage: string[];
     tag: string;
-    _id: string
+    _id: string;
+    content: string
 }
 
 export interface UserDocument {

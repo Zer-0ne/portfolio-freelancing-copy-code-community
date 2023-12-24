@@ -48,7 +48,7 @@ export const ReadmeField = ({
     // handle click
     const handleClick = async (code: ((number?: number) => string) | ((image?: string) => string), name: string, toMoveCursor?: number) => {
 
-        if (['qoutes', 'ol', 'ul'].includes(name)) {
+        if (['ol', 'ul'].includes(name)) {
             if (!isTrue) {
                 setCounter(2)
                 setMarkdownContent((prevContent: string) => {
@@ -164,7 +164,7 @@ export const ReadmeField = ({
                                 const imageUrl = await storeImage(dataURL, `content/${propsData.title}`, uid) as string
                                 setProgress(80)
                                 setMarkdownContent((prevContent: string) => {
-                                    return prevContent + `![${uid}]('${imageUrl}')`;
+                                    return prevContent + `![${uid}](${imageUrl})`;
                                 })
                                 setProgress(100)
                             }
