@@ -4,6 +4,7 @@ import EventCard from '@/Components/EventCard'
 import Loading from '@/Components/Loading'
 import { allPost } from '@/utils/FetchFromApi'
 import { EventsInterface } from '@/utils/Interfaces'
+import { Box } from '@mui/material'
 import React, { useState } from 'react'
 
 const page = () => {
@@ -57,18 +58,27 @@ const page = () => {
         searchInput={searchInput}
         handleSearch={handleSearch}
       >
-        {
-          !data?.length ? <>
-            No Events Yet!
-          </> :
-            filteredEvents?.map((item, index) => (
-              <EventCard
-                fetchData={fetchData}
-                key={index}
-                item={item}
-              />
-            ))
-        }
+        <Box
+          sx={{
+            display: 'flex',
+            gap: 2,
+            flexDirection: 'column-reverse'
+          }}
+        >
+
+          {
+            !data?.length ? <>
+              No Events Yet!
+            </> :
+              filteredEvents?.map((item, index) => (
+                <EventCard
+                  fetchData={fetchData}
+                  key={index}
+                  item={item}
+                />
+              ))
+          }
+        </Box>
       </BlogEventsStructure>
     </>
   )

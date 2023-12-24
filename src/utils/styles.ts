@@ -138,7 +138,7 @@ export const styles = {
         mt: 3,
         gap: 5,
         display: 'flex',
-        flexDirection: 'column-reverse'
+        flexDirection: 'column'
         , marginBottom: 7
     }),
     dateTimeBox: () => ({
