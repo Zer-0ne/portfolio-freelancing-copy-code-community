@@ -23,7 +23,7 @@ const Navbar = () => {
         e.preventDefault();
         try {
             const response = await LoginUser(data as Data)
-            console.log(response)
+            
         } catch (error) {
             console.error(error)
         }

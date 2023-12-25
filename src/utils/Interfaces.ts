@@ -92,6 +92,7 @@ export interface Session {
         id: string;
         name: string;
         image: string;
-        username: string
+        username: string;
+        role: string;
     }
 }

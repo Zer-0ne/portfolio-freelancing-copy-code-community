@@ -6,11 +6,13 @@ import { styles } from '@/utils/styles';
 import BlogEventsStructure from '@/Components/BlogEventsStructure';
 // import { blogsDetails } from '@/utils/constant';
 import { allPost } from '@/utils/FetchFromApi';
-import { BlogsInterface } from '@/utils/Interfaces';
+import { BlogsInterface, Session } from '@/utils/Interfaces';
 import Loading from '@/Components/Loading';
+import { currentSession } from '@/utils/Session';
 
 const page = () => {
   const [searchInput, setSearchInput] = useState<string>('');
+  const [session, setSession] = useState<Session>()
   const [data, setData] = useState<BlogsInterface[]>()
   const [isLoading, setIsLoading] = useState(true)
 
@@ -22,6 +24,8 @@ const page = () => {
   const fetchData = async () => {
     try {
       const fetchedData: BlogsInterface[] = await allPost('blog');
+      const session = await currentSession()
+      setSession(session as Session)
       setData(fetchedData)
       setIsLoading(false)
     } catch (error) {
@@ -48,6 +52,7 @@ const page = () => {
   return (
     <>
       <BlogEventsStructure
+        session={session as Session}
         placeholder='Search Blog...'
         from='blog'
         btnText='New'
@@ -69,6 +74,7 @@ const page = () => {
             </> :
               filteredEvents?.map((item, index) => (
                 <BlogCard
+                  session={session as Session}
                   fetchData={fetchData}
                   key={index}
                   item={item}

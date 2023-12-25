@@ -3,13 +3,15 @@ import BlogEventsStructure from '@/Components/BlogEventsStructure'
 import EventCard from '@/Components/EventCard'
 import Loading from '@/Components/Loading'
 import { allPost } from '@/utils/FetchFromApi'
-import { EventsInterface } from '@/utils/Interfaces'
+import { EventsInterface, Session } from '@/utils/Interfaces'
+import { currentSession } from '@/utils/Session'
 import { Box } from '@mui/material'
 import React, { useState } from 'react'
 
 const page = () => {
   const [searchInput, setSearchInput] = useState<string>('');
   const [data, setData] = useState<EventsInterface[]>()
+  const [session, setSession] = useState<Session>()
   const [isLoading, setIsLoading] = useState(true)
 
 
@@ -21,6 +23,8 @@ const page = () => {
   const fetchData = async () => {
     try {
       const fetchedData: EventsInterface[] = await allPost('event');
+      const session = await currentSession()
+      setSession(session as Session)
       setData(fetchedData)
       setIsLoading(false)
     } catch (error) {
@@ -33,7 +37,7 @@ const page = () => {
   React.useEffect(() => {
     fetchData()
   }, [])
-  console.log(data)
+  
 
   if (isLoading) return <Loading />
 
@@ -56,6 +60,7 @@ const page = () => {
         placeholder='Search event...'
         btnText='New'
         searchInput={searchInput}
+        session={session as Session}
         handleSearch={handleSearch}
       >
         <Box
@@ -72,6 +77,7 @@ const page = () => {
             </> :
               filteredEvents?.map((item, index) => (
                 <EventCard
+                  session={session as Session}
                   fetchData={fetchData}
                   key={index}
                   item={item}

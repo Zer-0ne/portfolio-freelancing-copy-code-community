@@ -32,7 +32,7 @@ const page = () => {
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        if (name === 'profile') {
+        if (name === 'image') {
             if (!e.target.files) return;
             const file: File | null = e?.target.files[0];
             const reader = new FileReader();
@@ -42,7 +42,7 @@ const page = () => {
                     const imageUrl = await storeImage(dataURL, 'profiles', data?.username as string)
                     setData((prevData) => ({
                         ...prevData,
-                        profile: imageUrl
+                        image: imageUrl
                     }));
                 }
             };
@@ -56,7 +56,7 @@ const page = () => {
         e.preventDefault();
         try {
             const response = (isLogin) ? await LoginUser(data as Data) : await createUser(data)
-            console.log(response)
+            
         } catch (error) {
             console.error(error)
         }
@@ -126,7 +126,7 @@ const page = () => {
                             {(!isLogin) &&
                                 <Avatar
                                     onClick={() => { inputRef.current && inputRef.current?.click() }}
-                                    src={data?.profile as string}
+                                    src={data?.image as string}
                                     sx={{
                                         display: isLogin ? 'none' : 'flex',
                                         width: 100,
@@ -142,7 +142,7 @@ const page = () => {
                                             width: '25px',
                                             height: '25px',
                                             borderRadius: '50%',
-                                            display: data.profile ? 'none' : 'flex',
+                                            display: data.image ? 'none' : 'flex',
                                             justifyContent: 'center',
                                             alignItems: 'center',
                                             background: 'green',
@@ -158,7 +158,7 @@ const page = () => {
                                 style={{ display: 'none' }}
                                 onChange={handleChange}
                                 // accept="image/*"
-                                name='profile'
+                                name='image'
                             />
                             {
                                 (isLogin ? Login : signup).map((item, index) => (

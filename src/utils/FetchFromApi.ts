@@ -8,8 +8,7 @@ import { storage } from "./Firebase";
 // create user 
 export const createUser = async (data: Data) => {
     try {
-        console.log(data)
-        const response = await fetch('http://localhost:3000/api/auth/signup', {
+        const response = await fetch('/api/auth/signup', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -17,7 +16,7 @@ export const createUser = async (data: Data) => {
             body: JSON.stringify(data)
         })
         if (response.ok) {
-            console.log(response)
+            return await response.json()
         }
         return
     } catch (error) {
@@ -64,6 +63,22 @@ export const allPost = async (route: string) => {
         console.log(error)
     }
 }
+// get all the posts
+export const allUser = async (route: string) => {
+    try {
+        const response = await fetch(`/api/${route}/`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+        if (response.ok) {
+            return await response.json();
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
 // get a post
 export const Post = async (route: string, id: string) => {
     try {
@@ -87,12 +102,12 @@ export const Post = async (route: string, id: string) => {
 }
 
 // getting the user info
-export const userInfo = async (id: string) => {
+export const userInfo = async (id: string, method: string = 'GET') => {
     try {
         // await new Promise((resolve: TimerHandler) => setTimeout(resolve, 3000))
 
         const user = await fetch(`/api/user/${id}`, {
-            method: 'GET',
+            method: `${method}`,
         })
         if (user.ok) {
             return await user.json()
@@ -101,6 +116,7 @@ export const userInfo = async (id: string) => {
         console.log(error)
     }
 }
+
 
 // image save to firestore
 export const storeImage = async (image: string, folder: string, fileName: string = new Date().getTime().toString()) => {
@@ -125,12 +141,10 @@ export const imagesInFolder = async (folderName: string, imageLinks: string[]) =
         await Promise.all(result.items.map(async (imageRef) => {
             // Get the download URL for the image
             const downloadURL = await getDownloadURL(imageRef);
-            console.log(downloadURL, imageLinks)
             // Check if the download URL is present in the imageLinks array
             if (!imageLinks.includes(downloadURL)) {
                 // Delete the image if it's not in the imageLinks array
                 await deleteObject(imageRef);
-                console.log(`Deleted ${downloadURL}`);
             }
         }));
     } catch (error) {

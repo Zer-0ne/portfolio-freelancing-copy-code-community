@@ -90,6 +90,7 @@ export const AuthOptions: NextAuthOptions = {
                 // Update the token with the user information
                 token.id = user.id;
                 token.username = (user as any).username
+                token.role = (user as any).role
             }
 
             return token;
@@ -98,6 +99,7 @@ export const AuthOptions: NextAuthOptions = {
             session.user = session.user ?? {};
             (session.user as any).id = token?.id;
             (session.user as any).username = token?.username;
+            (session.user as any).role = token?.role;
             return session;
         },
     },

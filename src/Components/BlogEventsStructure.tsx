@@ -1,4 +1,5 @@
 // 'use server'
+import { Session } from '@/utils/Interfaces'
 import { styles } from '@/utils/styles'
 import { Box, Container } from '@mui/material'
 import Link from 'next/link'
@@ -11,14 +12,16 @@ const BlogEventsStructure = (
         btnText,
         handleSearch,
         searchInput,
-        from
+        from,
+        session
     }: {
         children: React.ReactNode
         placeholder: string;
         btnText: string;
         searchInput: string;
         handleSearch: (input: string) => void;
-        from: string
+        from: string;
+        session: Session
     }
 ) => {
     return (
@@ -43,7 +46,10 @@ const BlogEventsStructure = (
                         onChange={e => handleSearch(e.target.value)}
                     />
                     <Link
-                        style={styles.greenBtn() as React.CSSProperties | undefined}
+                        style={{
+                            ...styles.greenBtn() as React.CSSProperties | undefined,
+                            display: ['admin', 'moderator'].includes(session?.user?.role) ? 'block' : 'none'
+                        }}
                         href={`/create/${from}`}
                     >{btnText}</Link>
                 </Box>

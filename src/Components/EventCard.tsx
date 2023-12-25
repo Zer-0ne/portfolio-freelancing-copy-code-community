@@ -4,15 +4,17 @@ import { styles } from '@/utils/styles'
 import Image from 'next/image'
 import { AssistantPhotoRounded, CalendarToday, DeleteRounded, EditRounded, LanguageOutlined, LocalOfferRounded } from '@mui/icons-material'
 import { colors } from '@/utils/colors'
-import { EventsInterface } from '@/utils/Interfaces'
+import { EventsInterface, Session } from '@/utils/Interfaces'
 import { deletePost } from '@/utils/FetchFromApi'
 import Link from 'next/link'
 const EventCard = ({
     item,
-    fetchData
+    fetchData,
+    session
 }: {
     item: EventsInterface;
-    fetchData: () => Promise<void>
+    fetchData: () => Promise<void>;
+    session: Session
 }) => {
 
     const getRelativeDate = (targetDate: Date | string) => {
@@ -47,242 +49,244 @@ const EventCard = ({
     return (
         <>
             <Link href={`/events/${item._id}`}>
-            <Box
-                sx={styles.eventCard(item.label)}
-            >
-                {/* edit nd delete btn */}
                 <Box
-                    sx={{
-                        position: 'absolute',
-                        top: 10,
-                        right: 10,
-                        display: 'flex',
-                        gap: 1,
-                        opacity: .5,
-                        justifyContent: 'center',
-                        alignItems: 'center'
-                    }}
+                    sx={styles.eventCard(item.label)}
                 >
-                    <EditRounded
+                    {/* edit nd delete btn */}
+                    <Box
                         sx={{
-                            fontSize: 25,
-                            padding: .5,
-                            borderRadius: '50%',
-                            cursor: 'pointer',
-                            ':hover': {
-                                background: 'white',
-                                color: 'black'
-                            }
-                        }}
-                    />
-                    <DeleteRounded
-                        onClick={deleteEvent}
-                        sx={{
-                            fontSize: 25,
-                            padding: .5,
-                            borderRadius: '50%',
-                            cursor: 'pointer',
-                            ':hover': {
-                                background: 'red',
-                                color: 'white'
-                            }
-                        }}
-                    />
-                </Box>
-
-                {/* image box */}
-                <Box
-                    sx={{
-                        display: 'flex',
-                        flex: { xs: 10, md: 1, xl: 1 },
-                        minWidth: 200
-                    }}
-                >
-                    <Image
-                        src={item.image}
-                        alt='img'
-                        width={200}
-                        height={200}
-                        fill={false}
-                        style={{
-                            flex: 1
-                        }}
-                    />
-                </Box>
-
-                {/* Heading and description */}
-                <Box
-                    sx={{
-                        display: 'flex',
-                        gap: 1,
-                        flex: 5,
-                        flexDirection: 'column',
-                    }}
-                >
-                    {/* Heading */}
-                    <Typography
-                        variant='h5'
-                        sx={{
-                            fontWeight: '500'
+                            position: 'absolute',
+                            top: 10,
+                            right: 10,
+                            display: 'flex',
+                            gap: 1,
+                            opacity: .5,
+                            justifyContent: 'center',
+                            alignItems: 'center'
                         }}
                     >
-                        {item.title}
-                    </Typography>
+                        <EditRounded
+                            sx={{
+                                fontSize: 25,
+                                padding: .5,
+                                borderRadius: '50%',
+                                display: ['admin', 'moderator'].includes(session?.user?.role) ? 'flex' : 'none',
+                                cursor: 'pointer',
+                                ':hover': {
+                                    background: 'white',
+                                    color: 'black'
+                                }
+                            }}
+                        />
+                        <DeleteRounded
+                            onClick={deleteEvent}
+                            sx={{
+                                fontSize: 25,
+                                display: ['admin', 'moderator'].includes(session?.user?.role) ? 'flex' : 'none',
+                                padding: .5,
+                                borderRadius: '50%',
+                                cursor: 'pointer',
+                                ':hover': {
+                                    background: 'red',
+                                    color: 'white'
+                                }
+                            }}
+                        />
+                    </Box>
 
-                    {/* Details modes participants */}
+                    {/* image box */}
                     <Box
                         sx={{
                             display: 'flex',
-                            gap: { xl: 5, md: 5, xs: 2 },
-                            margin: { xl: '5px 0', md: '5px 0', xs: '0 0 5px 0' },
-                            flexWrap: 'wrap',
-                            justifyContent: { xs: 'center', md: 'normal', xl: 'normal' }
+                            flex: { xs: 10, md: 1, xl: 1 },
+                            minWidth: 200
                         }}
                     >
-                        {/* Date and time */}
-                        <Box
-                            sx={styles.dateTimeBox()}
-                        >
-                            {getRelativeDate(item.eventDate)}
-                        </Box>
+                        <Image
+                            src={item.image}
+                            alt='img'
+                            width={200}
+                            height={200}
+                            fill={false}
+                            style={{
+                                flex: 1
+                            }}
+                        />
+                    </Box>
 
-                        {/* mode of the events online or offline  */}
+                    {/* Heading and description */}
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            gap: 1,
+                            flex: 5,
+                            flexDirection: 'column',
+                        }}
+                    >
+                        {/* Heading */}
+                        <Typography
+                            variant='h5'
+                            sx={{
+                                fontWeight: '500'
+                            }}
+                        >
+                            {item.title}
+                        </Typography>
+
+                        {/* Details modes participants */}
                         <Box
                             sx={{
                                 display: 'flex',
-                                gap: .8,
-                                justifyContent: 'center',
-                                alignItems: 'center'
+                                gap: { xl: 5, md: 5, xs: 2 },
+                                margin: { xl: '5px 0', md: '5px 0', xs: '0 0 5px 0' },
+                                flexWrap: 'wrap',
+                                justifyContent: { xs: 'center', md: 'normal', xl: 'normal' }
                             }}
                         >
-                            <LanguageOutlined
+                            {/* Date and time */}
+                            <Box
+                                sx={styles.dateTimeBox()}
+                            >
+                                {getRelativeDate(item.eventDate)}
+                            </Box>
+
+                            {/* mode of the events online or offline  */}
+                            <Box
                                 sx={{
-                                    fontSize: 19
-                                }}
-                            />
-                            <Typography
-                                variant='caption'
-                                sx={{
-                                    fontSize: 15
+                                    display: 'flex',
+                                    gap: .8,
+                                    justifyContent: 'center',
+                                    alignItems: 'center'
                                 }}
                             >
-                                {item.mode}
-                            </Typography>
-                        </Box>
+                                <LanguageOutlined
+                                    sx={{
+                                        fontSize: 19
+                                    }}
+                                />
+                                <Typography
+                                    variant='caption'
+                                    sx={{
+                                        fontSize: 15
+                                    }}
+                                >
+                                    {item.mode}
+                                </Typography>
+                            </Box>
 
-                        {/* members participants */}
-                        <Typography
-                            variant='caption'
-                            sx={{
-                                fontSize: 15,
-                                fontWeight: '600',
-                            }}
-                        >{item.participants}
+                            {/* members participants */}
                             <Typography
                                 variant='caption'
                                 sx={{
                                     fontSize: 15,
-                                    ml: .5
+                                    fontWeight: '600',
                                 }}
-                            >participants</Typography>
-                        </Typography>
-                    </Box>
+                            >{item.participants}
+                                <Typography
+                                    variant='caption'
+                                    sx={{
+                                        fontSize: 15,
+                                        ml: .5
+                                    }}
+                                >participants</Typography>
+                            </Typography>
+                        </Box>
 
-                    {/* Description */}
-                    <Typography
-                        variant='body2'
-                        sx={{
-                            textAlign: 'justify',
-                            ml: 1,
-                            mt: 1,
-                            overflow: 'hidden'
-                        }}
-                    >
-                        {item.description}
-                    </Typography>
-                </Box>
-
-                {/* organizer keywords and other details */}
-                <Box
-                    sx={styles.eventCardRight()}
-                >
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            gap: 1.5,
-                            justifyContent: 'center',
-                            alignItems: 'center'
-                        }}
-                    >
-                        <AssistantPhotoRounded
-                            sx={{
-                                fontSize: 20
-                            }}
-                        />
+                        {/* Description */}
                         <Typography
-                            variant='caption'
-                            fontSize={15}
+                            variant='body2'
                             sx={{
-                                padding: '2px 13px',
-                                borderRadius: 7,
-                                border: `1px solid ${colors.transparentGrey}`
+                                textAlign: 'justify',
+                                ml: 1,
+                                mt: 1,
+                                overflow: 'hidden'
                             }}
-                        >Sahil khan</Typography>
-                    </Box>
-
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            gap: 1.5,
-                            justifyContent: 'center',
-                            alignItems: 'center'
-                        }}
-                    >
-                        <CalendarToday
-                            sx={{
-                                fontSize: 15
-                            }}
-                        />
-                        <Typography
-                            variant='caption'
-                            fontSize={15}
-
                         >
-                            {item.eventDate}
+                            {item.description}
                         </Typography>
                     </Box>
 
-
+                    {/* organizer keywords and other details */}
                     <Box
-                        sx={{
-                            display: 'flex',
-                            gap: 1.5,
-                            justifyContent: 'center',
-                            alignItems: 'center'
-                        }}
+                        sx={styles.eventCardRight()}
                     >
-                        <LocalOfferRounded
-                            sx={{
-                                fontSize: 15
-                            }}
-                        />
                         <Box
                             sx={{
                                 display: 'flex',
-                                flexDirection: 'column',
-                                gap: 1
+                                gap: 1.5,
+                                justifyContent: 'center',
+                                alignItems: 'center'
                             }}
                         >
+                            <AssistantPhotoRounded
+                                sx={{
+                                    fontSize: 20
+                                }}
+                            />
                             <Typography
                                 variant='caption'
                                 fontSize={15}
+                                sx={{
+                                    padding: '2px 13px',
+                                    borderRadius: 7,
+                                    border: `1px solid ${colors.transparentGrey}`
+                                }}
+                            >Sahil khan</Typography>
+                        </Box>
+
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                gap: 1.5,
+                                justifyContent: 'center',
+                                alignItems: 'center'
+                            }}
+                        >
+                            <CalendarToday
+                                sx={{
+                                    fontSize: 15
+                                }}
+                            />
+                            <Typography
+                                variant='caption'
+                                fontSize={15}
+
                             >
-                                {item.tag}
+                                {item.eventDate}
                             </Typography>
+                        </Box>
+
+
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                gap: 1.5,
+                                justifyContent: 'center',
+                                alignItems: 'center'
+                            }}
+                        >
+                            <LocalOfferRounded
+                                sx={{
+                                    fontSize: 15
+                                }}
+                            />
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: 1
+                                }}
+                            >
+                                <Typography
+                                    variant='caption'
+                                    fontSize={15}
+                                >
+                                    {item.tag}
+                                </Typography>
+                            </Box>
                         </Box>
                     </Box>
                 </Box>
-            </Box>
             </Link>
         </>
     )
