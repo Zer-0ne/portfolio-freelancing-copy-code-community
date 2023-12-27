@@ -262,24 +262,24 @@ export const styles = {
         fontSize: '85%',
         lineHeight: '1.45',
         color: '#e6edf3',
-        backgroundColor: '#161b22',
-        borderRadius: '6px',
+        ...styles.glassphorism(),
         margin: '1rem',
         position: 'relative'
     }),
-    heading: (size: string | number = 50, weight: string | number = '800') => ({
+    heading: (size: string | number = 50, weight: string | number = '800', display: string = 'block') => ({
         fontSize: size,
         fontWeight: weight,
         position: 'relative',
-        mb: 3,
+        mt: 1,
         '::after': {
             content: `""`,
             height: '2px',
             background: 'grey',
             position: 'absolute',
             left: 0, right: 0,
-            bottom: -2.5,
-            opacity: .6
+            bottom: -5,
+            opacity: .6,
+            display
         }
     })
 }

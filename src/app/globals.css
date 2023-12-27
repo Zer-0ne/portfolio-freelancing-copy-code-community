@@ -27,6 +27,7 @@ body {
   background: linear-gradient(to bottom,
       transparent,
       rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
+  /* overflow: hidden; */
 }
 
 .css-iwcgw7-MuiFormLabel-root-MuiInputLabel-root,

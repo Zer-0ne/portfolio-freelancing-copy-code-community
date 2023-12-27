@@ -26,9 +26,11 @@ const BlogEventsStructure = (
 ) => {
     const { session } = useSelector((state: RootState) => state.session)
     return (
-        <Box>
+        <Box
+        >
             <Container
-                sx={styles.containerStyle()}
+
+                sx={[styles.containerStyle()]}
             >
 
                 {/* search bar and new btn */}

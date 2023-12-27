@@ -27,19 +27,21 @@ const Markdown = (
             <ReactMarkdown
                 components={{
                     h1: ({ children }) => <Typography variant='h1' sx={{
-                        ...styles.heading()
+                        ...styles.heading(),
+                        mb: 3
                     }}>{children}</Typography>,
                     h2: ({ children }) => <Typography variant='h2' sx={{
                         ...styles.heading(40, '500')
                     }}>{children}</Typography>,
                     h3: ({ children }) => <Typography variant='h3' sx={{
-                        ...styles.heading(30, '400')
+                        ...styles.heading(30, '500'),
+                        mb: 4, mt: 2, p: 1
                     }}>{children}</Typography>,
                     h4: ({ children }) => <Typography variant='h4' sx={{
-                        ...styles.heading(25, '300')
+                        ...styles.heading(25, '300', 'none')
                     }}>{children}</Typography>,
-                    h5: ({ children }) => <Typography variant='h4' sx={{
-                        ...styles.heading(20, '300')
+                    h5: ({ children }) => <Typography variant='h5' sx={{
+                        ...styles.heading(20, '300', 'none')
                     }}>{children}</Typography>,
                     pre: ({ children }) => <CodeContainer children={children as {
                         props: {

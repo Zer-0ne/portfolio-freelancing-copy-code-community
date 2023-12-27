@@ -1,5 +1,6 @@
 export const colors = {
     dateTimeBoxBackgroundColor: '#0582ca',
     transparentGrey: '#8080802e',
-    darkRedTransparent: '#c9050594'
+    darkRedTransparent: '#c9050594',
+    colorBoxBgColor: '#090a0a'
 }
