@@ -26,29 +26,25 @@ const CodeContainer = ({ children }: {
     return (
         <>
             <Box id='text' sx={[styles.codeBox()]}>
-                <pre
-                    style={{
-                        position: 'relative'
+                <Box
+                    onClick={handleCopyCode}
+                    sx={{
+                        position: 'absolute',
+                        top: 10,
+                        right: 10,
+                        fontSize: '1rem',
+                        cursor: 'pointer',
+                        zIndex: 2
                     }}
-                >
-                    <Box
-                        onClick={handleCopyCode}
-                        sx={{
-                            position: 'absolute',
-                            top: 10,
-                            right: 10,
-                            fontSize: '1rem',
-                            cursor: 'pointer',
-                            zIndex: 2
-                        }}
-                    >{
-                            isCopied ?
-                                <Done /> :
-                                <ContentCopy
-                                />
+                >{
+                        isCopied ?
+                            <Done /> :
+                            <ContentCopy
+                            />
 
-                        }
-                    </Box>
+                    }
+                </Box>
+                <pre>
                     {children.props.children}
                 </pre>
             </Box>
