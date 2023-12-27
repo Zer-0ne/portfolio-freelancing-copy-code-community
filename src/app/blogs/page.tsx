@@ -1,20 +1,23 @@
 'use client'
 import BlogCard from '@/Components/BlogCard'
-import { Box, Container } from '@mui/material'
-import React, { useState } from 'react'
-import { styles } from '@/utils/styles';
+import { Box,  } from '@mui/material'
+import React, {  useRef, useState } from 'react'
 import BlogEventsStructure from '@/Components/BlogEventsStructure';
 // import { blogsDetails } from '@/utils/constant';
 import { allPost } from '@/utils/FetchFromApi';
-import { BlogsInterface, Session } from '@/utils/Interfaces';
+import { BlogsInterface } from '@/utils/Interfaces';
 import Loading from '@/Components/Loading';
-import { currentSession } from '@/utils/Session';
+import { fetchSession } from '@/slices/sessionSlice';
+import { useDispatch } from 'react-redux';
+import { AppDispatch  } from '@/store/store';
 
 const page = () => {
+  const blogRef = useRef(false)
   const [searchInput, setSearchInput] = useState<string>('');
-  const [session, setSession] = useState<Session>()
   const [data, setData] = useState<BlogsInterface[]>()
   const [isLoading, setIsLoading] = useState(true)
+  const dispatch = useDispatch<AppDispatch>()
+
 
   const handleSearch = (input: string) => {
     setSearchInput(input);
@@ -24,8 +27,10 @@ const page = () => {
   const fetchData = async () => {
     try {
       const fetchedData: BlogsInterface[] = await allPost('blog');
-      const session = await currentSession()
-      setSession(session as Session)
+      
+      // fetch session from the redux store 
+      dispatch(fetchSession());
+      
       setData(fetchedData)
       setIsLoading(false)
     } catch (error) {
@@ -36,7 +41,8 @@ const page = () => {
 
   // useEffect
   React.useEffect(() => {
-    fetchData()
+    (blogRef.current === false) && fetchData()
+    return () => { blogRef.current = true }
   }, [])
 
   if (isLoading) return <Loading />
@@ -52,7 +58,6 @@ const page = () => {
   return (
     <>
       <BlogEventsStructure
-        session={session as Session}
         placeholder='Search Blog...'
         from='blog'
         btnText='New'
@@ -74,7 +79,6 @@ const page = () => {
             </> :
               filteredEvents?.map((item, index) => (
                 <BlogCard
-                  session={session as Session}
                   fetchData={fetchData}
                   key={index}
                   item={item}

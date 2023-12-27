@@ -105,12 +105,17 @@ export const Post = async (route: string, id: string) => {
 export const userInfo = async (id: string, method: string = 'GET') => {
     try {
         // await new Promise((resolve: TimerHandler) => setTimeout(resolve, 3000))
+        // check the session
+        const session = await currentSession() as Session;
+        if (!session) return 'Please login'
 
-        const user = await fetch(`/api/user/${id}`, {
+        if (session?.user?.username === id && method === "DELETE") return 'You can\'t do this action'
+
+        const res = await fetch(`/api/user/${id}`, {
             method: `${method}`,
         })
-        if (user.ok) {
-            return await user.json()
+        if (res.ok) {
+            return await res.json()
         }
     } catch (error) {
         console.log(error)

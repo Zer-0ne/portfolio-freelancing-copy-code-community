@@ -6,6 +6,8 @@ import { DeleteRounded, EditRounded } from '@mui/icons-material'
 import { deletePost } from '@/utils/FetchFromApi'
 import { IBM_Plex_Mono, Kalam, Libre_Baskerville } from 'next/font/google'
 import Link from 'next/link'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/store/store'
 
 const kalam = Kalam({
     subsets: ['latin'],
@@ -26,18 +28,17 @@ export const libre_Baskerville = Libre_Baskerville({
 
 
 const BlogCard = ({
-    session,
     item,
     fetchData
 }: {
     item: BlogsInterface,
     fetchData: () => Promise<void>;
-    session: Session
 }) => {
     const deleteBlog = async () => {
         await deletePost(item?._id, 'blog', item)
         await fetchData()
     }
+    const { session } = useSelector((state: RootState) => state.session)
     return (
         <>
             <Link href={`/blogs/${item._id}`}>
@@ -62,7 +63,7 @@ const BlogCard = ({
                                 padding: .5,
                                 borderRadius: '50%',
                                 cursor: 'pointer',
-                                display: ['admin', 'moderator'].includes(session?.user?.role) ? 'flex' : 'none',
+                                display: ['admin', 'moderator'].includes(session[0]?.role) ? 'flex' : 'none',
                                 ':hover': {
                                     background: 'white',
                                     color: 'black'
@@ -76,7 +77,7 @@ const BlogCard = ({
                                 padding: .5,
                                 borderRadius: '50%',
                                 cursor: 'pointer',
-                                display: ['admin', 'moderator'].includes(session?.user?.role) ? 'flex' : 'none',
+                                display: ['admin', 'moderator'].includes(session[0]?.role) ? 'flex' : 'none',
                                 ':hover': {
                                     background: 'red',
                                     color: 'white'

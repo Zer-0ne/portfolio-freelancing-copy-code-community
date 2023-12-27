@@ -2,34 +2,42 @@
 import CustomModal from '@/Components/CustomModal'
 import Loading from '@/Components/Loading'
 import UserCard from '@/Components/UserCard'
+import { fetchSession } from '@/slices/sessionSlice'
+import { AppDispatch, RootState } from '@/store/store'
 import { allUser, userInfo } from '@/utils/FetchFromApi'
 import { Data, Session } from '@/utils/Interfaces'
 import { currentSession } from '@/utils/Session'
 import { Backdrop, Box, Container, Fade, Modal } from '@mui/material'
 import { notFound } from 'next/navigation'
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
 const page = () => {
-  const [isAdmin, setIsAdmin] = React.useState<boolean>(true)
+  const pageRef = useRef(false)
   const [isloading, setIsloading] = React.useState<boolean>(true)
   const [open, setOpen] = React.useState(false);
   const [data, setData] = React.useState<Data[]>()
+  const dispatch = useDispatch<AppDispatch>()
+  const { session } = useSelector((state: RootState) => state.session)
   const [isUpdate, setIsUpdate] = React.useState<Data>()
+  
+  const user = async () => {
+    // fetch session from the redux store 
+    await dispatch(fetchSession());
+    const alluser = await allUser('user')
+    setData(alluser)
+    setIsloading(false)
+    return (session[0]?.isAdmin) ? true : false;
+  }
 
   useEffect(() => {
-    const user = async () => {
-      const session = await currentSession() as Session
-      const currUser = await userInfo(session?.user.username);
-      (session && currUser.isAdmin === true) ? setIsAdmin(true) : setIsAdmin(false)
-      const alluser = await allUser('user')
-      setData(alluser)
-      setIsloading(false)
-      return (currUser.isAdmin) ? true : false;
+    (pageRef.current === false) && user()
+    return () => {
+      pageRef.current = true
     }
-    user()
   }, [])
   if (isloading) return <Loading />
-  if (!isAdmin) return notFound()
+  if (session[0]?.isAdmin === false) return notFound()
 
   const handleDelete = async () => {
     try {

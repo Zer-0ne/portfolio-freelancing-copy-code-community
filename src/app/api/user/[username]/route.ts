@@ -1,6 +1,6 @@
 import Users from "@/Models/Users";
 import { userInfo } from "@/utils/FetchFromApi";
-import { Session } from "@/utils/Interfaces";
+import { Data, Session } from "@/utils/Interfaces";
 import { currentSession } from "@/utils/Session";
 import connect from "@/utils/database";
 import { NextRequest, NextResponse } from "next/server";
@@ -14,8 +14,10 @@ export const GET = async (request: NextRequest, { params }: any) => {
         const user = await Users.findOne({ username });
 
         if (!user) return NextResponse.json({ message: 'User not found!' }, { status: 400 });
+        const { password, ...userWithoutPassword } = user.toObject();
 
-        return NextResponse.json(user)
+
+        return NextResponse.json(userWithoutPassword)
     } catch (error) {
         return NextResponse.json({ message: 'Internal server error' }, { status: 500 })
     }
@@ -80,11 +82,13 @@ export const DELETE = async (request: NextRequest, { params }: any) => {
 
         // check the user is admin or not 
         const user = await userInfo(session?.user?.username)
-        if (user?.isAdmin === false) return NextResponse.json({ message: 'Your are not Authorized!' }, { status: 401 })
+        if (user?.isAdmin === false) return NextResponse.json({ message: 'You are not Authorized!' }, { status: 401 })
+
 
         // connect to Database
         await connect();
         const { username } = params
+        if (user?.username === username) return NextResponse.json({ message: 'Cant do this action!' }, { status: 400 })
         const deleteUser = await Users.findOneAndDelete({ username })
         if (!deleteUser) return NextResponse.json({ message: 'User not found!' })
         return NextResponse.json({ message: 'Delete seccussfully' })

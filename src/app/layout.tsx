@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import Navbar from '@/Components/Navbar'
 import NextAuthProvider from '@/provider/SessionProvider'
+import ReduxProdiver from '@/provider/ReduxProdiver'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -13,10 +14,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-  
+
 }: {
   children: React.ReactNode,
-  
+
 }) {
   return (
     <html lang="en" style={{ position: 'relative' }}>
@@ -24,8 +25,10 @@ export default function RootLayout({
       </head>
       <body className={inter.className}  >
         <NextAuthProvider>
-          <Navbar />
-          {children}
+          <ReduxProdiver>
+            <Navbar />
+            {children}
+          </ReduxProdiver>
         </NextAuthProvider>
       </body>
     </html>

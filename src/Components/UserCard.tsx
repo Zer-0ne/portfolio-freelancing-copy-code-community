@@ -7,6 +7,8 @@ import DropDown from './DropDown'
 import { Data } from '@/utils/Interfaces'
 import { styles } from '@/utils/styles'
 import { allUser, editPost } from '@/utils/FetchFromApi'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/store/store'
 
 const UserCard = (
     {
@@ -21,6 +23,7 @@ const UserCard = (
         setdata: React.Dispatch<React.SetStateAction<Data[] | undefined>>
     }
 ) => {
+    const { session } = useSelector((state: RootState) => state.session)
     const [data, setData] = useState<Data>()
 
     const roles: string[] = ['admin', 'user', 'moderator']
@@ -47,7 +50,7 @@ const UserCard = (
                 return obj;
             }, {} as Data);
         await editPost(item.username as string, changedValues, 'user');
-        
+
         const alluser = await allUser('user')
         setdata(alluser)
     }
@@ -87,7 +90,7 @@ const UserCard = (
                 </Box>
                 <Box
                     sx={{
-                        display: 'flex',
+                        display: (item.username === session[0]?.username) ? 'none' : 'flex',
                         gap: 2,
                         alignItems: 'center'
                     }}

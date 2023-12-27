@@ -7,15 +7,16 @@ import { colors } from '@/utils/colors'
 import { EventsInterface, Session } from '@/utils/Interfaces'
 import { deletePost } from '@/utils/FetchFromApi'
 import Link from 'next/link'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/store/store'
 const EventCard = ({
     item,
     fetchData,
-    session
 }: {
     item: EventsInterface;
     fetchData: () => Promise<void>;
-    session: Session
 }) => {
+    const { session } = useSelector((state: RootState) => state.session)
 
     const getRelativeDate = (targetDate: Date | string) => {
         const currentDate = new Date() as any;
@@ -70,7 +71,7 @@ const EventCard = ({
                                 fontSize: 25,
                                 padding: .5,
                                 borderRadius: '50%',
-                                display: ['admin', 'moderator'].includes(session?.user?.role) ? 'flex' : 'none',
+                                display: ['admin', 'moderator'].includes(session[0]?.role) ? 'flex' : 'none',
                                 cursor: 'pointer',
                                 ':hover': {
                                     background: 'white',
@@ -82,7 +83,7 @@ const EventCard = ({
                             onClick={deleteEvent}
                             sx={{
                                 fontSize: 25,
-                                display: ['admin', 'moderator'].includes(session?.user?.role) ? 'flex' : 'none',
+                                display: ['admin', 'moderator'].includes(session[0]?.role) ? 'flex' : 'none',
                                 padding: .5,
                                 borderRadius: '50%',
                                 cursor: 'pointer',

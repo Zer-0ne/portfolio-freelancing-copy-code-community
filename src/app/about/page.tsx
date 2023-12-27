@@ -1,9 +1,12 @@
+'use client'
 import { Box, Typography } from '@mui/material'
 import React from 'react'
 import { Kalam, IBM_Plex_Mono } from 'next/font/google';
 import { styles } from '@/utils/styles';
 import { aboutCCC, coreTeamMember } from '@/utils/constant';
 import MemberCard from '@/Components/MemberCard';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store/store';
 
 const kalam = Kalam({
     subsets: ['latin'],
@@ -15,6 +18,8 @@ const ibn = IBM_Plex_Mono({
 })
 
 const page = () => {
+    const { session } = useSelector((state: RootState) => state.session)
+    console.log(session)
     return (
         <>
             <Box

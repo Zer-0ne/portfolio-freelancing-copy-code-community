@@ -2,16 +2,20 @@
 import BlogEventsStructure from '@/Components/BlogEventsStructure'
 import EventCard from '@/Components/EventCard'
 import Loading from '@/Components/Loading'
+import { fetchSession } from '@/slices/sessionSlice'
+import { AppDispatch } from '@/store/store'
 import { allPost } from '@/utils/FetchFromApi'
 import { EventsInterface, Session } from '@/utils/Interfaces'
 import { currentSession } from '@/utils/Session'
 import { Box } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
+import { useDispatch } from 'react-redux'
 
 const page = () => {
+  const pageRef = useRef(false)
   const [searchInput, setSearchInput] = useState<string>('');
   const [data, setData] = useState<EventsInterface[]>()
-  const [session, setSession] = useState<Session>()
+  const dispatch = useDispatch<AppDispatch>()
   const [isLoading, setIsLoading] = useState(true)
 
 
@@ -23,8 +27,10 @@ const page = () => {
   const fetchData = async () => {
     try {
       const fetchedData: EventsInterface[] = await allPost('event');
-      const session = await currentSession()
-      setSession(session as Session)
+      
+      // fetch session from the redux store 
+      dispatch(fetchSession());
+      
       setData(fetchedData)
       setIsLoading(false)
     } catch (error) {
@@ -35,9 +41,12 @@ const page = () => {
 
   // useEffect
   React.useEffect(() => {
-    fetchData()
+    (pageRef.current === false) && fetchData()
+    return () => {
+      pageRef.current = true
+    }
   }, [])
-  
+
 
   if (isLoading) return <Loading />
 
@@ -60,7 +69,6 @@ const page = () => {
         placeholder='Search event...'
         btnText='New'
         searchInput={searchInput}
-        session={session as Session}
         handleSearch={handleSearch}
       >
         <Box
@@ -77,7 +85,6 @@ const page = () => {
             </> :
               filteredEvents?.map((item, index) => (
                 <EventCard
-                  session={session as Session}
                   fetchData={fetchData}
                   key={index}
                   item={item}

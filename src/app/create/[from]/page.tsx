@@ -6,7 +6,7 @@ import { createBlog, createEvent } from '@/utils/constant'
 import { styles } from '@/utils/styles'
 import { notFound, useParams, useRouter } from 'next/navigation'
 import { Box, Container, Typography } from '@mui/material'
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import DropDown from '@/Components/DropDown'
 import { AddAPhotoRounded } from '@mui/icons-material'
 import Image from 'next/image'
@@ -14,6 +14,7 @@ import { currentSession } from '@/utils/Session'
 import Loading from '@/Components/Loading'
 
 const page = () => {
+    const pageRef = useRef(false)
     const [data, setData] = React.useState<Data>()
     const [isAdmin, setIsAdmin] = React.useState<boolean>(true)
     const [isloading, setIsloading] = React.useState<boolean>(true)
@@ -29,7 +30,10 @@ const page = () => {
             setIsloading(false)
             return (currUser.isAdmin) ? true : false;
         }
-        user()
+        (pageRef.current === false) && user()
+        return () => {
+            pageRef.current = true
+        }
     }, [])
     if (isloading) return <Loading />
     if (!isAdmin) return notFound()
@@ -61,7 +65,7 @@ const page = () => {
         e.preventDefault();
         try {
             (data?.contentImages) && await imagesInFolder('content/', data?.contentImages as string[])
-            await createNew(data as Data, from as string,setIsDisabled)
+            await createNew(data as Data, from as string, setIsDisabled)
             router.push((from === 'blog') ? '/blogs' : '/events')
         } catch (error) {
             console.log(error)

@@ -6,8 +6,15 @@ import { NextResponse } from "next/server";
 // Fetching all the events
 export const GET = async () => {
     await connect();
-    const user = await Users.find({});
+    const users = await Users.find({});
+
+    // Create a new array without the password field
+    const sanitizedUsers = users.map(user => {
+        const { password, ...userWithoutPassword } = user.toObject();
+        return userWithoutPassword;
+    });
+
     return NextResponse.json(
-        user,
+        sanitizedUsers
     );
 }
