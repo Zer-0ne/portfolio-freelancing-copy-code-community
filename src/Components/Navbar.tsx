@@ -1,5 +1,5 @@
 'use client'
-import { Box, Typography } from '@mui/material'
+import { Box, NoSsr, Typography } from '@mui/material'
 import React from 'react'
 import { styles } from '@/utils/styles'
 import { Login, navbarContent, sessionAction } from '@/utils/constant'
@@ -23,13 +23,13 @@ const Navbar = () => {
         e.preventDefault();
         try {
             const response = await LoginUser(data as Data)
-            
+
         } catch (error) {
             console.error(error)
         }
     }
     return (
-        <>
+        <NoSsr>
             {/* <Box
                 display={'flex'}
                 gap={1}
@@ -119,6 +119,9 @@ const Navbar = () => {
                                         />
                                         <GitHub
                                             sx={styles.socialMediaIcon()}
+                                            onClick={async () => {
+                                                await signIn('github')
+                                            }}
                                         />
 
                                     </Box>
@@ -129,7 +132,7 @@ const Navbar = () => {
                 </form>
             </Box>
             {/* </Box> */}
-        </>
+        </NoSsr>
     )
 }
 

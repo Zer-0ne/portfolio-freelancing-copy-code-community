@@ -1,5 +1,5 @@
 import { Avatar, Box, Typography } from '@mui/material'
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import { styles } from '@/utils/styles'
 import { BlogsInterface, Session } from '@/utils/Interfaces'
 import { DeleteRounded, EditRounded } from '@mui/icons-material'
@@ -39,52 +39,52 @@ const BlogCard = ({
         await fetchData()
     }
     const { session } = useSelector((state: RootState) => state.session)
+    const cardRef = useRef<HTMLDivElement>(null);
+    const [isVisible, setIsVisible] = React.useState(false);
+
+    useEffect(() => {
+        const options = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.5, // Adjust the threshold as needed
+        };
+
+        const callback: IntersectionObserverCallback = (entries) => {
+            entries.forEach((entry) => {
+                setIsVisible(entry.isIntersecting);
+            });
+        };
+
+        const observer = new IntersectionObserver(callback, options);
+
+        if (cardRef.current) {
+            observer.observe(cardRef.current);
+        }
+
+        // Cleanup the observer when the component unmounts
+        return () => {
+            observer.disconnect();
+        };
+    }, []);
     return (
-        <>
+        <Box
+            ref={cardRef}
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: .5,
+                transition: 'all 0.5s ease-in-out',
+                opacity: isVisible ? 1 : 0,
+                transform: `scale(${!isVisible ? -.8 : 1})`,
+            }}
+        >
             <Link href={`/blogs/${item._id}`}>
                 <Box
-                    sx={styles.blogCard()}
+                    sx={styles.blogCard(session as {
+                        role: string
+                    }[])}
                 >
-                    <Box
-                        sx={{
-                            position: 'absolute',
-                            top: 10,
-                            right: 10,
-                            display: 'flex',
-                            gap: 1,
-                            opacity: .5,
-                            justifyContent: 'center',
-                            alignItems: 'center'
-                        }}
-                    >
-                        <EditRounded
-                            sx={{
-                                fontSize: 25,
-                                padding: .5,
-                                borderRadius: '50%',
-                                cursor: 'pointer',
-                                display: ['admin', 'moderator'].includes(session[0]?.role) ? 'flex' : 'none',
-                                ':hover': {
-                                    background: 'white',
-                                    color: 'black'
-                                }
-                            }}
-                        />
-                        <DeleteRounded
-                            onClick={deleteBlog}
-                            sx={{
-                                fontSize: 25,
-                                padding: .5,
-                                borderRadius: '50%',
-                                cursor: 'pointer',
-                                display: ['admin', 'moderator'].includes(session[0]?.role) ? 'flex' : 'none',
-                                ':hover': {
-                                    background: 'red',
-                                    color: 'white'
-                                }
-                            }}
-                        />
-                    </Box>
+
                     <Typography
                         variant='h5'
                         className={libre_Baskerville.className}
@@ -152,8 +152,47 @@ const BlogCard = ({
                         {item.description}
                     </Typography>
                 </Box>
-            </Link>
-        </>
+
+            </Link >
+            <Box
+                sx={{
+                    display: ['admin', 'moderator'].includes(session[0]?.role) ? 'flex' : 'none',
+                    gap: 1,
+                    opacity: .5,
+                    justifyContent: 'space-around',
+                    p: 1,
+                    alignItems: 'center',
+                    ...styles.glassphorism('', '0 0 12px 12px'),
+                    ml: 2
+                }}
+            >
+                <EditRounded
+                    sx={{
+                        fontSize: 25,
+                        padding: .5,
+                        borderRadius: '50%',
+                        cursor: 'pointer',
+                        ':hover': {
+                            background: 'white',
+                            color: 'black'
+                        }
+                    }}
+                />
+                <DeleteRounded
+                    onClick={deleteBlog}
+                    sx={{
+                        fontSize: 25,
+                        padding: .5,
+                        borderRadius: '50%',
+                        cursor: 'pointer',
+                        ':hover': {
+                            background: 'red',
+                            color: 'white'
+                        }
+                    }}
+                />
+            </Box>
+        </Box >
     )
 }
 

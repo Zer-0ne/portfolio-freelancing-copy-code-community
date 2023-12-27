@@ -103,9 +103,11 @@ export const styles = {
         padding: '0px 0',
         flex: 1
     }),
-    blogCard: () => ({
+    blogCard: (session: {
+        role: string
+    }[]) => ({
         flex: 1,
-        ...styles.glassphorism(),
+        ...styles.glassphorism('5px', ['admin', 'moderator'].includes(session[0]?.role) ? '12px 12px 0 0' : '12px'),
         padding: 4,
         ml: 2,
         pt: 3,
@@ -220,7 +222,7 @@ export const styles = {
     }),
     customInput: (flex: string | number = 8, customStyles?: object, radius = 5) => ({
         flex: flex,
-        background: 'transparent'
+        background: 'rgba(0, 0, 0, 0.2)'
         , border: '1px solid rgba(255,255,255,.25)'
         , borderRadius: radius
         , padding: '7px 10px'

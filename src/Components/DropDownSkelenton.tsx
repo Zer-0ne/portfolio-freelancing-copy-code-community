@@ -39,7 +39,7 @@ const DropDownSkelenton = (
                         flexDirection: 'column',
                         cursor: 'pointer',
                         transition: 'all .5s ease-in-out',
-                        backdropFilter: `blur(5px) saturate(187%)`,
+                        backdropFilter: `blur(5px) saturate(187%) !important`,
                         flex: 1,
                         gap: 1,
                         zIndex: 50
@@ -52,7 +52,7 @@ const DropDownSkelenton = (
             <Box
                 sx={styles?.customInput(8, {
                     textTransform: 'capitalize',
-                    position:'relative',
+                    position: 'relative',
                     cursor: 'pointer',
                     display: 'flex',
                     justifyContent: 'space-between',

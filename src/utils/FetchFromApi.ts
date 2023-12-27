@@ -1,4 +1,3 @@
-
 import { signIn, useSession } from "next-auth/react";
 import { BlogsInterface, Data, EventsInterface, Session } from "./Interfaces";
 import { currentSession } from "./Session";
@@ -9,9 +8,8 @@ import { errorToast, successToast, update } from "./ToastConfig";
 
 // create user 
 export const createUser = async (data: Data) => {
-    const Toast = toast.loading('Please wait')
     try {
-        const response = await fetch('/api/auth/signup', {
+        const response = await fetch('http://localhost:3000/api/auth/signup', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -19,12 +17,11 @@ export const createUser = async (data: Data) => {
             body: JSON.stringify(data)
         })
         if (response.ok) {
-            toast.update(Toast, update('Created!', 'success'));
             return await response.json()
         }
+        return false
     } catch (error) {
         console.log(error)
-        return toast.update(Toast, update('Something Went Wrong!', 'error'))
     }
 }
 
@@ -113,21 +110,19 @@ export const userInfo = async (id: string, method: string = 'GET') => {
         if (method === "DELETE") {
 
             const session = await currentSession() as Session;
-            if (!session) return toast.error('Please Login!', errorToast)
+            if (!session) return 'Please Login!'
 
-            if (session?.user?.username === id) return toast.error('Cant do this action!', errorToast)
+            if (session?.user?.username === id) return 'Cant do this action!'
         }
 
         const res = await fetch(`/api/user/${id}`, {
             method: `${method}`,
         })
         if (res.ok) {
-            if (method === 'DELETE') return toast.success('User Deleted!', successToast)
             return await res.json()
         }
     } catch (error) {
         console.log(error)
-        return toast.error('Something Went Wrong!', errorToast)
     }
 }
 
@@ -289,7 +284,7 @@ export const editPost = async (id: string, data: Data, route: string) => {
         const user = await userInfo(session?.user?.username)
         if (user.isAdmin === false) return toast.update(Toast, update('Your are not Authorized!', 'error'))
 
-        const res = await fetch(`http://localhost:3000/api/${route}/${id}`, {
+        const res = await fetch(`/api/${route}/${id}`, {
             method: 'PUT',
             body: JSON.stringify({ ...data }),
         });

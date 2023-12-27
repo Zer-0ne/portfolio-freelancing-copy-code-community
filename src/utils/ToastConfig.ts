@@ -1,3 +1,4 @@
+
 import { ToastContent, ToastOptions, ToastPosition, TypeOptions, UpdateOptions } from "react-toastify"
 
 export const infoToast = {

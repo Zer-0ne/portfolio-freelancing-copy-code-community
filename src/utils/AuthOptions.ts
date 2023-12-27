@@ -1,8 +1,9 @@
 
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from 'bcrypt';
-import { Account,  NextAuthOptions } from "next-auth";
+import { Account, NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+import GithubProvider from 'next-auth/providers/github'
 import Users from "@/Models/Users";
 import connect from "./database";
 import { createUser } from "./FetchFromApi";
@@ -15,6 +16,10 @@ export const AuthOptions: NextAuthOptions = {
         GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID as string,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+        }),
+        GithubProvider({
+            clientId: process.env.GITHUB_CLIENT_ID as string,
+            clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
         }),
         CredentialsProvider({
             name: 'Credentials',
@@ -63,10 +68,11 @@ export const AuthOptions: NextAuthOptions = {
     callbacks: {
         async signIn({ user, account }: { user: any, account: Account | null; }) {
             try {
-                if (account?.provider === 'google') {
+                if (['google', 'github'].includes(account?.provider as string)) {
                     await connect()
-                    const checkUser = await user.id
-                    const isExist = await Users.findOne<any>({ checkUser });
+                    const username = await user.id
+                    const isExist = await Users.findOne<any>({ username });
+                    console.log(isExist)
                     if (isExist) return user
                     await createUser({
                         username: user?.id as string,
@@ -79,6 +85,7 @@ export const AuthOptions: NextAuthOptions = {
                 }
                 return user
             } catch (error) {
+                console.log(error)
                 return false
             }
         },
