@@ -197,9 +197,10 @@ export const createNew = async (data: Data, route: string, setIsDisabled: React.
             return toast.update(Toast, update('Posted!', 'success'))
         }
         setIsDisabled(false)
+        return toast.update(Toast, update('Something went wrong!', 'error'))
     } catch (error) {
         setIsDisabled(false)
-        console.log(error)
+        console.log('error')
         return toast.update(Toast, update('Something went wrong!', 'error'))
     }
 }
@@ -227,6 +228,7 @@ export const createNewContact = async (data: Data, setIsDisabled: React.Dispatch
             return toast.update(Toast, update('Posted!', 'success'))
         }
         setIsDisabled(false)
+        return toast.update(Toast, update('Something went wrong!', 'error'))
     } catch (error) {
         setIsDisabled(false)
         console.log(error)
@@ -267,6 +269,7 @@ export const deletePost = async (id: string, route: string, item: BlogsInterface
         if (res.ok) {
             return toast.update(Toast, update('Deleted!', 'success'));
         }
+        return toast.update(Toast, update('Something went wrong!', 'error'))
     } catch (error) {
         console.log(error)
         return toast.update(Toast, update('Something Went Wrong!', 'error'))
@@ -293,6 +296,7 @@ export const editPost = async (id: string, data: Data, route: string) => {
         if (res.ok) {
             return toast.update(Toast, update('Edited!', 'success'));
         }
+        return toast.update(Toast, update('Something went wrong!', 'error'))
     } catch (error) {
         console.log(error)
         return toast.update(Toast, update('Something Went Wrong!', 'error'));
