@@ -4,6 +4,8 @@ import './globals.css'
 import Navbar from '@/Components/Navbar'
 import NextAuthProvider from '@/provider/SessionProvider'
 import ReduxProdiver from '@/provider/ReduxProdiver'
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -27,6 +29,18 @@ export default function RootLayout({
         <NextAuthProvider>
           <ReduxProdiver>
             <Navbar />
+            <ToastContainer
+              position="top-right"
+              autoClose={5000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="dark"
+            />
             {children}
           </ReduxProdiver>
         </NextAuthProvider>

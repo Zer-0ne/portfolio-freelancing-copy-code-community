@@ -4,9 +4,12 @@ import { BlogsInterface, Data, EventsInterface, Session } from "./Interfaces";
 import { currentSession } from "./Session";
 import { deleteObject, getDownloadURL, listAll, ref, uploadString } from "firebase/storage";
 import { storage } from "./Firebase";
+import { toast } from "react-toastify";
+import { errorToast, successToast, update } from "./ToastConfig";
 
 // create user 
 export const createUser = async (data: Data) => {
+    const Toast = toast.loading('Please wait')
     try {
         const response = await fetch('/api/auth/signup', {
             method: 'POST',
@@ -16,11 +19,13 @@ export const createUser = async (data: Data) => {
             body: JSON.stringify(data)
         })
         if (response.ok) {
+            toast.update(Toast, update('Created!', 'success'));
             return await response.json()
         }
-        return
+        return toast.update(Toast, update('Try again later!', 'info'))
     } catch (error) {
         console.log(error)
+        return toast.update(Toast, update('Something Went Wrong!', 'error'))
     }
 }
 
@@ -106,19 +111,24 @@ export const userInfo = async (id: string, method: string = 'GET') => {
     try {
         // await new Promise((resolve: TimerHandler) => setTimeout(resolve, 3000))
         // check the session
-        const session = await currentSession() as Session;
-        if (!session) return 'Please login'
+        if (method === "DELETE") {
 
-        if (session?.user?.username === id && method === "DELETE") return 'You can\'t do this action'
+            const session = await currentSession() as Session;
+            if (!session) return toast.error('Please Login!', errorToast)
+
+            if (session?.user?.username === id) return toast.error('Cant do this action!', errorToast)
+        }
 
         const res = await fetch(`/api/user/${id}`, {
             method: `${method}`,
         })
         if (res.ok) {
+            if (method === 'DELETE') return toast.success('User Deleted!', successToast)
             return await res.json()
         }
     } catch (error) {
         console.log(error)
+        return toast.error('Something Went Wrong!', errorToast)
     }
 }
 
@@ -159,14 +169,17 @@ export const imagesInFolder = async (folderName: string, imageLinks: string[]) =
 
 // create a new post
 export const createNew = async (data: Data, route: string, setIsDisabled: React.Dispatch<React.SetStateAction<boolean>>) => {
+    const Toast = toast.loading('Please wait')
     try {
+
+
         // check the session
         const session = await currentSession() as Session;
-        if (!session) return 'Please login'
+        if (!session) return toast.update(Toast, update('Please Login!', 'error'))
 
         // check the user is admin or not 
         const user = await userInfo(session?.user?.username)
-        if (user.isAdmin === false) return 'Your are not Authorized!'
+        if (user.isAdmin === false) return toast.update(Toast, update('Your are not Authorized!', 'error'))
 
 
         setIsDisabled(true)
@@ -181,24 +194,25 @@ export const createNew = async (data: Data, route: string, setIsDisabled: React.
             })
         })
         if (response.ok) {
-            console.log('success')
             setIsDisabled(false)
-            return
+            return toast.update(Toast, update('Posted!', 'success'))
         }
         setIsDisabled(false)
-        return
+        return toast.update(Toast, update('Try again later!', 'info'))
     } catch (error) {
         setIsDisabled(false)
         console.log(error)
+        return toast.update(Toast, update('Something went wrong!', 'error'))
     }
 }
 
 export const createNewContact = async (data: Data, setIsDisabled: React.Dispatch<React.SetStateAction<boolean>>) => {
+    const Toast = toast.loading('Please wait')
     try {
         setIsDisabled(true)
         // check the session
         const session = await currentSession() as Session;
-        if (!session) { setIsDisabled(false); return 'Please login' }
+        if (!session) { setIsDisabled(false); return toast.update(Toast, update('Please Login!', 'error')) }
 
         const response = await fetch(`/api/contact/`, {
             method: "POST",
@@ -212,26 +226,28 @@ export const createNewContact = async (data: Data, setIsDisabled: React.Dispatch
         if (response.ok) {
             console.log('success')
             setIsDisabled(false)
-            return
+            return toast.update(Toast, update('Posted!', 'success'))
         }
         setIsDisabled(false)
-        return
+        return toast.update(Toast, update('Try again later!', 'info'))
     } catch (error) {
         setIsDisabled(false)
         console.log(error)
+        return toast.update(Toast, update('Something went wrong!', 'error'))
     }
 }
 
 // delete the post
 export const deletePost = async (id: string, route: string, item: BlogsInterface | EventsInterface) => {
+    const Toast = toast.loading('Please wait')
     try {
         // check the session
         const session = await currentSession() as Session;
-        if (!session) return 'Please login'
+        if (!session) return toast.update(Toast, update('Please Login!', 'error'))
 
         // check the user is admin or not 
         const user = await userInfo(session?.user?.username)
-        if (user.isAdmin === false) return 'Your are not Authorized!'
+        if (user.isAdmin === false) return toast.update(Toast, update('Your are not Authorized!', 'error'))
 
         if (item.contentImage.length) {
 
@@ -252,33 +268,38 @@ export const deletePost = async (id: string, route: string, item: BlogsInterface
 
         const res = await fetch(`/api/${route}/${id}`, { method: 'DELETE' });
         if (res.ok) {
-            return 'Deleted!';
+            return toast.update(Toast, update('Deleted!', 'success'));
         }
     } catch (error) {
         console.log(error)
+        return toast.update(Toast, update('Something Went Wrong!', 'error'))
+
     }
 }
 
 // edit the post
 export const editPost = async (id: string, data: Data, route: string) => {
+    const Toast = toast.loading('Please wait')
     try {
         // check the session
         const session = await currentSession() as Session;
-        if (!session) return 'Please login'
+        if (!session) return toast.update(Toast, update('Please Login!', 'error'))
 
         // check the user is admin or not 
         const user = await userInfo(session?.user?.username)
-        if (user.isAdmin === false) return 'Your are not Authorized!'
+        if (user.isAdmin === false) return toast.update(Toast, update('Your are not Authorized!', 'error'))
 
         const res = await fetch(`http://localhost:3000/api/${route}/${id}`, {
             method: 'PUT',
             body: JSON.stringify({ ...data }),
         });
         if (res.ok) {
-            return 'Edited!'
+            return toast.update(Toast, update('Edited!', 'success'));
         }
+        return toast.update(Toast, update('Try again later!', 'info'));
     } catch (error) {
         console.log(error)
+        return toast.update(Toast, update('Something Went Wrong!', 'error'));
     }
 }
 
