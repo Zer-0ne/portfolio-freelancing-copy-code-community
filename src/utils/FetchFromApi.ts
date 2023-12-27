@@ -22,7 +22,6 @@ export const createUser = async (data: Data) => {
             toast.update(Toast, update('Created!', 'success'));
             return await response.json()
         }
-        return toast.update(Toast, update('Try again later!', 'info'))
     } catch (error) {
         console.log(error)
         return toast.update(Toast, update('Something Went Wrong!', 'error'))
@@ -198,7 +197,6 @@ export const createNew = async (data: Data, route: string, setIsDisabled: React.
             return toast.update(Toast, update('Posted!', 'success'))
         }
         setIsDisabled(false)
-        return toast.update(Toast, update('Try again later!', 'info'))
     } catch (error) {
         setIsDisabled(false)
         console.log(error)
@@ -229,7 +227,6 @@ export const createNewContact = async (data: Data, setIsDisabled: React.Dispatch
             return toast.update(Toast, update('Posted!', 'success'))
         }
         setIsDisabled(false)
-        return toast.update(Toast, update('Try again later!', 'info'))
     } catch (error) {
         setIsDisabled(false)
         console.log(error)
@@ -296,7 +293,6 @@ export const editPost = async (id: string, data: Data, route: string) => {
         if (res.ok) {
             return toast.update(Toast, update('Edited!', 'success'));
         }
-        return toast.update(Toast, update('Try again later!', 'info'));
     } catch (error) {
         console.log(error)
         return toast.update(Toast, update('Something Went Wrong!', 'error'));
