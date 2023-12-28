@@ -44,7 +44,11 @@ const CodeContainer = ({ children }: {
 
                     }
                 </Box>
-                <pre>
+                <pre
+                    style={{
+                        overflow: 'auto',
+                    }}
+                >
                     {children.props.children}
                 </pre>
             </Box>

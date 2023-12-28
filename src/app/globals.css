@@ -30,6 +30,22 @@ body {
   /* overflow: hidden; */
 }
 
+* {
+  -ms-overflow-style: none !important;
+  /* Internet Explorer 10+ */
+  scrollbar-width: none !important;
+  /* Firefox */
+
+}
+
+*::-webkit-scrollbar {
+  display: none !important;
+  /* Safari and Chrome */
+  width: 0;
+  height: 0;
+
+}
+
 .css-iwcgw7-MuiFormLabel-root-MuiInputLabel-root,
 .css-1x51dt5-MuiInputBase-input-MuiInput-input,
 .css-1717ajk-MuiFormLabel-root-MuiInputLabel-root.Mui-focused {
@@ -52,10 +68,12 @@ body {
   border-bottom: 2px solid white;
 }
 
-.list,.olist{
+.list,
+.olist {
   margin-left: 50px;
 }
-blockquote{
+
+blockquote {
   font-style: italic;
   opacity: .8;
   margin-left: 30px;
@@ -64,6 +82,7 @@ blockquote{
 .list {
   list-style: disc !important;
 }
+
 .olist {
   list-style: decimal !important;
 }

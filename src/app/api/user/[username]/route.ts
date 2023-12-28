@@ -3,6 +3,7 @@ import { userInfo } from "@/utils/FetchFromApi";
 import { Data, Session } from "@/utils/Interfaces";
 import { currentSession } from "@/utils/Session";
 import connect from "@/utils/database";
+import { isValidObjectId } from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
 
 export const GET = async (request: NextRequest, { params }: any) => {
@@ -10,8 +11,15 @@ export const GET = async (request: NextRequest, { params }: any) => {
         await connect()
         const { username } = params
 
-        // If it's not a valid ObjectId, assume it's a username
-        const user = await Users.findOne({ username });
+        let user;
+        
+        // Check if the username is a valid ObjectId
+        if (isValidObjectId(username)) {
+            user = await Users.findById(username);
+        } else {
+            // If it's not a valid ObjectId, assume it's a username
+            user = await Users.findOne({ username });
+        }
 
         if (!user) return NextResponse.json({ message: 'User not found!' }, { status: 400 });
         const { password, ...userWithoutPassword } = user.toObject();

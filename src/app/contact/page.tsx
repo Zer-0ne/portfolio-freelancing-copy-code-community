@@ -3,9 +3,11 @@ import { Box, Button, Container, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import { styles } from '@/utils/styles'
 import { GitHub, Instagram, LinkedIn, WhatsApp } from '@mui/icons-material'
-import Link from 'next/link'
 import { Data } from '@/utils/Interfaces'
-import { createNewContact } from '@/utils/FetchFromApi'
+import dynamic from 'next/dynamic'
+
+const Link = dynamic(() => import('next/link'))
+
 const page = () => {
     const [isDisabled, setIsDisabled] = React.useState(false)
     const [data, setData] = useState<Data>()
@@ -19,6 +21,7 @@ const page = () => {
     const handleSubmit = async (e: any) => {
         e.preventDefault();
         try {
+            const { createNewContact } = await import('@/utils/FetchFromApi')
             return await createNewContact(data as Data, setIsDisabled)
         } catch (error) {
             console.error(error)

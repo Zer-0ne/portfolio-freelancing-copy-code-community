@@ -1,10 +1,13 @@
 'use client'
-import Loading from '@/Components/Loading'
-import Markdown from '@/Components/Markdown'
-import { Post } from '@/utils/FetchFromApi'
+
 import { EventsInterface } from '@/utils/Interfaces'
+import dynamic from 'next/dynamic'
 import { useParams } from 'next/navigation'
 import React, { useEffect, useRef, useState } from 'react'
+
+const Loading = dynamic(() => import('@/Components/Loading'))
+const Markdown = dynamic(() => import('@/Components/Markdown'))
+
 
 const page = () => {
     const pageRef = useRef(false)
@@ -16,6 +19,7 @@ const page = () => {
     useEffect(() => {
         const fetchedData = async () => {
             try {
+                const {Post} = await import('@/utils/FetchFromApi')
                 const res = await Post('event', id as string)
                 setData(res)
                 setIsLoading(false)

@@ -1,15 +1,15 @@
 'use client'
-import BlogCard from '@/Components/BlogCard'
 import { Box, } from '@mui/material'
-import React, { useEffect, useRef, useState } from 'react'
-import BlogEventsStructure from '@/Components/BlogEventsStructure';
-// import { blogsDetails } from '@/utils/constant';
-import { allPost } from '@/utils/FetchFromApi';
-import { BlogsInterface, Data } from '@/utils/Interfaces';
-import Loading from '@/Components/Loading';
-import { fetchSession } from '@/slices/sessionSlice';
+import React, { useRef, useState } from 'react'
+import { BlogsInterface, } from '@/utils/Interfaces';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/store/store';
+import dynamic from 'next/dynamic';
+
+const Loading = dynamic(() => import('@/Components/Loading'))
+const BlogEventsStructure = dynamic(() => import('@/Components/BlogEventsStructure'))
+const BlogCard = dynamic(() => import('@/Components/BlogCard'))
+
 
 const page = () => {
   const blogRef = useRef(false);
@@ -27,6 +27,8 @@ const page = () => {
   // fetch all the blogs
   const fetchData = async () => {
     try {
+      const { allPost } = await import('@/utils/FetchFromApi')
+      const { fetchSession } = await import('@/slices/sessionSlice')
       const fetchedData: BlogsInterface[] = await allPost('blog');
 
       // fetch session from the redux store 
@@ -41,7 +43,7 @@ const page = () => {
     }
   }
 
-  
+
 
   // useEffect
   React.useEffect(() => {

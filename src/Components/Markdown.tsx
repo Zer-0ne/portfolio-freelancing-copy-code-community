@@ -7,6 +7,13 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { BlogsInterface, EventsInterface } from '@/utils/Interfaces';
 import '@/app/globals.css'
+import { IBM_Plex_Mono } from 'next/font/google';
+
+export const ibn = IBM_Plex_Mono({
+    weight: '400',
+    subsets: ['latin']
+})
+
 const Markdown = (
     {
         data,
@@ -25,6 +32,7 @@ const Markdown = (
             }}
         >
             <ReactMarkdown
+                className={ibn.className}
                 components={{
                     h1: ({ children }) => <Typography variant='h1' sx={{
                         ...styles.heading(),
@@ -61,7 +69,7 @@ const Markdown = (
                     a: ({ children, href }) => (
                         <Link href={href as string}
                             style={{
-                                color: 'blue',
+                                color: 'white',
                                 textDecoration: 'underline'
 
                             }}

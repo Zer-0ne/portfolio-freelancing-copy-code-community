@@ -1,19 +1,20 @@
 'use client'
 import { ReadmeField } from '@/Components/ReadmeField'
-import { createNew, imagesInFolder, storeImage, userInfo } from '@/utils/FetchFromApi'
 import { Data, Session } from '@/utils/Interfaces'
 import { createBlog, createEvent } from '@/utils/constant'
 import { styles } from '@/utils/styles'
 import { notFound, useParams, useRouter } from 'next/navigation'
 import { Box, Container, Typography } from '@mui/material'
 import React, { useEffect, useRef } from 'react'
-import DropDown from '@/Components/DropDown'
 import { AddAPhotoRounded } from '@mui/icons-material'
-import Image from 'next/image'
-import { currentSession } from '@/utils/Session'
-import Loading from '@/Components/Loading'
+import dynamic from 'next/dynamic'
 
-const page = () => {
+const Loading = dynamic(() => import('@/Components/Loading'))
+const DropDown = dynamic(() => import('@/Components/DropDown'))
+const Image = dynamic(() => import('next/image'))
+
+
+const page = async () => {
     const pageRef = useRef(false)
     const [data, setData] = React.useState<Data>()
     const [isAdmin, setIsAdmin] = React.useState<boolean>(true)
@@ -24,6 +25,9 @@ const page = () => {
     const inputRef = React.useRef<HTMLDivElement>(null)
     useEffect(() => {
         const user = async () => {
+            const { userInfo } = await import('@/utils/FetchFromApi');
+            const { currentSession } = await import('@/utils/Session');
+
             const session = await currentSession() as Session
             const currUser = await userInfo(session?.user.username);
             (session && currUser.isAdmin === true) ? setIsAdmin(true) : setIsAdmin(false)
@@ -46,6 +50,7 @@ const page = () => {
             reader.onload = async (event) => {
                 if (event.target && event.target.result) {
                     const dataURL = event.target.result.toString();
+                    const { storeImage } = await import('@/utils/FetchFromApi');
                     const imageUrl = await storeImage(dataURL, 'Thumbnails', data?.title as string) as string
                     setData((prevData) => ({
                         ...prevData,
@@ -64,6 +69,8 @@ const page = () => {
     const handleSubmit = async (e: any) => {
         e.preventDefault();
         try {
+            const { createNew, imagesInFolder } = await import('@/utils/FetchFromApi');
+
             (data?.contentImages) && await imagesInFolder('content/', data?.contentImages as string[])
             await createNew(data as Data, from as string, setIsDisabled)
             router.push((from === 'blog') ? '/blogs' : '/events')

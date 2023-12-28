@@ -1,13 +1,15 @@
 'use client'
-import Loading from '@/Components/Loading'
-import { LoginUser, createUser, storeImage, userInfo } from '@/utils/FetchFromApi'
+
 import { Data, Session } from '@/utils/Interfaces'
-import { currentSession } from '@/utils/Session'
 import { Login, authMode, signup } from '@/utils/constant'
 import { styles } from '@/utils/styles'
-import { Avatar, Box, Button, TextField, Typography } from '@mui/material'
+import { Avatar, Box, Button, Typography } from '@mui/material'
+import dynamic from 'next/dynamic'
 import { notFound } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
+
+const Loading = dynamic(() => import('@/Components/Loading'))
+
 
 const page = () => {
     const [isLogin, setIsLogin] = React.useState(true);
@@ -19,6 +21,8 @@ const page = () => {
 
     useEffect(() => {
         const user = async () => {
+            const { userInfo } = await import('@/utils/FetchFromApi')
+            const { currentSession } = await import('@/utils/Session')
             const session = await currentSession() as Session
             const currUser = await userInfo(session?.user.username);
             (session && currUser.isAdmin === true) ? setIsAdmin(true) : setIsAdmin(false)
@@ -39,6 +43,7 @@ const page = () => {
             reader.onload = async (event) => {
                 if (event.target && event.target.result) {
                     const dataURL = event.target.result.toString();
+                    const { storeImage } = await import('@/utils/FetchFromApi');
                     const imageUrl = await storeImage(dataURL, 'profiles', data?.username as string)
                     setData((prevData) => ({
                         ...prevData,
@@ -55,8 +60,9 @@ const page = () => {
     const handleSubmit = async (e: any) => {
         e.preventDefault();
         try {
-            const response = (isLogin) ? await LoginUser(data as Data) : await createUser(data)
-            
+            const { LoginUser, createUser } = await import('@/utils/FetchFromApi');
+            (isLogin) ? await LoginUser(data as Data) : await createUser(data)
+
         } catch (error) {
             console.error(error)
         }

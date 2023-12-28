@@ -1,28 +1,35 @@
 'use client'
-import CustomModal from '@/Components/CustomModal'
-import Loading from '@/Components/Loading'
-import UserCard from '@/Components/UserCard'
-import { fetchSession } from '@/slices/sessionSlice'
+
+
 import { AppDispatch, RootState } from '@/store/store'
-import { allUser, userInfo } from '@/utils/FetchFromApi'
 import { Data } from '@/utils/Interfaces'
 import { Container, } from '@mui/material'
+import dynamic from 'next/dynamic'
 import { notFound } from 'next/navigation'
 import React, { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+
+const Loading = dynamic(() => import('@/Components/Loading'))
+const CustomModal = dynamic(() => import('@/Components/CustomModal'))
+const UserCard = dynamic(() => import('@/Components/UserCard'))
+// const { fetchSession } = dynamic(() => import('@/slices/sessionSlice'))
 
 const page = () => {
   const pageRef = useRef(false)
   const [isloading, setIsloading] = React.useState<boolean>(true)
   const [open, setOpen] = React.useState(false);
   const [data, setData] = React.useState<Data[]>()
-  const dispatch = useDispatch<AppDispatch>()
   const { session } = useSelector((state: RootState) => state.session)
   const [isUpdate, setIsUpdate] = React.useState<Data>()
-  
+
   const user = async () => {
+    const { fetchSession } = await import('@/slices/sessionSlice')
+    const { allUser } = await import('@/utils/FetchFromApi')
+
     // fetch session from the redux store 
+    const dispatch = useDispatch<AppDispatch>()
     await dispatch(fetchSession());
+    
     const alluser = await allUser('user')
     setData(alluser)
     setIsloading(false)
@@ -40,6 +47,7 @@ const page = () => {
 
   const handleDelete = async () => {
     try {
+      const { userInfo, allUser } = await import('@/utils/FetchFromApi')
       await userInfo(isUpdate?.username as string, 'DELETE')
       const alluser = await allUser('user')
       setData(alluser)

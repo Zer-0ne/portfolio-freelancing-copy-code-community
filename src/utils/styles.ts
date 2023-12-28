@@ -258,7 +258,6 @@ export const styles = {
     }),
     codeBox: () => ({
         padding: '16px',
-        overflow: 'auto',
         fontSize: '85%',
         lineHeight: '1.45',
         color: '#e6edf3',

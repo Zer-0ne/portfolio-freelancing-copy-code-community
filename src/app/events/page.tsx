@@ -1,15 +1,16 @@
 'use client'
-import BlogEventsStructure from '@/Components/BlogEventsStructure'
-import EventCard from '@/Components/EventCard'
-import Loading from '@/Components/Loading'
-import { fetchSession } from '@/slices/sessionSlice'
+
 import { AppDispatch } from '@/store/store'
-import { allPost } from '@/utils/FetchFromApi'
-import { EventsInterface, Session } from '@/utils/Interfaces'
-import { currentSession } from '@/utils/Session'
+import { EventsInterface } from '@/utils/Interfaces'
 import { Box } from '@mui/material'
+import dynamic from 'next/dynamic'
 import React, { useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
+
+const Loading = dynamic(() => import('@/Components/Loading'))
+const EventCard = dynamic(() => import('@/Components/EventCard'))
+const BlogEventsStructure = dynamic(() => import('@/Components/BlogEventsStructure'))
+
 
 const page = () => {
   const pageRef = useRef(false)
@@ -26,11 +27,14 @@ const page = () => {
   // fetch all the events
   const fetchData = async () => {
     try {
+      const { fetchSession } = await import('@/slices/sessionSlice')
+      const { allPost } = await import('@/utils/FetchFromApi')
+
       const fetchedData: EventsInterface[] = await allPost('event');
-      
+
       // fetch session from the redux store 
       dispatch(fetchSession());
-      
+
       setData(fetchedData)
       setIsLoading(false)
     } catch (error) {
