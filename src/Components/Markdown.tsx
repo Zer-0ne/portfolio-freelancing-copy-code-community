@@ -5,7 +5,7 @@ import ReactMarkdown from 'react-markdown';
 import CodeContainer from './CodeContainer';
 import Image from 'next/image';
 import Link from 'next/link';
-import { BlogsInterface, EventsInterface } from '@/utils/Interfaces';
+import { BlogsInterface, Data, EventsInterface } from '@/utils/Interfaces';
 import '@/app/globals.css'
 import { IBM_Plex_Mono } from 'next/font/google';
 
@@ -81,7 +81,7 @@ const Markdown = (
                     ),
                 }}
             >
-                {data?.content}
+                {data?.content as string}
             </ReactMarkdown>
         </Container >
     )
