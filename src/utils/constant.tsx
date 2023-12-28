@@ -300,6 +300,14 @@ export const wordEditorFunc = [
         code: () => { return `###### ` },
         type: (isTrue: boolean = false) => isTrue
     },
+    {
+        name: 'new line',
+        icon: (type?: boolean, item?: Item) => <Typography variant='caption' sx={styles.wordEditorIcon(15, {
+            fontWeight: '700'
+        })}>new line</Typography>,
+        code: () => { return `\n\\\n ` },
+        type: (isTrue: boolean = false) => isTrue
+    },
 ]
 
 export const aboutCCC = [

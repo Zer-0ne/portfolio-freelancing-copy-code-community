@@ -7,7 +7,7 @@ import Link from 'next/link'
 import DropDownSkelenton from './DropDownSkelenton'
 import { signIn, useSession } from 'next-auth/react'
 import { Data, Session } from '@/utils/Interfaces'
-import { GitHub, Google } from '@mui/icons-material'
+import { GitHub, Google, LinkedIn } from '@mui/icons-material'
 import { LoginUser } from '@/utils/FetchFromApi'
 import { usePathname } from 'next/navigation'
 
@@ -124,6 +124,12 @@ const Navbar = () => {
                                             sx={styles.socialMediaIcon()}
                                             onClick={async () => {
                                                 await signIn('github')
+                                            }}
+                                            />
+                                        <LinkedIn
+                                            sx={styles.socialMediaIcon()}
+                                            onClick={async () => {
+                                                await signIn('linkedin')
                                             }}
                                         />
 

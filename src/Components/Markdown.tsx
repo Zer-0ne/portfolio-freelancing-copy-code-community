@@ -18,7 +18,7 @@ const Markdown = (
     {
         data,
     }: {
-        data: BlogsInterface | EventsInterface
+        data: BlogsInterface | EventsInterface | Data
     }
 ) => {
     return (

@@ -170,6 +170,7 @@ const page = () => {
                     </Box>
 
                     <ReadmeField
+                        Daata={data as Data}
                         setdata={setData}
                         propsData={data as Data}
                         isDisabled={isDisabled}

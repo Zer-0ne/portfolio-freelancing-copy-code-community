@@ -4,6 +4,7 @@ import bcrypt from 'bcrypt';
 import { Account, NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import GithubProvider from 'next-auth/providers/github'
+import LinkedinProvider from 'next-auth/providers/linkedin'
 import Users from "@/Models/Users";
 import connect from "./database";
 import { createUser } from "./FetchFromApi";
@@ -20,6 +21,10 @@ export const AuthOptions: NextAuthOptions = {
         GithubProvider({
             clientId: process.env.GITHUB_CLIENT_ID as string,
             clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
+        }),
+        LinkedinProvider({
+            clientId: process.env.LINKEDIN_CLIENT_ID as string,
+            clientSecret: process.env.LINKEDIN_CLIENT_SECRET as string,
         }),
         CredentialsProvider({
             name: 'Credentials',
@@ -68,7 +73,7 @@ export const AuthOptions: NextAuthOptions = {
     callbacks: {
         async signIn({ user, account }: { user: any, account: Account | null; }) {
             try {
-                if (['google', 'github'].includes(account?.provider as string)) {
+                if (['google', 'github','linkedin'].includes(account?.provider as string)) {
                     await connect()
                     const username = await user.id
                     const isExist = await Users.findOne<any>({ username });

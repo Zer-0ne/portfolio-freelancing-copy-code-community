@@ -1,20 +1,24 @@
 'use client'
-import { Box, LinearProgress } from '@mui/material'
+import { Box, LinearProgress, Typography } from '@mui/material'
 import React, { LegacyRef, useRef, useState } from 'react'
 import { styles } from '@/utils/styles'
-import { Data, InputToMoveCursor, Item } from '@/utils/Interfaces'
+import { BlogsInterface, Data, InputToMoveCursor, Item } from '@/utils/Interfaces'
 import { wordEditorFunc } from '@/utils/constant'
+import Markdown from './Markdown'
 
 const ReadmeField = ({
     setdata,
     propsData,
+    Daata,
     isDisabled
 }: {
     setdata: React.Dispatch<React.SetStateAction<Data | undefined>>;
     propsData: Data,
     isDisabled: boolean
+    Daata: Data
 }) => {
     const [markdownContent, setMarkdownContent] = useState('');
+    const [isPreview, setIsPreview] = useState(false)
     const [isTrue, setIsTrue] = useState(false);
     const [isEnter, setIsEnter] = useState(false);
     const inputRef = React.useRef<HTMLDivElement>(null)
@@ -202,40 +206,64 @@ const ReadmeField = ({
                             wordEditorFunc.map((item, index) => (
                                 <Box
                                     key={index}
-                                    onClick={(e) => { handleClick(item.code, item.name, item?.toMoveCursor); }}
+                                    sx={{
+                                        cursor: 'pointer'
+                                    }}
+                                    onClick={(e) => { !isPreview && handleClick(item.code, item.name, item?.toMoveCursor); }}
                                 >
                                     {item.icon(data.type, item as Item)}
                                 </Box>
                             ))
                         }
+                        <Box sx={{
+                            cursor: 'pointer',
+                            background: isPreview ? 'white' : 'transparent',
+                            color: isPreview ? 'black' : 'white',
+                            padding: '1.6px 8px',
+                            borderRadius: 2
+                        }}
+                            onClick={() => setIsPreview(prev => !prev)}
+                        >Preview</Box>
                     </Box>
-                    <textarea
-                        value={markdownContent}
-                        placeholder='Write your content here...'
-                        ref={editorRef as LegacyRef<HTMLTextAreaElement> | undefined}
-                        onKeyDown={(event) => {
+                    {
+                        isPreview ? <Box
+                            sx={{
+                                flex: 100,
+                                overflow:'auto'
+                            }}
+                        >
+                            <Markdown
+                                data={Daata as Data}
+                            /> </Box> :
+                            <textarea
+                                value={markdownContent}
+                                placeholder='Write your content here...'
+                                ref={editorRef as LegacyRef<HTMLTextAreaElement> | undefined}
+                                onKeyDown={(event) => {
 
-                            // Check if the pressed key is Enter
-                            if (event.key === 'Enter') {
+                                    // Check if the pressed key is Enter
+                                    if (event.key === 'Enter') {
 
-                                // Your custom logic here
-                                setIsEnter(true);
-                                if (isEnter && isTrue) {
-                                    setCounter(prev => prev + 1)
-                                }
+                                        // Your custom logic here
+                                        setIsEnter(true);
+                                        if (isEnter && isTrue) {
+                                            setCounter(prev => prev + 1)
+                                        }
 
-                            } else {
-                                setIsEnter(false)
-                            }
-                        }}
-                        onChange={handleChange}
-                        style={{
-                            flex: 100,
-                            background: 'transparent',
-                            resize: 'none',
-                            padding: 4
-                        }}
-                    />
+                                    } else {
+                                        setIsEnter(false)
+                                    }
+                                }}
+                                onChange={handleChange}
+                                style={{
+                                    flex: 100,
+                                    background: 'transparent',
+                                    resize: 'none',
+                                    padding: 4
+                                }}
+                            />
+                    }
+
                     <Box
                         sx={{
                             flex: 1,
