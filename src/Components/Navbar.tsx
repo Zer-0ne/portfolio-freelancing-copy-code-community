@@ -9,10 +9,14 @@ import { signIn, useSession } from 'next-auth/react'
 import { Data, Session } from '@/utils/Interfaces'
 import { GitHub, Google } from '@mui/icons-material'
 import { LoginUser } from '@/utils/FetchFromApi'
+import { usePathname } from 'next/navigation'
+
+
 const Navbar = () => {
     const { data: session, status } = useSession();
     const [data, setData] = React.useState<Data>({})
-
+    const pathName = usePathname()
+    
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setData((prevFormData) => ({ ...prevFormData, [name]: value }));
@@ -22,8 +26,7 @@ const Navbar = () => {
     const handleSubmit = async (e: any) => {
         e.preventDefault();
         try {
-            const response = await LoginUser(data as Data)
-
+            await LoginUser(data as Data)
         } catch (error) {
             console.error(error)
         }
@@ -42,7 +45,7 @@ const Navbar = () => {
                     navbarContent.map((item, index) => (
 
                         <Link href={`${item.path}`} key={index}>
-                            {item.icon}
+                            {item.icon(pathName as string, item.path)}
                         </Link>
 
                     ))

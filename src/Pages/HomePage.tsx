@@ -79,7 +79,7 @@ const HomePage = () => {
                 <Typography
                     variant='body1'
                     sx={{
-                        fontSize: {xl:20,md:16,xs:10}
+                        fontSize: {xl:20,md:17,xs:14}
                     }}
                     className={smooch.className}
                 >

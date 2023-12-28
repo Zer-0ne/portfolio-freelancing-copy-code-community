@@ -28,6 +28,7 @@ const Markdown = (
                 display: "flex",
                 flexDirection: 'column',
                 justifyContent: "center",
+                textAlign: 'justify'
                 // alignItems:'center'
             }}
         >
@@ -53,11 +54,12 @@ const Markdown = (
                     }}>{children}</Typography>,
                     pre: ({ children }) => <CodeContainer children={children as {
                         props: {
-                            children: string
+                            children: string;
                         }
                     }} />,
                     p: ({ children }) => <Typography variant='caption' sx={{
-                        fontSize: 16
+                        fontSize: 16,
+                        lineHeight: 'normal',
                     }}>{children}</Typography>,
                     img: ({ src, alt }) => <Image className='image' style={{
                         alignSelf: 'center',

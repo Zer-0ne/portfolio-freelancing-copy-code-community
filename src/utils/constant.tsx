@@ -81,38 +81,38 @@ export const signup = [
 export const navbarContent = [
     {
         name: 'home',
-        icon: <HomeRounded
-            sx={styles.iconStyle()}
-        />,
+        icon: (currentPath: string, iconPath: string) => (<HomeRounded
+            sx={styles.iconStyle(currentPath as string, iconPath as string)}
+        />),
         path: '/'
     },
     {
         name: 'about',
-        icon: <Person
-            sx={styles.iconStyle()}
-        />,
+        icon: (currentPath: string, iconPath: string) => (<Person
+            sx={styles.iconStyle(currentPath as string, iconPath as string)}
+        />),
         path: `/about`
     },
     {
         name: 'blog',
-        icon: <Book
-            sx={styles.iconStyle()}
-        />,
+        icon: (currentPath: string, iconPath: string) => (<Book
+            sx={styles.iconStyle(currentPath as string, iconPath as string)}
+        />),
         path: `/blogs`
 
     },
     {
         name: 'events',
-        icon: <EmojiEvents
-            sx={styles.iconStyle()}
-        />,
+        icon: (currentPath: string, iconPath: string) => (<EmojiEvents
+            sx={styles.iconStyle(currentPath as string, iconPath as string)}
+        />),
         path: `/events`
     },
     {
         name: 'contact',
-        icon: <ForumRounded
-            sx={styles.iconStyle()}
-        />,
+        icon: (currentPath: string, iconPath: string) => (<ForumRounded
+            sx={styles.iconStyle(currentPath as string, iconPath as string)}
+        />),
         path: `/contact`
     }
 ]

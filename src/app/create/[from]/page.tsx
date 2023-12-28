@@ -1,5 +1,5 @@
 'use client'
-import { ReadmeField } from '@/Components/ReadmeField'
+
 import { Data, Session } from '@/utils/Interfaces'
 import { createBlog, createEvent } from '@/utils/constant'
 import { styles } from '@/utils/styles'
@@ -11,10 +11,11 @@ import dynamic from 'next/dynamic'
 
 const Loading = dynamic(() => import('@/Components/Loading'))
 const DropDown = dynamic(() => import('@/Components/DropDown'))
+const ReadmeField = dynamic(() => import('@/Components/ReadmeField'))
 const Image = dynamic(() => import('next/image'))
 
 
-const page = async () => {
+const page = () => {
     const pageRef = useRef(false)
     const [data, setData] = React.useState<Data>()
     const [isAdmin, setIsAdmin] = React.useState<boolean>(true)

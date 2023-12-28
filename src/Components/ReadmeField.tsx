@@ -1,12 +1,11 @@
 'use client'
-import { Box, Button, LinearProgress } from '@mui/material'
-import React, { LegacyRef, MutableRefObject, useRef, useState } from 'react'
+import { Box, LinearProgress } from '@mui/material'
+import React, { LegacyRef, useRef, useState } from 'react'
 import { styles } from '@/utils/styles'
 import { Data, InputToMoveCursor, Item } from '@/utils/Interfaces'
 import { wordEditorFunc } from '@/utils/constant'
-import { storeImage } from '@/utils/FetchFromApi'
 
-export const ReadmeField = ({
+const ReadmeField = ({
     setdata,
     propsData,
     isDisabled
@@ -161,6 +160,9 @@ export const ReadmeField = ({
                                 const dataURL = await event.target.result.toString();
                                 const uid = new Date().getTime().toString()
                                 setProgress(60)
+
+                                const { storeImage } = await import('@/utils/FetchFromApi')
+
                                 const imageUrl = await storeImage(dataURL, `content/${propsData.title}`, uid) as string
                                 setProgress(80)
                                 setMarkdownContent((prevContent: string) => {
@@ -262,3 +264,5 @@ export const ReadmeField = ({
         </>
     )
 }
+
+export default ReadmeField

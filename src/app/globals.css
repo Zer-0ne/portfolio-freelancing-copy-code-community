@@ -35,6 +35,7 @@ body {
   /* Internet Explorer 10+ */
   scrollbar-width: none !important;
   /* Firefox */
+  box-sizing: border-box;
 
 }
 

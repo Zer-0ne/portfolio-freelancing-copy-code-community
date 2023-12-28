@@ -21,15 +21,15 @@ const page = () => {
   const [data, setData] = React.useState<Data[]>()
   const { session } = useSelector((state: RootState) => state.session)
   const [isUpdate, setIsUpdate] = React.useState<Data>()
+  const dispatch = useDispatch<AppDispatch>()
 
   const user = async () => {
     const { fetchSession } = await import('@/slices/sessionSlice')
     const { allUser } = await import('@/utils/FetchFromApi')
 
     // fetch session from the redux store 
-    const dispatch = useDispatch<AppDispatch>()
     await dispatch(fetchSession());
-    
+
     const alluser = await allUser('user')
     setData(alluser)
     setIsloading(false)

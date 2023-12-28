@@ -1,9 +1,8 @@
 import { Avatar, Box, Typography } from '@mui/material'
 import React, { useEffect, useRef } from 'react'
 import { styles } from '@/utils/styles'
-import { BlogsInterface, Session } from '@/utils/Interfaces'
+import { BlogsInterface} from '@/utils/Interfaces'
 import { DeleteRounded, EditRounded } from '@mui/icons-material'
-import { deletePost } from '@/utils/FetchFromApi'
 import { IBM_Plex_Mono, Kalam, Libre_Baskerville } from 'next/font/google'
 import Link from 'next/link'
 import { useSelector } from 'react-redux'
@@ -35,6 +34,8 @@ const BlogCard = ({
     fetchData: () => Promise<void>;
 }) => {
     const deleteBlog = async () => {
+        const {deletePost} = await import('@/utils/FetchFromApi')
+
         await deletePost(item?._id, 'blog', item)
         await fetchData()
     }

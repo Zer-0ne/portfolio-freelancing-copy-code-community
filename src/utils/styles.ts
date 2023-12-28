@@ -48,13 +48,21 @@ export const styles = {
         borderRadius: radius,
         border: '1px solid rgba(255, 255, 255, 0.125)',
     }),
-    iconStyle: () => ({
-        opacity: 0.8,
+    iconStyle: (currentPath: string, iconPath: string) => ({
         color: 'white',
+        opacity: [currentPath].includes(iconPath) ? 1 : 0.5,
+        position: 'relative',
+        transition: 'all .5s ease-in-out',
+        // '::after': {
+        //     content: '""',
+        //     position: 'absolute',
+        //     bottom: -6,
+        //     left: 0, right: 0,
+        //     height: 2,
+        //     background: 'white'
+        // }
         ":hover": {
-            color: 'black',
-            filter: 'drop-shadow(0px 0px 2px green)',
-            // color: 'green'
+            opacity: 1
         }
     }),
     heading1: (font = 30) => ({

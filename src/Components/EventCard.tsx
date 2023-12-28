@@ -48,52 +48,20 @@ const EventCard = ({
     }
 
     return (
-        <>
+        <Box
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: .5,
+                transition: 'all 0.5s ease-in-out',
+                // opacity: isVisible ? 1 : 0,
+                // transform: `scale(${!isVisible ? -.8 : 1})`,
+            }}
+        >
             <Link href={`/events/${item._id}`}>
                 <Box
                     sx={styles.eventCard(item.label)}
                 >
-                    {/* edit nd delete btn */}
-                    <Box
-                        sx={{
-                            position: 'absolute',
-                            top: 10,
-                            right: 10,
-                            display: 'flex',
-                            gap: 1,
-                            opacity: .5,
-                            justifyContent: 'center',
-                            alignItems: 'center'
-                        }}
-                    >
-                        <EditRounded
-                            sx={{
-                                fontSize: 25,
-                                padding: .5,
-                                borderRadius: '50%',
-                                display: ['admin', 'moderator'].includes(session[0]?.role) ? 'flex' : 'none',
-                                cursor: 'pointer',
-                                ':hover': {
-                                    background: 'white',
-                                    color: 'black'
-                                }
-                            }}
-                        />
-                        <DeleteRounded
-                            onClick={deleteEvent}
-                            sx={{
-                                fontSize: 25,
-                                display: ['admin', 'moderator'].includes(session[0]?.role) ? 'flex' : 'none',
-                                padding: .5,
-                                borderRadius: '50%',
-                                cursor: 'pointer',
-                                ':hover': {
-                                    background: 'red',
-                                    color: 'white'
-                                }
-                            }}
-                        />
-                    </Box>
 
                     {/* image box */}
                     <Box
@@ -289,7 +257,44 @@ const EventCard = ({
                     </Box>
                 </Box>
             </Link>
-        </>
+            <Box
+                sx={{
+                    display: ['admin', 'moderator'].includes(session[0]?.role) ? 'flex' : 'none',
+                    gap: 1,
+                    opacity: .5,
+                    justifyContent: 'space-around',
+                    p: 1,
+                    alignItems: 'center',
+                    ...styles.glassphorism('', '0 0 12px 12px'),
+                }}
+            >
+                <EditRounded
+                    sx={{
+                        fontSize: 25,
+                        padding: .5,
+                        borderRadius: '50%',
+                        cursor: 'pointer',
+                        ':hover': {
+                            background: 'white',
+                            color: 'black'
+                        }
+                    }}
+                />
+                <DeleteRounded
+                    onClick={deleteEvent}
+                    sx={{
+                        fontSize: 25,
+                        padding: .5,
+                        borderRadius: '50%',
+                        cursor: 'pointer',
+                        ':hover': {
+                            background: 'red',
+                            color: 'white'
+                        }
+                    }}
+                />
+            </Box>
+        </Box>
     )
 }
 
