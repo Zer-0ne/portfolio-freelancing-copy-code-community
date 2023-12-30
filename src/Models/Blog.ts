@@ -18,27 +18,14 @@ const blogSchema = new Schema({
     },
     comments: [
         {
-            comment: {
-                type: String
-            },
-            userId: {
-                type: Schema.Types.ObjectId,
-                ref: "User",
-            },
-            replies: [
-                {
-                    reply: {
-                        type: String,
-                    },
-                    userId: {
-                        type: Schema.Types.ObjectId,
-                        ref: "User",
-                    },
-                },
-            ],
-
+            type: Schema.Types.ObjectId,
+            ref: 'Comment'
         }
     ],
+    likes: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }],
     content: {
         type: String,
         required: [true, 'Please add a content']

@@ -1,15 +1,17 @@
-import { signIn, useSession } from "next-auth/react";
+import { signIn, } from "next-auth/react";
 import { BlogsInterface, Data, EventsInterface, Session } from "./Interfaces";
 import { currentSession } from "./Session";
 import { deleteObject, getDownloadURL, listAll, ref, uploadString } from "firebase/storage";
 import { storage } from "./Firebase";
 import { toast } from "react-toastify";
-import { errorToast, successToast, update } from "./ToastConfig";
+import { update } from "./ToastConfig";
 
 // create user 
 export const createUser = async (data: Data) => {
     try {
-        const response = await fetch('/api/auth/signup', {
+        const os = await import('os')
+        const hostname = os.hostname();
+        const response = await fetch(`${process.env.BASE_URL}/api/auth/signup`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

@@ -42,7 +42,8 @@ const DropDownSkelenton = (
                         backdropFilter: `blur(5px) saturate(187%) !important`,
                         flex: 1,
                         gap: 1,
-                        zIndex: 50
+                        zIndex: 50,
+                        fontSize: { xs: 12, md: 18, xl: 25 }
                     }, 1),
 
                 }}
@@ -57,7 +58,8 @@ const DropDownSkelenton = (
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center',
-                    zIndex: 0
+                    zIndex: 0,
+                    fontSize: { xs: 12, md: 18, xl: 25 }
                 }, 1)}
                 onClick={() => setIsTrue(prev => !prev)}
             >

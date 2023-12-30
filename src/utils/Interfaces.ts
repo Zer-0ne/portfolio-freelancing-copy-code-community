@@ -97,3 +97,7 @@ export interface Session {
         role: string;
     }
 }
+
+export interface CommentInterface {
+    userId: string
+}

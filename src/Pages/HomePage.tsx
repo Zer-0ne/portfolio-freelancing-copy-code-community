@@ -39,7 +39,7 @@ const HomePage = () => {
                     flexDirection: 'column',
                     alignItems: 'center',
                     position: 'relative',
-                    height: {xl:'20vh',md:'15vh',xs:'10vh'},
+                    height: { xl: '20vh', md: '15vh', xs: '10vh' },
                     "::after": {
                         content: '""',
                         width: '50%',
@@ -56,7 +56,7 @@ const HomePage = () => {
                         textTransform: 'capitalize',
                         color: 'green',
                         fontWeight: 800,
-                        fontSize:{xs:'2rem',md:'4rem',xl:'6rem'}
+                        fontSize: { xs: '1.5rem', md: '4rem', xl: '6rem' }
                     }}
                     className={rubikGlitchFont.className}
                 >Copy code community</Typography>
@@ -64,14 +64,14 @@ const HomePage = () => {
                     sx={{
                         color: 'green',
                         textTransform: 'uppercase',
-                        fontSize: {xl:25,md:18,xs:12}
+                        fontSize: { xl: 25, md: 16, xs: 10 }
                     }}
                     className={ibn.className}
                 >-- Jamia Hamdard --</Typography>
             </Box>
             <Box
                 sx={{
-                    width: {xl:'40%',xs:'80%',md:'40%'},
+                    width: { xl: '40%', xs: '80%', md: '40%' },
                     textAlign: 'center',
                     marginTop: 3
                 }}
@@ -79,7 +79,7 @@ const HomePage = () => {
                 <Typography
                     variant='body1'
                     sx={{
-                        fontSize: {xl:20,md:17,xs:14}
+                        fontSize: { xl: 20, md: 17, xs: 14 }
                     }}
                     className={smooch.className}
                 >
@@ -93,7 +93,7 @@ const HomePage = () => {
                     padding: '10px 15px',
                     backgroundColor: 'rgba(0, 0, 0, .7)',
                     borderRadius: 5,
-                    border:'1px solid rgba(255,255,255,.5)'
+                    border: '1px solid rgba(255,255,255,.5)'
                 }}
                 className={ibn.className}
             >Start Learning...</Link>

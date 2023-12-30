@@ -8,6 +8,7 @@ import React, { useEffect, useRef, useState } from 'react'
 const Loading = dynamic(() => import('@/Components/Loading'))
 const Markdown = dynamic(() => import('@/Components/Markdown'))
 const MarkdownHeader = dynamic(() => import('@/Components/MarkdownHeader'))
+const CommentContainer = dynamic(() => import('@/Components/CommentContainer'))
 
 
 const page = () => {
@@ -48,6 +49,7 @@ const page = () => {
       <Markdown
         data={data as BlogsInterface}
       />
+      {/* <CommentContainer /> */}
     </>
   )
 }
