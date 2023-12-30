@@ -5,7 +5,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 export const fetchSession = createAsyncThunk('session', async (thunkApi) => {
     const session = await currentSession() as Session
-    if (!session) return
+    if (!session) return false
     return await userInfo(session?.user?.username)
 })
 
