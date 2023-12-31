@@ -3,6 +3,7 @@ import React from 'react'
 import { styles } from '@/utils/styles'
 import { LinkedIn, Instagram, GitHub } from '@mui/icons-material';
 import { coreMember } from '@/utils/Interfaces';
+import Link from 'next/link';
 const MemberCard = ({ item }: {
     item: coreMember;
 }) => {
@@ -81,9 +82,15 @@ const MemberCard = ({ item }: {
                         mt: 2
                     }}
                 >
-                    <LinkedIn />
-                    <Instagram />
-                    <GitHub />
+                    <Link href={item.LinkedIn} target='_blank'>
+                        <LinkedIn />
+                    </Link>
+                    <Link href={item.insta} target='_blank'>
+                        <Instagram />
+                    </Link>
+                    <Link href={item.GitHub} target='_blank'>
+                        <GitHub />
+                    </Link>
                 </Box>
             </Box>
         </>

@@ -314,13 +314,9 @@ export const aboutCCC = [
     {
         heading: 'Copy Code Community!',
         content: `Copy Code Community is like a cool online club for people who love playing with computers and making websites and apps. Whether you're a total pro or just starting, everyone is invited to share their computer codes and chat about tech stuff.
-        <br />
         It's a friendly space where we help each other learn and grow. We really like sharing our codes so that everyone can learn from them. You might be into building websites or trying out new tech things - whatever it is, you'll find friends here who are excited to talk about it.
-        <br />
         We're not just about serious coding - we like to have fun too! We share funny computer jokes, take part in friendly coding challenges, and talk about the latest tech news. It's a mix of learning and laughing.
-        <br />
         And guess what? Everyone is welcome! It doesn't matter if you know a lot about coding or just a little; we're here to help each other out. We also chat about interesting tech trends and other fun stuff because, hey, we're not just about computers - we're people with lots of interests!
-        <br />
         So, if you want to join a friendly group of tech fans, learn new things, and have a good time, Copy Code Community is the place for you. Come on in and be part of our coding family!`
     },
     {
@@ -342,38 +338,42 @@ export const aboutCCC = [
 
 export const coreTeamMember: coreMember[] = [
     {
-        name: 'Sahil khan',
-        role: 'Co-founder & Tech lead',
+        name: 'Ziya-ul Rehman',
+        role: 'Lead',
         image: 'https://www.osmpic.com/wp-content/uploads/2019/08/Cat-image-for-WhatsApp-dp-min.jpg',
         LinkedIn: '',
-        GitHub: 'https://github.com/sahilk1234567890',
+        insta: '',
+        GitHub: '',
         bio: `I am a 2nd year student at the University of Maryland, College Park majoring in Computer Science and minoring in Mathematics`,
         email: 'sahilk@copycodecommunity.org',
     },
     {
-        name: 'Ziya-ul Rehman',
-        role: 'Co-Founder',
-        image: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.osmpic.com%2Fwp-content%2Fuploads%2F2019%2F03%2FPicsArt_03-24-02.06.31.jpg&f=1&nofb=1&ipt=219ded931b3ef72de49a868c76adae6aec420ab1379c3d0b7392426e9f336a13&ipo=images',
-        LinkedIn: '',
-        GitHub: 'https://github.com/sahilk1234567890',
+        name: 'Sahil khan',
+        role: 'Co-founder & Tech lead',
+        image: 'https://www.osmpic.com/wp-content/uploads/2019/08/Cat-image-for-WhatsApp-dp-min.jpg',
+        LinkedIn: 'https://www.linkedin.com/in/sahil-khan-7a718a259/',
+        GitHub: 'https://github.com/Zer-0ne/',
+        insta: 'https://instagram.com/zer.0n3',
         bio: `I am a 2nd year student at the University of Maryland, College Park majoring in Computer Science and minoring in Mathematics`,
         email: 'sahilk@copycodecommunity.org',
     },
     {
         name: 'Ibrahim Khursheed',
         role: 'Content Writer',
-        image: 'https://wallpaperaccess.com/full/2133155.jpg',
+        image: 'https://www.osmpic.com/wp-content/uploads/2019/08/Cat-image-for-WhatsApp-dp-min.jpg',
+        insta: '',
         LinkedIn: '',
-        GitHub: 'https://github.com/sahilk1234567890',
+        GitHub: '',
         bio: `I am a 2nd year student at the University of Maryland, College Park majoring in Computer Science and minoring in Mathematics`,
         email: 'sahilk@copycodecommunity.org',
     },
     {
         name: 'Musab Hussain',
         role: 'Management lead',
-        image: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwallpapercave.com%2Fwp%2Fwp7380751.jpg&f=1&nofb=1&ipt=92d8bdbdccdc6fb6cfa1759c8e58d34ce5b612b82aff3b022b073885a6730b4c&ipo=images',
+        image: 'https://www.osmpic.com/wp-content/uploads/2019/08/Cat-image-for-WhatsApp-dp-min.jpg',
+        insta: '',
         LinkedIn: '',
-        GitHub: 'https://github.com/sahilk1234567890',
+        GitHub: '',
         bio: `I am a 2nd year student at the University of Maryland, College Park majoring in Computer Science and minoring in Mathematics`,
         email: 'sahilk@copycodecommunity.org',
     },
@@ -381,8 +381,49 @@ export const coreTeamMember: coreMember[] = [
         name: 'Azmat',
         role: 'Technical member',
         image: 'https://www.osmpic.com/wp-content/uploads/2019/03/PicsArt_03-24-02.06.31-903x1024.jpg',
+        insta: '',
         LinkedIn: '',
-        GitHub: 'https://github.com/sahilk1234567890',
+        GitHub: '',
+        bio: `I am a 2nd year student at the University of Maryland, College Park majoring in Computer Science and minoring in Mathematics`,
+        email: 'sahilk@copycodecommunity.org',
+    },
+    {
+        name: 'Sukain inam naqvi',
+        role: 'Advisor and Speaker',
+        image: 'https://www.osmpic.com/wp-content/uploads/2019/08/Cat-image-for-WhatsApp-dp-min.jpg',
+        insta: '',
+        LinkedIn: '',
+        GitHub: '',
+        bio: `I am a 2nd year student at the University of Maryland, College Park majoring in Computer Science and minoring in Mathematics`,
+        email: 'sahilk@copycodecommunity.org',
+    },
+    {
+        name: 'Zarqua',
+        role: 'Mentor',
+        image: 'https://www.osmpic.com/wp-content/uploads/2019/08/Cat-image-for-WhatsApp-dp-min.jpg',
+        insta: '',
+        LinkedIn: '',
+        GitHub: '',
+        bio: `I am a 2nd year student at the University of Maryland, College Park majoring in Computer Science and minoring in Mathematics`,
+        email: 'sahilk@copycodecommunity.org',
+    },
+    {
+        name: 'Zubiya',
+        role: 'Graphics',
+        image: 'https://www.osmpic.com/wp-content/uploads/2019/08/Cat-image-for-WhatsApp-dp-min.jpg',
+        insta: '',
+        LinkedIn: '',
+        GitHub: '',
+        bio: `I am a 2nd year student at the University of Maryland, College Park majoring in Computer Science and minoring in Mathematics`,
+        email: 'sahilk@copycodecommunity.org',
+    },
+    {
+        name: 'Hayat',
+        role: 'Photography',
+        image: 'https://www.osmpic.com/wp-content/uploads/2019/08/Cat-image-for-WhatsApp-dp-min.jpg',
+        insta: '',
+        LinkedIn: '',
+        GitHub: '',
         bio: `I am a 2nd year student at the University of Maryland, College Park majoring in Computer Science and minoring in Mathematics`,
         email: 'sahilk@copycodecommunity.org',
     },

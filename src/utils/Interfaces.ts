@@ -5,6 +5,7 @@ export interface navbar {
     icon: React.ReactNode;
 }[]
 export interface coreMember {
+    insta:string
     name: string;
     role: string;
     image: string
