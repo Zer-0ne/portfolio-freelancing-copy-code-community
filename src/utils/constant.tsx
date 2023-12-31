@@ -359,7 +359,7 @@ export const coreTeamMember: coreMember[] = [
     },
     {
         name: 'Ibrahim Khursheed',
-        role: 'Content Writer',
+        role: 'Outrage',
         image: 'https://www.osmpic.com/wp-content/uploads/2019/08/Cat-image-for-WhatsApp-dp-min.jpg',
         insta: '',
         LinkedIn: '',
@@ -399,7 +399,7 @@ export const coreTeamMember: coreMember[] = [
     },
     {
         name: 'Zarqua',
-        role: 'Mentor',
+        role: 'Content writer',
         image: 'https://www.osmpic.com/wp-content/uploads/2019/08/Cat-image-for-WhatsApp-dp-min.jpg',
         insta: '',
         LinkedIn: '',
