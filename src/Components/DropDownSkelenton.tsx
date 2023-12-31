@@ -59,7 +59,7 @@ const DropDownSkelenton = (
                     justifyContent: 'space-between',
                     alignItems: 'center',
                     zIndex: 0,
-                    fontSize: { xs: 12, md: 18, xl: 25 }
+                    fontSize: { xs: 12, md: 18, xl: 20 }
                 }, 1)}
                 onClick={() => setIsTrue(prev => !prev)}
             >
