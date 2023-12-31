@@ -300,3 +300,26 @@ export const editPost = async (id: string, data: Data, route: string) => {
     }
 }
 
+// add a new comments
+export const addComment = async (blogId: string, comment: Data, route: string) => {
+    const Toast = toast.loading("Adding...")
+    try {
+        // check the session
+        const session = await currentSession() as Session;
+        if (!session) return toast.update(Toast, update('Please Login!', 'error'))
+
+        const response = await fetch(`/api/comment/`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                blogId,
+                ...comment,
+                authorId: session.user.id
+            }),
+        })
+        const data = await response.json();
+        return toast.update(Toast, update(data.message, 'success'))
+    } catch (err) {
+        console.log(err)
+    }
+}

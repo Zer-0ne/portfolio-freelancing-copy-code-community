@@ -49,7 +49,10 @@ const page = () => {
       <Markdown
         data={data as BlogsInterface}
       />
-      {/* <CommentContainer /> */}
+      {/* <CommentContainer
+        data={data as BlogsInterface}
+      /> */}
+
     </>
   )
 }
