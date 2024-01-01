@@ -48,11 +48,11 @@ const Markdown = (
                             mb: 3
                         }}>{children}</Typography>,
                         h2: ({ children }) => <Typography variant='h2' sx={{
-                            ...styles.heading(40, '500'),
+                            ...styles.heading({ md: 40, xs: 25 }, '500'),
                             mt: 4
                         }}>{children}</Typography>,
                         h3: ({ children }) => <Typography variant='h3' sx={{
-                            ...styles.heading(30, '500', 'none'),
+                            ...styles.heading({ md: 30, xs: 19 }, '500', 'none'),
                             mb: 2, mt: 2, p: 1, pl: 1.5
                         }}>{children}</Typography>,
                         h4: ({ children }) => <Typography variant='h4' sx={{

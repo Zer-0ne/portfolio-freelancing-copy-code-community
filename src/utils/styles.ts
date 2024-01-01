@@ -273,7 +273,7 @@ export const styles = {
         margin: '1rem',
         position: 'relative'
     }),
-    heading: (size: string | number = 50, weight: string | number = '800', display: string = 'block') => ({
+    heading: (size: string | number | object = 50, weight: string | number = '800', display: string = 'block') => ({
         fontSize: size,
         fontWeight: weight,
         position: 'relative',
