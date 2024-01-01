@@ -341,3 +341,31 @@ export const fetchComment = async (data: string) => {
         console.log(error)
     }
 }
+
+export const deleteComment = async (id: string, authorId: string) => {
+    const Toast = toast.loading('Please wait')
+    try {
+        const session = await currentSession() as Session;
+        if (!session) return toast.update(Toast, update('Please Login!', 'error'))
+
+        // check the user is admin or not 
+        const user = await userInfo(session?.user?.username)
+        if (user.isAdmin === false || user._id === authorId) return toast.update(Toast, update('Your are not Authorized!', 'error'))
+
+        const response = await fetch(`/api/comment/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                authorId
+            })
+        })
+        if (response.ok) {
+            const data = await response.json()
+            return toast.update(Toast, update(data.message, 'success'))
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}

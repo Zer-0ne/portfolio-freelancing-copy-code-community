@@ -2,8 +2,6 @@
 import { Box, } from '@mui/material'
 import React, { useRef, useState } from 'react'
 import { BlogsInterface, } from '@/utils/Interfaces';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '@/store/store';
 import dynamic from 'next/dynamic';
 
 const Loading = dynamic(() => import('@/Components/Loading'))
@@ -17,7 +15,7 @@ const page = () => {
   const [data, setData] = useState<BlogsInterface[]>()
   const [pageCount, setPageCount] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(true)
-  const dispatch = useDispatch<AppDispatch>()
+
 
 
   const handleSearch = (input: string) => {
@@ -28,11 +26,7 @@ const page = () => {
   const fetchData = async () => {
     try {
       const { allPost } = await import('@/utils/FetchFromApi')
-      const { fetchSession } = await import('@/slices/sessionSlice')
       const fetchedData: BlogsInterface[] = await allPost('blog');
-
-      // fetch session from the redux store 
-      dispatch(fetchSession());
 
       setData(fetchedData)
       setIsLoading(false)

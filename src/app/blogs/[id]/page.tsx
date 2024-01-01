@@ -25,7 +25,7 @@ const page = () => {
       try {
         const { Post, userInfo, fetchComment } = await import('@/utils/FetchFromApi')
         const res = await Post('blog', id as string)
-        if (res?.comments) {
+        if (res?.comments.length) {
           const comments = await fetchComment(res.comments.toString())
           setComment(comments)
         }

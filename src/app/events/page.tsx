@@ -1,11 +1,9 @@
 'use client'
 
-import { AppDispatch } from '@/store/store'
 import { EventsInterface } from '@/utils/Interfaces'
 import { Box } from '@mui/material'
 import dynamic from 'next/dynamic'
 import React, { useRef, useState } from 'react'
-import { useDispatch } from 'react-redux'
 
 const Loading = dynamic(() => import('@/Components/Loading'))
 const EventCard = dynamic(() => import('@/Components/EventCard'))
@@ -16,7 +14,6 @@ const page = () => {
   const pageRef = useRef(false)
   const [searchInput, setSearchInput] = useState<string>('');
   const [data, setData] = useState<EventsInterface[]>()
-  const dispatch = useDispatch<AppDispatch>()
   const [isLoading, setIsLoading] = useState(true)
 
 
@@ -27,13 +24,10 @@ const page = () => {
   // fetch all the events
   const fetchData = async () => {
     try {
-      const { fetchSession } = await import('@/slices/sessionSlice')
       const { allPost } = await import('@/utils/FetchFromApi')
 
       const fetchedData: EventsInterface[] = await allPost('event');
 
-      // fetch session from the redux store 
-      dispatch(fetchSession());
 
       setData(fetchedData)
       setIsLoading(false)

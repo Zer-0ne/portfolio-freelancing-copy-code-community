@@ -1,3 +1,4 @@
+import Blog from "@/Models/Blog";
 import Comment from "@/Models/Comment";
 import Users from "@/Models/Users";
 import { userInfo } from "@/utils/FetchFromApi";
@@ -48,7 +49,7 @@ export const DELETE = async (request: NextRequest, { params }: any) => {
         if (!session) return NextResponse.json({ message: 'Please login' }, { status: 401 })
 
         // check the user is admin or not 
-        const user = await userInfo(session?.user?.username)
+        const user = await Users.findOne({ username: session?.user?.username })
         if (user?.isAdmin === false || session.user.id == userId) return NextResponse.json({ message: 'Your are not Authorized!' }, { status: 401 })
 
         // connect to Database
@@ -57,6 +58,15 @@ export const DELETE = async (request: NextRequest, { params }: any) => {
 
 
         if (!deleteComment) return NextResponse.json({ message: 'Comment not found!' }, { status: 400 })
+
+        // delete the id of the comment from the blog comment array
+        const currentBlog = await Blog.findById(deleteComment.blogId)
+        const isAlreadyFollowing = currentBlog.comments.some((comment: any) => comment._id?.toString() === id);
+        if (!isAlreadyFollowing) return NextResponse.json({ message: 'Not found this comment in this post' });
+        const commentIndex = currentBlog.comments.findIndex((comment: any) => comment._id?.toString() === id);
+        if (commentIndex === -1) return NextResponse.json({ message: 'Not found this comment in this post' });
+        currentBlog.comments.splice(commentIndex, 1)
+        await currentBlog.save()
 
         return NextResponse.json({ message: 'Delete seccussfully' })
 
@@ -78,7 +88,7 @@ export const PUT = async (request: NextRequest, { params }: any) => {
         if (!session) return NextResponse.json({ message: 'Please login' }, { status: 401 })
 
         // check the user is admin or not 
-        const user = await userInfo(session?.user?.username)
+        const user = await Users.findOne({ username: session?.user?.username });
         if (user?.isAdmin === false || user.id !== userId) return NextResponse.json({ message: 'Your are not Authorized!' }, { status: 401 })
 
         // connect to Database

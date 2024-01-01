@@ -46,7 +46,8 @@ const MemberCard = ({ item }: {
                         flexDirection: 'column',
                         flex: 1,
                         position: 'relative',
-                        width: '100%'
+                        width: '100%',
+                        textAlign: 'center'
                     }}
                 >
 

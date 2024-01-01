@@ -1,6 +1,6 @@
 'use client'
 import { Box, NoSsr, Typography } from '@mui/material'
-import React from 'react'
+import React, { useRef } from 'react'
 import { styles } from '@/utils/styles'
 import { Login, navbarContent, sessionAction } from '@/utils/constant'
 import Link from 'next/link'
@@ -10,13 +10,36 @@ import { Data, Session } from '@/utils/Interfaces'
 import { GitHub, Google, LinkedIn } from '@mui/icons-material'
 import { LoginUser } from '@/utils/FetchFromApi'
 import { usePathname } from 'next/navigation'
+import { AppDispatch } from '@/store/store'
+import { useDispatch } from 'react-redux'
 
 
 const Navbar = () => {
+    const pageRef = useRef(false);
     const { data: session, status } = useSession();
     const [data, setData] = React.useState<Data>({})
     const pathName = usePathname()
-    
+    const dispatch = useDispatch<AppDispatch>()
+
+    // fetch all the blogs
+    const fetchData = async () => {
+        try {
+            const { fetchSession } = await import('@/slices/sessionSlice');
+
+            // fetch session from the redux store 
+            dispatch(fetchSession());
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    // useEffect
+    React.useEffect(() => {
+        (pageRef.current === false) && fetchData()
+        return () => { pageRef.current = true }
+    }, [])
+
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setData((prevFormData) => ({ ...prevFormData, [name]: value }));
@@ -125,7 +148,7 @@ const Navbar = () => {
                                             onClick={async () => {
                                                 await signIn('github')
                                             }}
-                                            />
+                                        />
                                         <LinkedIn
                                             sx={styles.socialMediaIcon()}
                                             onClick={async () => {

@@ -80,6 +80,7 @@ const MarkdownHeader = (
                     />
                     {user?.name}
                 </Typography>
+
                 <Typography
                     variant='caption'
                     sx={{
@@ -94,6 +95,15 @@ const MarkdownHeader = (
                     {data?.updatedAt?.slice(0, 10)}
                 </Typography>
             </Box>
+            <Typography
+                variant='caption'
+                sx={{
+                    textAlign: 'justify'
+                }}
+                className={ibn.className}
+            >
+                {data?.description}
+            </Typography>
         </Container>
     )
 }

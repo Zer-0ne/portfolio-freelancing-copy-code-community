@@ -5,6 +5,8 @@ import { SendRounded } from '@mui/icons-material'
 import { colors } from '@/utils/colors'
 import { BlogsInterface, CommentInterface, Data, EventsInterface } from '@/utils/Interfaces'
 import CommentItem from './CommentItem'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/store/store'
 
 const CommentContainer = (
     {
@@ -12,9 +14,10 @@ const CommentContainer = (
         comments
     }: {
         data: BlogsInterface | EventsInterface
-        comments: CommentInterface[]
+        comments: CommentInterface[];
     }
 ) => {
+    const { session } = useSelector((state: RootState) => state.session)
     const [comment, setComment] = useState<Data>()
     const [isDisabled, setIsDisabled] = useState(false)
 
@@ -77,14 +80,17 @@ const CommentContainer = (
                             gap: 1.5,
                         }}
                     >
-                        <Avatar />
+                        <Avatar
+                            src={session[0].image as string || ''}
+                        />
                         <textarea
                             name='comment'
                             onChange={handleChange}
                             style={{
                                 ...styles.customInput(1, {
                                     borderRadius: 10,
-                                    height: 150
+                                    height: 150,
+                                    resize: 'none'
                                 })
                             }}
                             placeholder='Type your comment'
@@ -109,7 +115,7 @@ const CommentContainer = (
             <Box
                 sx={{
                     background: colors.commentConatinerBg,
-                    display: 'flex',
+                    display: (comments?.length) ? 'flex' : 'none',
                     flexDirection: 'column',
                     p: 2,
                     borderRadius: '10px',
@@ -122,9 +128,9 @@ const CommentContainer = (
                         fontSize: 25,
                         // p:'0 10px'
                     }}
-                >Comments {comments.length}</Typography>
+                >Comments {comments?.length}</Typography>
                 {
-                    comments.map((item, index) => (
+                    comments?.map((item, index) => (
                         <CommentItem key={index} data={item} />
                     ))
                 }

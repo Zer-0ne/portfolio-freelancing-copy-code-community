@@ -47,7 +47,8 @@ const HomePage = () => {
                         bottom: 5,
                         ...styles.glassphorism('2px'),
                         position: 'absolute',
-                        transform: 'rotate(5deg)'
+                        transform: 'rotate(5deg)',
+                        display: { md: 'block', xs: 'none' }
                     }
                 }}
             >
@@ -56,7 +57,8 @@ const HomePage = () => {
                         textTransform: 'capitalize',
                         color: 'green',
                         fontWeight: 800,
-                        fontSize: { xs: '1.5rem', md: '4rem', xl: '6rem' }
+                        fontSize: { xs: '2rem', md: '4rem', xl: '6rem' },
+                        textAlign: 'center'
                     }}
                     className={rubikGlitchFont.className}
                 >Copy code community</Typography>
