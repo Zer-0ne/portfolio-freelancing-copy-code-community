@@ -35,9 +35,9 @@ const Markdown = (
         >
             <Box
                 sx={{
-                    background:colors.commentConatinerBg,
-                    p:2,
-                    borderRadius:'10px'
+                    background: colors.commentConatinerBg,
+                    p: 2,
+                    borderRadius: '10px'
                 }}
             >
                 <ReactMarkdown
@@ -48,14 +48,16 @@ const Markdown = (
                             mb: 3
                         }}>{children}</Typography>,
                         h2: ({ children }) => <Typography variant='h2' sx={{
-                            ...styles.heading(40, '500')
+                            ...styles.heading(40, '500'),
+                            mt: 4
                         }}>{children}</Typography>,
                         h3: ({ children }) => <Typography variant='h3' sx={{
-                            ...styles.heading(30, '500'),
-                            mb: 4, mt: 2, p: 1
+                            ...styles.heading(30, '500', 'none'),
+                            mb: 2, mt: 2, p: 1, pl: 1.5
                         }}>{children}</Typography>,
                         h4: ({ children }) => <Typography variant='h4' sx={{
-                            ...styles.heading(25, '300', 'none')
+                            ...styles.heading(25, '300', 'none'),
+                            pl: 2
                         }}>{children}</Typography>,
                         h5: ({ children }) => <Typography variant='h5' sx={{
                             ...styles.heading(20, '300', 'none')
@@ -68,6 +70,7 @@ const Markdown = (
                         p: ({ children }) => <Typography variant='caption' sx={{
                             fontSize: 16,
                             lineHeight: 'normal',
+                            textAlign: 'justify'
                         }}>{children}</Typography>,
                         img: ({ src, alt }) => <Image className='image' style={{
                             alignSelf: 'center',
@@ -87,6 +90,13 @@ const Markdown = (
                                 {children}
                             </Link>
                         ),
+                        hr: ({ children }) => <hr
+                            style={{
+                                marginTop: '2rem',
+                                marginBottom: '1rem',
+                                color: 'gray'
+                            }}
+                        />
                     }}
                 >
                     {data?.content as string}

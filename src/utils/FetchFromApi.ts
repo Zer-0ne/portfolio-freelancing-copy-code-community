@@ -323,3 +323,21 @@ export const addComment = async (blogId: string, comment: Data, route: string) =
         console.log(err)
     }
 }
+
+// fetch all the comment of related post
+export const fetchComment = async (data: string) => {
+    try {
+        const response = await fetch(`/api/comment/${data}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+        if (response.ok) {
+            const res = await response.json()
+            return res
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}

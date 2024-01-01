@@ -23,6 +23,8 @@ const CommentSchema = new Schema({
             type: Schema.Types.ObjectId
         }
     ]
+},{
+    timestamps:true
 })
 
 export default mongoose.models.Comment || mongoose.model("Comment", CommentSchema);

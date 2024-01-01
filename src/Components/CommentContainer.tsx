@@ -3,16 +3,20 @@ import { styles } from '@/utils/styles'
 import React, { useState } from 'react'
 import { SendRounded } from '@mui/icons-material'
 import { colors } from '@/utils/colors'
-import { BlogsInterface, Data, EventsInterface } from '@/utils/Interfaces'
+import { BlogsInterface, CommentInterface, Data, EventsInterface } from '@/utils/Interfaces'
+import CommentItem from './CommentItem'
 
 const CommentContainer = (
     {
-        data
+        data,
+        comments
     }: {
         data: BlogsInterface | EventsInterface
+        comments: CommentInterface[]
     }
 ) => {
     const [comment, setComment] = useState<Data>()
+    const [isDisabled, setIsDisabled] = useState(false)
 
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -22,11 +26,14 @@ const CommentContainer = (
     }
 
     const handleSubmit = async () => {
+        setIsDisabled(true)
         try {
             const { addComment } = await import('@/utils/FetchFromApi')
             await addComment(data?._id, comment as Data, 'blog')
+            setIsDisabled(false)
         } catch (error) {
-
+            setIsDisabled(false)
+            console.log(error)
         }
     }
     return (
@@ -36,9 +43,11 @@ const CommentContainer = (
                 display: "flex",
                 flexDirection: 'column',
                 justifyContent: "center",
-                textAlign: 'justify'
+                textAlign: 'justify',
+                gap: 2
             }}
         >
+            {/* input fleid for new comments */}
             <Box
                 sx={{
                     background: colors.commentConatinerBg,
@@ -48,7 +57,6 @@ const CommentContainer = (
                 }}
             >
 
-                {/* input fleid for new comments */}
                 <Box
                     sx={{
                         display: 'flex',
@@ -81,18 +89,45 @@ const CommentContainer = (
                             }}
                             placeholder='Type your comment'
                         />
-                        <SendRounded
-                            sx={{
-                                alignSelf: 'flex-end',
-                                mb: 1
-                            }}
+                        <button
                             onClick={handleSubmit}
-                        />
+                            disabled={isDisabled}
+                            style={{
+                                alignSelf: 'flex-end',
+                                marginBottom: 1,
+                                cursor: 'pointer',
+                            }}
+                        >
+                            <SendRounded
+                            />
+                        </button>
                     </Box>
                 </Box>
+            </Box>
 
-                {/* fetch all the comment of the post */}
-
+            {/* fetch all the comment of the post */}
+            <Box
+                sx={{
+                    background: colors.commentConatinerBg,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    p: 2,
+                    borderRadius: '10px',
+                    gap: 2
+                }}
+            >
+                <Typography
+                    variant='h4'
+                    sx={{
+                        fontSize: 25,
+                        // p:'0 10px'
+                    }}
+                >Comments {comments.length}</Typography>
+                {
+                    comments.map((item, index) => (
+                        <CommentItem key={index} data={item} />
+                    ))
+                }
             </Box>
         </Container>
     )

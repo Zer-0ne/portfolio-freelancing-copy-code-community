@@ -1,6 +1,6 @@
 'use client'
 
-import { BlogsInterface, Data } from '@/utils/Interfaces'
+import { BlogsInterface, CommentInterface, Data } from '@/utils/Interfaces'
 import dynamic from 'next/dynamic'
 import { useParams } from 'next/navigation'
 import React, { useEffect, useRef, useState } from 'react'
@@ -14,6 +14,7 @@ const CommentContainer = dynamic(() => import('@/Components/CommentContainer'))
 const page = () => {
   const pageRef = useRef(false)
   const [data, setData] = useState<BlogsInterface>()
+  const [comment, setComment] = useState<CommentInterface[]>()
   const [user, setUser] = useState<Data>()
   const { id } = useParams()
   const [isLoading, setIsLoading] = useState(true)
@@ -22,9 +23,12 @@ const page = () => {
   useEffect(() => {
     const fetchedData = async () => {
       try {
-        const { Post, userInfo } = await import('@/utils/FetchFromApi')
+        const { Post, userInfo, fetchComment } = await import('@/utils/FetchFromApi')
         const res = await Post('blog', id as string)
-        console.log(res)
+        if (res?.comments) {
+          const comments = await fetchComment(res.comments.toString())
+          setComment(comments)
+        }
         const user = await userInfo(res?.authorId)
         setUser(user)
         setData(res)
@@ -51,6 +55,7 @@ const page = () => {
       />
       {/* <CommentContainer
         data={data as BlogsInterface}
+        comments={comment as CommentInterface[]}
       /> */}
 
     </>

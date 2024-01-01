@@ -1,4 +1,5 @@
 import Comment from "@/Models/Comment";
+import Users from "@/Models/Users";
 import { userInfo } from "@/utils/FetchFromApi";
 import { CommentInterface, Session } from "@/utils/Interfaces";
 import { currentSession } from "@/utils/Session";
@@ -15,7 +16,18 @@ export const GET = async (request: NextRequest, { params }: any) => {
         // if (!id) return new Comment().getAllComments(); // get all comments
         for (const singleId of array) {
             const res = await Comment.findById(singleId)
-            comment.push(res)
+            let author = await Users.findById(res.authorId);
+            const { password, ...userWithoutPassword } = author.toObject();
+            const {
+                authorId,
+                ...other
+            } = await res.toObject()
+            comment.push({
+                ...other,
+                authorId: {
+                    ...userWithoutPassword
+                }
+            })
         }
         return NextResponse.json(comment)
     } catch (err: {

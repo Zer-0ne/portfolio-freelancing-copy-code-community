@@ -5,7 +5,7 @@ export interface navbar {
     icon: React.ReactNode;
 }[]
 export interface coreMember {
-    insta:string
+    insta: string
     name: string;
     role: string;
     image: string
@@ -37,6 +37,7 @@ export interface BlogsInterface {
     updatedAt: string;
     contentImage: string[];
     tag: string;
+    comments: string[];
     _id: string;
     content: string;
 }
@@ -87,18 +88,27 @@ export interface Item {
     type: (isTrue?: boolean) => boolean;
 }
 
+export interface User{
+    email: string;
+    id: string;
+    name: string;
+    image: string;
+    username: string;
+    role: string;
+}
+
 export interface Session {
     expires: string;
-    user: {
-        email: string;
-        id: string;
-        name: string;
-        image: string;
-        username: string;
-        role: string;
-    }
+    user: User
 }
 
 export interface CommentInterface {
-    userId: string
+    userId: string;
+    _id: string;
+    comment:string;
+    blogId:string;
+    eventId:string;
+    updatedAt:string;
+    createdAt:string;
+    authorId:User;
 }
