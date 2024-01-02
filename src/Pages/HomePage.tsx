@@ -26,8 +26,8 @@ const HomePage = () => {
                 justifyContent: 'center',
                 alignItems: 'center',
                 flexDirection: 'column',
-                height: '90vh',
-                maxHeight: '90vh',
+                height: '100vh',
+                maxHeight: '100vh',
                 flex: 1,
                 // backgroundColor: '#283593',
             }}
