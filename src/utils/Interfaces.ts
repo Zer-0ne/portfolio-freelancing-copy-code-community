@@ -88,8 +88,9 @@ export interface Item {
     type: (isTrue?: boolean) => boolean;
 }
 
-export interface User{
+export interface User {
     email: string;
+    _id: string;
     id: string;
     name: string;
     image: string;
@@ -105,10 +106,10 @@ export interface Session {
 export interface CommentInterface {
     userId: string;
     _id: string;
-    comment:string;
-    blogId:string;
-    eventId:string;
-    updatedAt:string;
-    createdAt:string;
-    authorId:User;
+    comment: string;
+    blogId: string;
+    eventId: string;
+    updatedAt: string;
+    createdAt: string;
+    authorId: User;
 }

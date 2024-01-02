@@ -308,13 +308,15 @@ export const addComment = async (blogId: string, comment: Data, route: string) =
         const session = await currentSession() as Session;
         if (!session) return toast.update(Toast, update('Please Login!', 'error'))
 
+        const user = await userInfo(session.user.id)
+
         const response = await fetch(`/api/comment/`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 blogId,
                 ...comment,
-                authorId: session.user.id
+                authorId: user._id
             }),
         })
         const data = await response.json();
@@ -350,7 +352,7 @@ export const deleteComment = async (id: string, authorId: string) => {
 
         // check the user is admin or not 
         const user = await userInfo(session?.user?.username)
-        if (user.isAdmin === false || user._id === authorId) return toast.update(Toast, update('Your are not Authorized!', 'error'))
+        if (user._id !== authorId && user.isAdmin === false) return toast.update(Toast, update('Your are not Authorized!', 'error'))
 
         const response = await fetch(`/api/comment/${id}`, {
             method: 'DELETE',

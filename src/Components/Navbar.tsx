@@ -5,19 +5,21 @@ import { styles } from '@/utils/styles'
 import { Login, navbarContent, sessionAction } from '@/utils/constant'
 import Link from 'next/link'
 import DropDownSkelenton from './DropDownSkelenton'
-import { signIn, useSession } from 'next-auth/react'
+import { SignOutResponse, signIn, signOut, useSession } from 'next-auth/react'
 import { Data, Session } from '@/utils/Interfaces'
 import { GitHub, Google, LinkedIn } from '@mui/icons-material'
 import { LoginUser } from '@/utils/FetchFromApi'
 import { usePathname } from 'next/navigation'
-import { AppDispatch } from '@/store/store'
-import { useDispatch } from 'react-redux'
+import { AppDispatch, RootState } from '@/store/store'
+import { useDispatch, useSelector } from 'react-redux'
+import { removeSession } from '@/slices/sessionSlice'
 
 
 const Navbar = () => {
     const pageRef = useRef(false);
-    const { data: session, status } = useSession();
+    const { session } = useSelector((state: RootState) => state.session)
     const [data, setData] = React.useState<Data>({})
+    const { status } = useSession()
     const pathName = usePathname()
     const dispatch = useDispatch<AppDispatch>()
 
@@ -50,10 +52,12 @@ const Navbar = () => {
         e.preventDefault();
         try {
             await LoginUser(data as Data)
+            await fetchData()
         } catch (error) {
             console.error(error)
         }
     }
+
     return (
         <NoSsr>
             {/* <Box
@@ -75,7 +79,6 @@ const Navbar = () => {
                 }
                 <form onSubmit={handleSubmit}>
                     <DropDownSkelenton
-                        session={session as Session}
                         status={status}
                     >
                         {
@@ -92,7 +95,12 @@ const Navbar = () => {
                                             padding: 1,
                                             borderRadius: 1,
                                         }}
-                                        onClick={item.action}
+                                        onClick={async () => {
+                                            dispatch(removeSession(session[0].id))
+                                            return await signOut({
+                                                redirect: false
+                                            })
+                                        }}
                                     >
                                         {item.name}
                                     </Typography>

@@ -11,10 +11,12 @@ import { RootState } from '@/store/store'
 const CommentContainer = (
     {
         data,
-        comments
+        comments,
+        fetchedData
     }: {
         data: BlogsInterface | EventsInterface
         comments: CommentInterface[];
+        fetchedData: () => Promise<void>
     }
 ) => {
     const { session } = useSelector((state: RootState) => state.session)
@@ -33,6 +35,7 @@ const CommentContainer = (
         try {
             const { addComment } = await import('@/utils/FetchFromApi')
             await addComment(data?._id, comment as Data, 'blog')
+            await fetchedData()
             setIsDisabled(false)
         } catch (error) {
             setIsDisabled(false)
@@ -81,7 +84,7 @@ const CommentContainer = (
                         }}
                     >
                         <Avatar
-                            src={session[0].image as string || ''}
+                            src={session[0]?.image as string || ''}
                         />
                         <textarea
                             name='comment'
@@ -131,7 +134,7 @@ const CommentContainer = (
                 >Comments {comments?.length}</Typography>
                 {
                     comments?.map((item, index) => (
-                        <CommentItem key={index} data={item} />
+                        <CommentItem key={index} data={item} fetchedData={fetchedData} />
                     ))
                 }
             </Box>

@@ -1,13 +1,13 @@
 'use client'
 
 
-import { AppDispatch, RootState } from '@/store/store'
+import { RootState } from '@/store/store'
 import { Data } from '@/utils/Interfaces'
 import { Container, } from '@mui/material'
 import dynamic from 'next/dynamic'
 import { notFound } from 'next/navigation'
 import React, { useEffect, useRef } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 
 const Loading = dynamic(() => import('@/Components/Loading'))
 const CustomModal = dynamic(() => import('@/Components/CustomModal'))
@@ -21,14 +21,9 @@ const page = () => {
   const [data, setData] = React.useState<Data[]>()
   const { session } = useSelector((state: RootState) => state.session)
   const [isUpdate, setIsUpdate] = React.useState<Data>()
-  const dispatch = useDispatch<AppDispatch>()
 
   const user = async () => {
-    const { fetchSession } = await import('@/slices/sessionSlice')
     const { allUser } = await import('@/utils/FetchFromApi')
-
-    // fetch session from the redux store 
-    await dispatch(fetchSession());
 
     const alluser = await allUser('user')
     setData(alluser)

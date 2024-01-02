@@ -1,23 +1,23 @@
 
-import { Session } from '@/utils/Interfaces';
+import { RootState } from '@/store/store';
 import { styles } from '@/utils/styles'
 import { KeyboardArrowDown } from '@mui/icons-material';
 import { Box } from '@mui/material'
 import React from 'react'
+import { useSelector } from 'react-redux';
 
 const DropDownSkelenton = (
     {
         value,
         children,
-        session,
         status
     }: {
         value?: string;
         children: React.ReactNode;
-        session?: Session;
         status?: string
     }
 ) => {
+    const { session } = useSelector((state: RootState) => state.session)
     const [isTrue, setIsTrue] = React.useState(false)
 
     return (
@@ -63,7 +63,7 @@ const DropDownSkelenton = (
                 }, 1)}
                 onClick={() => setIsTrue(prev => !prev)}
             >
-                {(value) ? value : (status === 'unauthenticated') ? 'Login' : session?.user?.name}
+                {(value) ? value : (status === 'unauthenticated') ? 'Login' : session[0]?.name}
                 <KeyboardArrowDown
                     sx={{
                         transform: isTrue ? 'rotate(180deg)' : 'rotate(0deg)',

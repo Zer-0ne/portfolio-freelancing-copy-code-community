@@ -73,11 +73,14 @@ export const AuthOptions: NextAuthOptions = {
     callbacks: {
         async signIn({ user, account }: { user: any, account: Account | null; }) {
             try {
-                if (['google', 'github','linkedin'].includes(account?.provider as string)) {
+                if (['google', 'github', 'linkedin'].includes(account?.provider as string)) {
                     await connect()
                     const username = await user.id
                     const isExist = await Users.findOne<any>({ username });
-                    console.log(isExist)
+                    user.username = username;
+                    user.role = isExist?.role;
+                    
+                    console.log(user)
                     if (isExist) return user
                     await createUser({
                         username: user?.id as string,

@@ -20,23 +20,23 @@ const page = () => {
   const [isLoading, setIsLoading] = useState(true)
 
 
-  useEffect(() => {
-    const fetchedData = async () => {
-      try {
-        const { Post, userInfo, fetchComment } = await import('@/utils/FetchFromApi')
-        const res = await Post('blog', id as string)
-        if (res?.comments.length) {
-          const comments = await fetchComment(res.comments.toString())
-          setComment(comments)
-        }
-        const user = await userInfo(res?.authorId)
-        setUser(user)
-        setData(res)
-        setIsLoading(false)
-      } catch (error) {
-        console.log(error)
+  const fetchedData = async () => {
+    try {
+      const { Post, userInfo, fetchComment } = await import('@/utils/FetchFromApi')
+      const res = await Post('blog', id as string)
+      if (res?.comments.length) {
+        const comments = await fetchComment(res.comments.toString())
+        setComment(comments)
       }
+      const user = await userInfo(res?.authorId)
+      setUser(user)
+      setData(res)
+      setIsLoading(false)
+    } catch (error) {
+      console.log(error)
     }
+  }
+  useEffect(() => {
     (pageRef.current === false) && fetchedData()
     return () => {
       pageRef.current = true;
@@ -53,10 +53,11 @@ const page = () => {
       <Markdown
         data={data as BlogsInterface}
       />
-      {/* <CommentContainer
+      <CommentContainer
         data={data as BlogsInterface}
         comments={comment as CommentInterface[]}
-      /> */}
+        fetchedData={fetchedData}
+      />
 
     </>
   )

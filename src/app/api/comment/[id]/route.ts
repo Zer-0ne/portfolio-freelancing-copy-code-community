@@ -50,7 +50,7 @@ export const DELETE = async (request: NextRequest, { params }: any) => {
 
         // check the user is admin or not 
         const user = await Users.findOne({ username: session?.user?.username })
-        if (user?.isAdmin === false || session.user.id == userId) return NextResponse.json({ message: 'Your are not Authorized!' }, { status: 401 })
+        if (user?.isAdmin === false && session.user.id == userId) return NextResponse.json({ message: 'Your are not Authorized!' }, { status: 401 })
 
         // connect to Database
         await connect();

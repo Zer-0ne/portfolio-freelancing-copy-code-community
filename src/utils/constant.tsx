@@ -1,4 +1,4 @@
-import { BlogsInterface, Data, EventsInterface, Item, coreMember, navbar } from "./Interfaces"
+import { BlogsInterface, Data, EventsInterface, Item, User, coreMember, navbar } from "./Interfaces"
 
 
 // imports icons 
@@ -20,6 +20,8 @@ import {
 import { styles } from "./styles";
 import { Typography } from "@mui/material";
 import { signOut } from "next-auth/react";
+import { Dispatch, ThunkDispatch, UnknownAction } from "@reduxjs/toolkit";
+import { removeSession } from "@/slices/sessionSlice";
 
 export const authMode = [
     {

@@ -9,20 +9,23 @@ import { useSelector } from 'react-redux'
 
 const CommentItem = (
   {
-    data
+    data,
+    fetchedData
   }: {
     data: CommentInterface;
-
+    fetchedData: () => Promise<void>
   }
 ) => {
   const { session } = useSelector((state: RootState) => state.session)
   const handleDelete = async () => {
     try {
-      return await deleteComment(data._id, data.authorId.id)
+      return await deleteComment(data._id, data.authorId._id)
+      await fetchedData()
     } catch (error) {
       console.log(error)
     }
   }
+  // console.log(session.length)
   return (
     <Box
       sx={{
@@ -50,15 +53,15 @@ const CommentItem = (
       >{data.comment}</Typography>
       {
         // (!session[0] || session[0]?.role !== 'admin' || session[0]?._id !== data.authorId.id) ? <></> :
-          <Delete
-            onClick={handleDelete}
-            sx={{
-              color: 'red',
-              opacity: 0.8,
-              cursor: 'pointer',
-              display: (session[0]?.role === 'admin' || session[0] || session[0]?._id === data.authorId.id) ? 'block' : 'none'
-            }}
-          />
+        <Delete
+          onClick={handleDelete}
+          sx={{
+            color: 'red',
+            opacity: 0.8,
+            cursor: 'pointer',
+            display: (session[0]?.role === 'admin' || session.length || session[0]?._id === data.authorId._id) ? 'block' : 'none'
+          }}
+        />
       }
     </Box>
   )
