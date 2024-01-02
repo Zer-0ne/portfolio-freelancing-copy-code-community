@@ -31,6 +31,7 @@ const page = () => {
         }
         user()
     }, [])
+    console.log(isAdmin)
     if (isloading) return <Loading />
     if (!isAdmin) return notFound()
 
