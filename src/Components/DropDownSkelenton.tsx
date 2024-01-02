@@ -2,7 +2,7 @@
 import { RootState } from '@/store/store';
 import { styles } from '@/utils/styles'
 import { KeyboardArrowDown } from '@mui/icons-material';
-import { Box } from '@mui/material'
+import { Box, useMediaQuery } from '@mui/material'
 import React from 'react'
 import { useSelector } from 'react-redux';
 
@@ -10,15 +10,18 @@ const DropDownSkelenton = (
     {
         value,
         children,
-        status
+        status,
+        customStyle
     }: {
         value?: string;
         children: React.ReactNode;
         status?: string
+        customStyle?: React.CSSProperties
     }
 ) => {
     const { session } = useSelector((state: RootState) => state.session)
     const [isTrue, setIsTrue] = React.useState(false)
+    const matches = useMediaQuery('(max-width:900px)');
 
     return (
 
@@ -33,7 +36,7 @@ const DropDownSkelenton = (
                         position: 'absolute',
                         top: '130%',
                         right: '0%',
-                        left: (status === 'unauthenticated') ? null : 0,
+                        left: (status === 'unauthenticated') ? null : { md: 0, xs: -200 },
                         display: isTrue ? 'flex' : 'none',
                         opacity: isTrue ? 1 : 0,
                         flexDirection: 'column',
@@ -43,7 +46,8 @@ const DropDownSkelenton = (
                         flex: 1,
                         gap: 1,
                         zIndex: 50,
-                        fontSize: { xs: 12, md: 18, xl: 25 }
+                        fontSize: { xs: 12, md: 18, xl: 25 },
+                        textAlign: 'center'
                     }, 1),
 
                 }}
@@ -59,11 +63,12 @@ const DropDownSkelenton = (
                     justifyContent: 'space-between',
                     alignItems: 'center',
                     zIndex: 0,
+                    ...customStyle,
                     fontSize: { xs: 12, md: 18, xl: 20 }
                 }, 1)}
                 onClick={() => setIsTrue(prev => !prev)}
             >
-                {(value) ? value : (status === 'unauthenticated') ? 'Login' : session[0]?.name}
+                {(value) ? value : (status === 'unauthenticated') ? 'Login' : (matches) ? '' : session[0]?.name}
                 <KeyboardArrowDown
                     sx={{
                         transform: isTrue ? 'rotate(180deg)' : 'rotate(0deg)',

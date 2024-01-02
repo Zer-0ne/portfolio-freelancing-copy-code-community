@@ -2,7 +2,7 @@ import { Data, Item } from "./Interfaces";
 import { colors } from "./colors";
 
 export const styles = {
-    navbar: () => ({
+    navbar: (pathName: string) => ({
         position: 'sticky',
         left: 0,
         right: 0,
@@ -11,9 +11,9 @@ export const styles = {
         flex: 1,
         top: '10px',
         padding: 3,
-        display: 'flex',
+        display: (pathName!=='/') ? 'flex' : 'none',
         alignItems: 'center',
-        justifyContent: 'space-evenly',
+        justifyContent: 'space-between',
         ...styles.glassphorism(),
         margin: '15px 20px'
     }),
