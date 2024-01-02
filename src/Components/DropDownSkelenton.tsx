@@ -68,7 +68,7 @@ const DropDownSkelenton = (
                 }, 1)}
                 onClick={() => setIsTrue(prev => !prev)}
             >
-                {(value) ? value : (status === 'unauthenticated') ? 'Login' : (matches) ? '' : session[0]?.name}
+                {(value) ? value : (status === 'unauthenticated') ? (matches) ? '' : 'Login' : (matches) ? '' : session[0]?.name}
                 <KeyboardArrowDown
                     sx={{
                         transform: isTrue ? 'rotate(180deg)' : 'rotate(0deg)',
