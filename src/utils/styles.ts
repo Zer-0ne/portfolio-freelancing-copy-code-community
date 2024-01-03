@@ -11,7 +11,7 @@ export const styles = {
         flex: 1,
         top: '10px',
         padding: 3,
-        display: (pathName!=='/') ? 'flex' : 'none',
+        display: (pathName !== '/') ? 'flex' : 'none',
         alignItems: 'center',
         justifyContent: 'space-between',
         ...styles.glassphorism(),
@@ -178,11 +178,11 @@ export const styles = {
     }),
     eventCard: (label: string | undefined) => ({
         padding: 4,
-        ...styles.glassphorism('', { md: '0 12px 12px 0', xl: '0 12px 12px 0', xs: (label) ? ' 0 0' : '12px' }),
+        ...styles.glassphorism('', { md: '0 12px 12px 0', xl: '0 12px 12px 0', xs: (label && (['UpComming', 'Featured'].includes(label as string))) ? ' 0 0' : '12px' }),
         cursor: 'pointer',
         position: 'relative',
         flexWrap: 'wrap',
-        mt: { xs: 4, md: 0, xl: 0 },
+        mt: { xs: (label && (['UpComming', 'Featured'].includes(label as string)))?7:4, md: 0, xl: 0 },
         flexDirection: { xs: 'column', md: 'row', xl: 'row' },
         '::before': {
             content: '""',
@@ -195,8 +195,8 @@ export const styles = {
             borderRadius: { md: '12px 0 0 12px', xl: '12px 0 0 12px', xs: '0 0 12px 12px' },
         },
         "::after": {
-            content: `"${label}"`,
-            display: label ? 'flex' : 'none',
+            content: `"${(['UpComming', 'Featured'].includes(label as string)) ? label : ''}"`,
+            display: (label && (['UpComming', 'Featured'].includes(label as string))) ? 'flex' : 'none',
             justifyContent: 'center',
             alignItems: 'center',
             padding: 2,

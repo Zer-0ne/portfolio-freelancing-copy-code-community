@@ -36,18 +36,18 @@ const DropDownSkelenton = (
                         position: 'absolute',
                         top: '130%',
                         right: '0%',
-                        left: (status === 'unauthenticated') ? null : { md: 0, xs: -200 },
+                        left: (status === 'unauthenticated') ? null : (status === 'authenticated') ? { md: 0, xs: -200 } : 0,
                         display: isTrue ? 'flex' : 'none',
                         opacity: isTrue ? 1 : 0,
                         flexDirection: 'column',
                         cursor: 'pointer',
                         transition: 'all .5s ease-in-out',
-                        backdropFilter: `blur(5px) saturate(187%) !important`,
+                        ...styles.glassphorism(),
                         flex: 1,
                         gap: 1,
                         zIndex: 50,
                         fontSize: { xs: 12, md: 18, xl: 25 },
-                        textAlign: 'center'
+                        textAlign: 'center',
                     }, 1),
 
                 }}

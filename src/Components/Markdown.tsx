@@ -49,12 +49,12 @@ const Markdown = (
                         }}>{children}</Typography>,
                         h2: ({ children }) => <Typography variant='h2' sx={{
                             ...styles.heading({ md: 40, xs: 25 }, '500'),
-                            mt: 4,
-                            mb: 4,
+                            mt: 3,
+                            mb: 3,
                         }}>{children}</Typography>,
                         h3: ({ children }) => <Typography variant='h3' sx={{
                             ...styles.heading({ md: 30, xs: 19 }, '500', 'none'),
-                            mb: 2, mt: 2, p: 1, pl: 1.5
+                            mb: 1, mt: 1, p: 1, pl: 1.5
                         }}>{children}</Typography>,
                         h4: ({ children }) => <Typography variant='h4' sx={{
                             ...styles.heading(25, '300', 'none'),
@@ -71,8 +71,10 @@ const Markdown = (
                         p: ({ children }) => <Typography variant='body1' sx={{
                             fontSize: 16,
                             lineHeight: 'normal',
-                            textAlign: 'justify',
-                            m:4
+                            // textAlign: 'justify',
+                            ml: 3,
+                            mr: 3,
+                            mb: 2
                         }}>{children}</Typography>,
                         img: ({ src, alt }) => <Image className='image' style={{
                             alignSelf: 'center',

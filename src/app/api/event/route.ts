@@ -1,4 +1,5 @@
 import Event from "@/Models/Event";
+import Users from "@/Models/Users";
 import { userInfo } from "@/utils/FetchFromApi";
 import { Session } from "@/utils/Interfaces";
 import { currentSession } from "@/utils/Session";
@@ -21,7 +22,7 @@ export const POST = async (request: NextRequest) => {
         if (!session) return NextResponse.json({ message: 'Please login' }, { status: 401 })
 
         // check the user is admin or not 
-        const user = await userInfo(session?.user?.username)
+        const user = await Users.findOne({ username: session?.user?.username })
         if (user?.isAdmin === false) return NextResponse.json({ message: 'Your are not Authorized!' }, { status: 401 })
 
 

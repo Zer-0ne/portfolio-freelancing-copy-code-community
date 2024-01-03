@@ -38,7 +38,8 @@ const page = () => {
     }
   }, [])
   if (isloading) return <Loading />
-  if (session[0]?.isAdmin === false || !session.length) return notFound()
+  if (session[0]?.isAdmin === false) return notFound()
+  if (!session.length) return notFound()
 
   const handleDelete = async () => {
     try {

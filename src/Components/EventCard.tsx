@@ -1,5 +1,5 @@
 import { Box, Typography } from '@mui/material'
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import { styles } from '@/utils/styles'
 import Image from 'next/image'
 import { AssistantPhotoRounded, CalendarToday, DeleteRounded, EditRounded, LanguageOutlined, LocalOfferRounded } from '@mui/icons-material'
@@ -17,6 +17,33 @@ const EventCard = ({
     fetchData: () => Promise<void>;
 }) => {
     const { session } = useSelector((state: RootState) => state.session)
+    const cardRef = useRef<HTMLDivElement>(null);
+    const [isVisible, setIsVisible] = React.useState(false);
+
+    useEffect(() => {
+        const options = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.5, // Adjust the threshold as needed
+        };
+
+        const callback: IntersectionObserverCallback = (entries) => {
+            entries.forEach((entry) => {
+                setIsVisible(entry.isIntersecting);
+            });
+        };
+
+        const observer = new IntersectionObserver(callback, options);
+
+        if (cardRef.current) {
+            observer.observe(cardRef.current);
+        }
+
+        // Cleanup the observer when the component unmounts
+        return () => {
+            observer.disconnect();
+        };
+    }, []);
 
     const getRelativeDate = (targetDate: Date | string) => {
         const currentDate = new Date() as any;
@@ -49,13 +76,14 @@ const EventCard = ({
 
     return (
         <Box
+            ref={cardRef}
             sx={{
                 display: 'flex',
                 flexDirection: 'column',
                 gap: .5,
-                transition: 'all 0.5s ease-in-out',
-                // opacity: isVisible ? 1 : 0,
-                // transform: `scale(${!isVisible ? -.8 : 1})`,
+                transition: 'all .5s ease-in-out',
+                opacity: isVisible ? 1 : 0,
+                transform: `scale(${!isVisible ? -.8 : 1})`,
             }}
         >
             <Link href={`/events/${item._id}`}>

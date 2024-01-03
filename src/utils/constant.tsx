@@ -160,7 +160,7 @@ export const createEvent = [
     },
     {
         name: 'status',
-        placeholder: 'Status',
+        placeholder: 'Status: e.g., end, upcomming etc',
         type: 'text',
         required: true,
         size: 1
@@ -174,7 +174,7 @@ export const createEvent = [
     },
     {
         name: 'label',
-        placeholder: 'Label',
+        placeholder: 'Label: upcomming, featured',
         type: 'text',
         required: false,
         size: 1

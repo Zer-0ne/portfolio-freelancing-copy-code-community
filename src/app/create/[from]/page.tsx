@@ -65,6 +65,7 @@ const page = () => {
         setData((prevFormData) => ({ ...prevFormData, [name]: value }));
     }
 
+    console.log(data)
 
     // handle submit to the api
     const handleSubmit = async (e: any) => {
@@ -103,12 +104,12 @@ const page = () => {
 
                         {
                             ((from === 'blog') ? createBlog : createEvent).map((item, index) => (
-                                (item.name === 'mode') ? <DropDown
+                                (['mode', 'label'].includes(item.name)) ? <DropDown
                                     onChange={setData}
                                     name={item.name}
                                     key={index}
                                     style={styles}
-                                    values={['offline', 'online', 'hybrid']}
+                                    values={(item.name === 'mode') ? ['offline', 'online', 'hybrid'] : ['Default', 'Featured', 'UpComming']}
                                 /> : (item.name === 'image') ?
                                     <Box
                                         key={index}
