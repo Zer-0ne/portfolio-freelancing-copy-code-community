@@ -194,7 +194,7 @@ const ReadmeField = ({
                             display: 'flex',
                             borderBottom: '1px solid rgba(255,255,255,.25)',
                             flex: 1,
-                            height: 40,
+                            mb: 1,
                             gap: 2.5,
                             flexWrap: 'wrap',
                             padding: `0px 10px 10px 10px`,
@@ -229,11 +229,12 @@ const ReadmeField = ({
                         isPreview ? <Box
                             sx={{
                                 flex: 100,
-                                overflow:'auto'
+                                overflow: 'auto'
                             }}
                         >
                             <Markdown
                                 data={Daata as Data}
+
                             /> </Box> :
                             <textarea
                                 value={markdownContent}

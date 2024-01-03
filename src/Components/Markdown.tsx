@@ -18,8 +18,10 @@ export const ibn = IBM_Plex_Mono({
 const Markdown = (
     {
         data,
+        customStyles
     }: {
-        data: BlogsInterface | EventsInterface | Data
+        data: BlogsInterface | EventsInterface | Data;
+        customStyles?: React.CSSProperties;
     }
 ) => {
     return (
@@ -29,7 +31,8 @@ const Markdown = (
                 display: "flex",
                 flexDirection: 'column',
                 justifyContent: "center",
-                textAlign: 'justify'
+                textAlign: 'justify',
+                ...customStyles
                 // alignItems:'center'
             }}
         >

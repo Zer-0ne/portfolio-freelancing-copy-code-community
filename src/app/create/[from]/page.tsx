@@ -65,7 +65,7 @@ const page = () => {
         setData((prevFormData) => ({ ...prevFormData, [name]: value }));
     }
 
-    console.log(data)
+
 
     // handle submit to the api
     const handleSubmit = async (e: any) => {
