@@ -127,10 +127,10 @@ const BlogCard = ({
                             }}
                             className={ibn.className}
                         >
-                            <Avatar
+                            {/* <Avatar
                                 sx={{ width: 22, height: 22 }}
-                            />
-                            Sahil khan
+                            /> */}
+                            Copy Code
                         </Typography>
                         <Typography
                             variant='caption'

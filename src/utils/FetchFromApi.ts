@@ -55,12 +55,8 @@ export const allPost = async (route: string) => {
             },
         })
         if (response.ok) {
-            if (route === 'blog') {
-                const { blog } = await response.json()
-                return blog
-            }
-            const { event } = await response.json();
-            return event
+            const data = await response.json()
+            return data
         }
     } catch (error) {
         console.log(error)
@@ -92,12 +88,8 @@ export const Post = async (route: string, id: string) => {
             },
         })
         if (response.ok) {
-            if (route === 'blog') {
-                const { blog } = await response.json()
-                return blog;
-            }
-            const { event } = await response.json();
-            return event
+            const data = await response.json()
+            return data
         }
     } catch (error) {
         console.log(error)
@@ -168,14 +160,13 @@ export const createNew = async (data: Data, route: string, setIsDisabled: React.
     const Toast = toast.loading('Please wait')
     try {
 
-
         // check the session
         const session = await currentSession() as Session;
         if (!session) return toast.update(Toast, update('Please Login!', 'error'))
 
         // check the user is admin or not 
         const user = await userInfo(session?.user?.username)
-        if (user.isAdmin === false) return toast.update(Toast, update('Your are not Authorized!', 'error'))
+        if (['user'].includes(user.role)) return toast.update(Toast, update('Your are not Authorized!', 'error'))
 
 
         setIsDisabled(true)
@@ -186,15 +177,16 @@ export const createNew = async (data: Data, route: string, setIsDisabled: React.
             },
             body: JSON.stringify({
                 ...data,
-                authorId: session.user.id
+                authorId: user._id
             })
         })
+        const res = await response.json()
         if (response.ok) {
             setIsDisabled(false)
-            return toast.update(Toast, update('Posted!', 'success'))
+            return toast.update(Toast, update(res.message, res.status))
         }
         setIsDisabled(false)
-        return toast.update(Toast, update('Something went wrong!', 'error'))
+        return toast.update(Toast, update(res.message, res.status))
     } catch (error) {
         setIsDisabled(false)
         console.log('error')
@@ -219,13 +211,13 @@ export const createNewContact = async (data: Data, setIsDisabled: React.Dispatch
                 ...data
             })
         })
+        const data_from_server = await response.json();
         if (response.ok) {
-            console.log('success')
             setIsDisabled(false)
-            return toast.update(Toast, update('Posted!', 'success'))
+            return toast.update(Toast, update(data_from_server.message, data_from_server.status))
         }
         setIsDisabled(false)
-        return toast.update(Toast, update('Something went wrong!', 'error'))
+        return toast.update(Toast, update(data_from_server.message, data_from_server.status))
     } catch (error) {
         setIsDisabled(false)
         console.log(error)
@@ -243,7 +235,7 @@ export const deletePost = async (id: string, route: string, item: BlogsInterface
 
         // check the user is admin or not 
         const user = await userInfo(session?.user?.username)
-        if (user.isAdmin === false) return toast.update(Toast, update('Your are not Authorized!', 'error'))
+        if (['user'].includes(user.role)) return toast.update(Toast, update('Your are not Authorized!', 'error'))
 
         if (item.contentImage.length) {
 
@@ -263,10 +255,11 @@ export const deletePost = async (id: string, route: string, item: BlogsInterface
         }
 
         const res = await fetch(`/api/${route}/${id}`, { method: 'DELETE' });
+        const data_from_server = await res.json();
         if (res.ok) {
-            return toast.update(Toast, update('Deleted!', 'success'));
+            return toast.update(Toast, update(data_from_server.message, data_from_server.status));
         }
-        return toast.update(Toast, update('Something went wrong!', 'error'))
+        return toast.update(Toast, update(data_from_server.message, data_from_server.status));
     } catch (error) {
         console.log(error)
         return toast.update(Toast, update('Something Went Wrong!', 'error'))
@@ -284,65 +277,23 @@ export const editPost = async (id: string, data: Data, route: string) => {
 
         // check the user is admin or not 
         const user = await userInfo(session?.user?.username)
-        if (user.isAdmin === false) return toast.update(Toast, update('Your are not Authorized!', 'error'))
+        if (['user'].includes(user.role)) return toast.update(Toast, update('Your are not Authorized!', 'error'))
 
         const res = await fetch(`/api/${route}/${id}`, {
             method: 'PUT',
             body: JSON.stringify({ ...data }),
         });
+        const data_from_server = await res.json();
         if (res.ok) {
-            return toast.update(Toast, update('Edited!', 'success'));
+            return toast.update(Toast, update(data_from_server.message, data_from_server.status));
         }
-        return toast.update(Toast, update('Something went wrong!', 'error'))
+        return toast.update(Toast, update(data_from_server.message, data_from_server.status));
     } catch (error) {
         console.log(error)
         return toast.update(Toast, update('Something Went Wrong!', 'error'));
     }
 }
 
-// add a new comments
-export const addComment = async (blogId: string, comment: Data, route: string) => {
-    const Toast = toast.loading("Adding...")
-    try {
-        // check the session
-        const session = await currentSession() as Session;
-        if (!session) return toast.update(Toast, update('Please Login!', 'error'))
-
-        const user = await userInfo(session.user.id)
-
-        const response = await fetch(`/api/comment/`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                blogId,
-                ...comment,
-                authorId: user._id
-            }),
-        })
-        const data = await response.json();
-        return toast.update(Toast, update(data.message, 'success'))
-    } catch (err) {
-        console.log(err)
-    }
-}
-
-// fetch all the comment of related post
-export const fetchComment = async (data: string) => {
-    try {
-        const response = await fetch(`/api/comment/${data}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-        })
-        if (response.ok) {
-            const res = await response.json()
-            return res
-        }
-    } catch (error) {
-        console.log(error)
-    }
-}
 
 export const deleteComment = async (id: string, authorId: string) => {
     const Toast = toast.loading('Please wait')

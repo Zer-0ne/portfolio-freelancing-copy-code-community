@@ -12,7 +12,7 @@ export const GET = async (request: NextRequest, { params }: any) => {
         const { username } = params
 
         let user;
-        
+
         // Check if the username is a valid ObjectId
         if (isValidObjectId(username)) {
             user = await Users.findById(username);
@@ -39,7 +39,7 @@ export const PUT = async (request: NextRequest, { params }: any) => {
         if (!session) return NextResponse.json({ message: 'Please login' }, { status: 401 })
 
         // check the user is admin or not 
-        const user = await userInfo(session?.user?.username)
+        const user = await Users.findOne({ username: session?.user?.username })
         if (user?.isAdmin === false) return NextResponse.json({ message: 'Your are not Authorized!' }, { status: 401 })
 
         // connect to Database

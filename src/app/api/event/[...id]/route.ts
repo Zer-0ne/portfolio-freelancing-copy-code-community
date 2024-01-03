@@ -1,6 +1,5 @@
 import Event from "@/Models/Event";
 import Users from "@/Models/Users";
-import { userInfo } from "@/utils/FetchFromApi";
 import { Session } from "@/utils/Interfaces";
 import { currentSession } from "@/utils/Session";
 import connect from "@/utils/database";
@@ -12,7 +11,7 @@ export const GET = async (request: NextRequest, { params }: any) => {
         await connect();
         const { id } = params;
         const event = await Event.findById(id)
-        return NextResponse.json({ event })
+        return NextResponse.json(event)
     } catch (err: {
         message: string
     } | any) {
@@ -24,11 +23,12 @@ export const GET = async (request: NextRequest, { params }: any) => {
 export const DELETE = async (request: NextRequest, { params }: any) => {
     try {
         const session = await currentSession() as Session;
-        if (!session) return NextResponse.json({ message: 'Please login' }, { status: 401 })
+        if (!session) return NextResponse.json({ message: 'Please login', status: 'error' }, { status: 401 })
 
-        // check the user is admin or not 
+        // check the user is admin and moderator or not 
         const user = await Users.findOne({ username: session?.user?.username })
-        if (user?.isAdmin === false) return NextResponse.json({ message: 'Your are not Authorized!' }, { status: 401 })
+
+        if (['user'].includes(user.role)) return NextResponse.json({ message: 'Your are not Authorized!', status: 'error' }, { status: 401 })
 
 
         // connect to Database
@@ -36,7 +36,7 @@ export const DELETE = async (request: NextRequest, { params }: any) => {
         const { id } = params
         const deleteBlog = await Event.findByIdAndDelete(id)
         if (!deleteBlog) return NextResponse.json({ message: 'Blog not found!' })
-        return NextResponse.json({ message: 'Delete seccussfully' })
+        return NextResponse.json({ message: 'Delete seccussfully', status: 'success' })
     } catch (err: {
         message: string
     } | any) {
@@ -48,11 +48,12 @@ export const DELETE = async (request: NextRequest, { params }: any) => {
 export const PUT = async (request: NextRequest, { params }: any) => {
     try {
         const session = await currentSession() as Session;
-        if (!session) return NextResponse.json({ message: 'Please login' }, { status: 401 })
+        if (!session) return NextResponse.json({ message: 'Please login', status: 'error' }, { status: 401 })
 
-        // check the user is admin or not 
+        // check the user is admin and moderator or not 
         const user = await Users.findOne({ username: session?.user?.username })
-        if (user?.isAdmin === false) return NextResponse.json({ message: 'Your are not Authorized!' }, { status: 401 })
+
+        if (['user'].includes(user.role)) return NextResponse.json({ message: 'Your are not Authorized!', status: 'error' }, { status: 401 })
 
 
         // connect to Database
@@ -85,8 +86,8 @@ export const PUT = async (request: NextRequest, { params }: any) => {
             { $set: updatedBlog },
             { new: true }
         );
-        if (!blog) return NextResponse.json({ message: 'Blog not found!' })
-        return NextResponse.json({ message: 'Blog updated!' })
+        if (!blog) return NextResponse.json({ message: 'Blog not found!', status: 'error' })
+        return NextResponse.json({ message: 'Blog updated!', status: 'success' })
     } catch (err: {
         message: string
     } | any) {

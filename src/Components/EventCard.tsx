@@ -4,7 +4,7 @@ import { styles } from '@/utils/styles'
 import Image from 'next/image'
 import { AssistantPhotoRounded, CalendarToday, DeleteRounded, EditRounded, LanguageOutlined, LocalOfferRounded } from '@mui/icons-material'
 import { colors } from '@/utils/colors'
-import { EventsInterface, Session } from '@/utils/Interfaces'
+import { EventsInterface, } from '@/utils/Interfaces'
 import { deletePost } from '@/utils/FetchFromApi'
 import Link from 'next/link'
 import { useSelector } from 'react-redux'
@@ -228,7 +228,7 @@ const EventCard = ({
                                     borderRadius: 7,
                                     border: `1px solid ${colors.transparentGrey}`
                                 }}
-                            >Sahil khan</Typography>
+                            >Copy Code</Typography>
                         </Box>
 
                         <Box

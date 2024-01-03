@@ -1,6 +1,5 @@
 import Event from "@/Models/Event";
 import Users from "@/Models/Users";
-import { userInfo } from "@/utils/FetchFromApi";
 import { Session } from "@/utils/Interfaces";
 import { currentSession } from "@/utils/Session";
 import connect from "@/utils/database";
@@ -10,9 +9,8 @@ import { NextRequest, NextResponse } from "next/server";
 export const GET = async () => {
     await connect();
     const event = await Event.find({});
-    return NextResponse.json({
-        event,
-    });
+    return NextResponse.json(event,
+    );
 }
 
 // create event
@@ -21,9 +19,10 @@ export const POST = async (request: NextRequest) => {
         const session = await currentSession() as Session;
         if (!session) return NextResponse.json({ message: 'Please login' }, { status: 401 })
 
-        // check the user is admin or not 
+        // check the user is admin, moderator or not 
         const user = await Users.findOne({ username: session?.user?.username })
-        if (user?.isAdmin === false) return NextResponse.json({ message: 'Your are not Authorized!' }, { status: 401 })
+
+        if (['user'].includes(user.role)) return NextResponse.json({ message: 'Your are not Authorized!' }, { status: 401 })
 
 
         // connect to the database

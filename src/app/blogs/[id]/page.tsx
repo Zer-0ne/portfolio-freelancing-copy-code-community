@@ -22,10 +22,16 @@ const page = () => {
 
   const fetchedData = async () => {
     try {
-      const { Post, userInfo, fetchComment } = await import('@/utils/FetchFromApi')
+      const { Post, userInfo } = await import('@/utils/FetchFromApi')
+
+      // fetching the post means blog
       const res = await Post('blog', id as string)
+
       if (res?.comments.length) {
-        const comments = await fetchComment(res.comments.toString())
+
+        // fetching all the comments related to the post
+        const comments = await Post('comment', res.comments.toString())
+
         setComment(comments)
       }
       const user = await userInfo(res?.authorId)

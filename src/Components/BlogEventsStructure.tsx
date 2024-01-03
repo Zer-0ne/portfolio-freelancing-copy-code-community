@@ -1,6 +1,5 @@
 // 'use server'
 import { RootState } from '@/store/store'
-import { Session } from '@/utils/Interfaces'
 import { styles } from '@/utils/styles'
 import { Box, Container } from '@mui/material'
 import Link from 'next/link'

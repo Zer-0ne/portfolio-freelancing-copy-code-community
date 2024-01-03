@@ -9,6 +9,7 @@ import { styles } from '@/utils/styles'
 import { allUser, editPost } from '@/utils/FetchFromApi'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/store/store'
+import { roles } from '@/utils/constant'
 
 const UserCard = (
     {
@@ -26,7 +27,6 @@ const UserCard = (
     const { session } = useSelector((state: RootState) => state.session)
     const [data, setData] = useState<Data>()
 
-    const roles: string[] = ['admin', 'user', 'moderator']
     const userRole = item.role as string;
 
     roles.sort((a, b) => {

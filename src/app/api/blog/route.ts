@@ -1,5 +1,5 @@
 import Blog from "@/Models/Blog";
-import { userInfo } from "@/utils/FetchFromApi";
+import Users from "@/Models/Users";
 import { Session } from "@/utils/Interfaces";
 import { currentSession } from "@/utils/Session";
 import connect from "@/utils/database";
@@ -9,9 +9,8 @@ import { NextRequest, NextResponse } from "next/server";
 export const GET = async () => {
     await connect();
     const blog = await Blog.find({});
-    return NextResponse.json({
-        blog,
-    });
+    return NextResponse.json(blog
+    );
 }
 
 // create blog
@@ -19,9 +18,9 @@ export const POST = async (request: NextRequest) => {
     try {
         const session = await currentSession() as Session;
         if (!session) return NextResponse.json({ message: 'Please login' }, { status: 401 })
-        const user = await userInfo(session?.user?.username)
-        
-        if (user?.isAdmin === false) return NextResponse.json({ message: 'Your are not Authorized!' }, { status: 401 })
+        const user = await Users.findOne({ username: session?.user?.username })
+
+        if (['user'].includes(user.role)) return NextResponse.json({ message: 'Your are not Authorized!' }, { status: 401 })
         const {
             title,
             description,

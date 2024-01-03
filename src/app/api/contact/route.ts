@@ -1,11 +1,17 @@
 import Contact from "@/Models/Contact";
-import { userInfo } from "@/utils/FetchFromApi";
 import { Session } from "@/utils/Interfaces";
 import { currentSession } from "@/utils/Session";
 import connect from "@/utils/database";
 import { NextRequest, NextResponse } from "next/server";
 
-// create blog
+// Fetching all the contact
+export const GET = async () => {
+    await connect();
+    const contact = await Contact.find({});
+    return NextResponse.json(contact);
+}
+
+// create contact
 export const POST = async (request: NextRequest) => {
     try {
         const session = await currentSession() as Session;

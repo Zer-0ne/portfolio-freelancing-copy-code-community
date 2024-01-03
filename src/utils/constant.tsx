@@ -559,3 +559,6 @@ export const contactForm = [
         type: 'text'
     }
 ]
+
+
+export const roles: string[] = ['admin', 'user', 'moderator']

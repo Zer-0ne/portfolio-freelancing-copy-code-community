@@ -9,7 +9,7 @@ import { NextRequest, NextResponse } from "next/server";
 export const POST = async (request: NextRequest) => {
     try {
         const session = await currentSession() as Session;
-        if (!session) return NextResponse.json({ message: 'Please login' }, { status: 401 })
+        if (!session) return NextResponse.json({ message: 'Please login',status:'error' }, { status: 401 })
 
         const {
             comment, authorId, blogId, replies
@@ -24,7 +24,7 @@ export const POST = async (request: NextRequest) => {
         const relativePost = await Blog.findById(blogId)
         await relativePost?.comments?.push(data._id)
         await relativePost.save();
-        return NextResponse.json({ message: 'Comment secussfully' })
+        return NextResponse.json({ message: 'Comment secussfully',status:'success' })
     } catch (err: {
         message: string
     } | any) {

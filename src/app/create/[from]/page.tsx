@@ -31,7 +31,7 @@ const page = () => {
 
             const session = await currentSession() as Session
             const currUser = await userInfo(session?.user.username);
-            (session && currUser.isAdmin === true) ? setIsAdmin(true) : setIsAdmin(false)
+            (session && ['user'].includes(currUser.role)) ? setIsAdmin(false) : setIsAdmin(true)
             setIsloading(false)
             return (currUser.isAdmin) ? true : false;
         }

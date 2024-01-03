@@ -1,13 +1,10 @@
 'use client'
 
-
-import { RootState } from '@/store/store'
-import { Data } from '@/utils/Interfaces'
+import { Data, Session } from '@/utils/Interfaces'
 import { Container, } from '@mui/material'
 import dynamic from 'next/dynamic'
 import { notFound } from 'next/navigation'
 import React, { useEffect, useRef } from 'react'
-import { useSelector } from 'react-redux'
 
 const Loading = dynamic(() => import('@/Components/Loading'))
 const CustomModal = dynamic(() => import('@/Components/CustomModal'))
@@ -19,16 +16,22 @@ const page = () => {
   const [isloading, setIsloading] = React.useState<boolean>(true)
   const [open, setOpen] = React.useState(false);
   const [data, setData] = React.useState<Data[]>()
-  const { session } = useSelector((state: RootState) => state.session)
+  const [isAdmin, setIsAdmin] = React.useState(false)
   const [isUpdate, setIsUpdate] = React.useState<Data>()
 
   const user = async () => {
-    const { allUser } = await import('@/utils/FetchFromApi')
+    const { allUser, userInfo } = await import('@/utils/FetchFromApi')
+    const { currentSession } = await import('@/utils/Session');
 
-    const alluser = await allUser('user')
-    setData(alluser)
+    const session = await currentSession() as Session
+    const currUser = await userInfo(session?.user.username);
+    (session && ['user', 'moderator'].includes(currUser.role)) ? setIsAdmin(false) : setIsAdmin(true)
+
+    if (session && ['admin'].includes(currUser.role)) {
+      const alluser = await allUser('user')
+      setData(alluser)
+    }
     setIsloading(false)
-    return (session[0]?.isAdmin) ? true : false;
   }
 
   useEffect(() => {
@@ -38,8 +41,7 @@ const page = () => {
     }
   }, [])
   if (isloading) return <Loading />
-  if (session[0]?.isAdmin === false) return notFound()
-  if (!session.length) return notFound()
+  if (isAdmin === false) return notFound()
 
   const handleDelete = async () => {
     try {

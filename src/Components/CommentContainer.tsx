@@ -33,8 +33,10 @@ const CommentContainer = (
     const handleSubmit = async () => {
         setIsDisabled(true)
         try {
-            const { addComment } = await import('@/utils/FetchFromApi')
-            await addComment(data?._id, comment as Data, 'blog')
+            const { createNew } = await import('@/utils/FetchFromApi')
+
+            // create the new comments
+            await createNew({ blogId: data?._id, ...comment } as Data, 'comment', setIsDisabled)
             await fetchedData()
             setIsDisabled(false)
         } catch (error) {
