@@ -78,7 +78,7 @@ const page = () => {
             item={item}
             setIsUpdate={setIsUpdate}
             setOpen={setOpen}
-            setdata={setData}
+            fetchedUser={user}
             key={index}
           />
         ))

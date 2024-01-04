@@ -40,7 +40,7 @@ export const PUT = async (request: NextRequest, { params }: any) => {
 
         // check the user is admin or not 
         const user = await Users.findOne({ username: session?.user?.username })
-        if (user?.isAdmin === false) return NextResponse.json({ message: 'Your are not Authorized!' }, { status: 401 })
+        if (['user','moderator'].includes(user.role)) return NextResponse.json({ message: 'You are not Authorized!' }, { status: 401 })
 
         // connect to Database
         await connect();
@@ -73,7 +73,7 @@ export const PUT = async (request: NextRequest, { params }: any) => {
             { new: true }
         );
         if (!User) return NextResponse.json({ message: 'User not found!' })
-        return NextResponse.json({ message: 'User updated!' })
+        return NextResponse.json({ message: 'User updated!', User })
     } catch (err: {
         message: string
     } | any) {
@@ -90,7 +90,7 @@ export const DELETE = async (request: NextRequest, { params }: any) => {
 
         // check the user is admin or not 
         const user = await userInfo(session?.user?.username)
-        if (user?.isAdmin === false) return NextResponse.json({ message: 'You are not Authorized!' }, { status: 401 })
+        if (['user','moderator'].includes(user.role)) return NextResponse.json({ message: 'You are not Authorized!' }, { status: 401 })
 
 
         // connect to Database

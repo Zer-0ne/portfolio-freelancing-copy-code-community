@@ -6,7 +6,7 @@ import React, { useState } from 'react'
 import DropDown from './DropDown'
 import { Data } from '@/utils/Interfaces'
 import { styles } from '@/utils/styles'
-import { allUser, editPost } from '@/utils/FetchFromApi'
+import {  editPost } from '@/utils/FetchFromApi'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/store/store'
 import { roles } from '@/utils/constant'
@@ -16,12 +16,12 @@ const UserCard = (
         item,
         setOpen,
         setIsUpdate,
-        setdata
+        fetchedUser
     }: {
         item: Data;
         setOpen: React.Dispatch<React.SetStateAction<boolean>>
         setIsUpdate: React.Dispatch<React.SetStateAction<Data | undefined>>;
-        setdata: React.Dispatch<React.SetStateAction<Data[] | undefined>>
+        fetchedUser: () => Promise<void>
     }
 ) => {
     const { session } = useSelector((state: RootState) => state.session)
@@ -50,9 +50,7 @@ const UserCard = (
                 return obj;
             }, {} as Data);
         await editPost(item.username as string, changedValues, 'user');
-
-        const alluser = await allUser('user')
-        setdata(alluser)
+        await fetchedUser()
     }
 
 
