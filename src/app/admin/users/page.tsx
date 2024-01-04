@@ -45,9 +45,9 @@ const page = () => {
 
   const handleDelete = async () => {
     try {
-      const { userInfo, allUser } = await import('@/utils/FetchFromApi')
+      const { userInfo, allPost } = await import('@/utils/FetchFromApi')
       await userInfo(isUpdate?.username as string, 'DELETE')
-      const alluser = await allUser('user')
+      const alluser = await allPost('user')
       setData(alluser)
       setOpen(false)
     } catch (error) {
