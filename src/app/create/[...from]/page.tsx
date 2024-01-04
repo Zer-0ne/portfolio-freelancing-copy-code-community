@@ -6,7 +6,7 @@ import { styles } from '@/utils/styles'
 import { notFound, useParams, useRouter } from 'next/navigation'
 import { Box, Container, Typography } from '@mui/material'
 import React, { useEffect, useRef } from 'react'
-import { AddAPhotoRounded,  } from '@mui/icons-material'
+import { AddAPhotoRounded, } from '@mui/icons-material'
 import dynamic from 'next/dynamic'
 
 const Loading = dynamic(() => import('@/Components/Loading'))
@@ -23,6 +23,7 @@ const page = () => {
     const [data, setData] = React.useState<Data>()
     const [isAdmin, setIsAdmin] = React.useState<boolean>(true)
     const [isloading, setIsloading] = React.useState<boolean>(true)
+    const [beforeEdit, setBeforeEdit] = React.useState<Data>()
     const [isDisabled, setIsDisabled] = React.useState(false)
     const router = useRouter()
     const inputRef = React.useRef<HTMLDivElement>(null)
@@ -37,6 +38,7 @@ const page = () => {
             if (from[1]) {
                 const editData = await Post(from[0] as string, from[1] as string)
                 setData(editData)
+                setBeforeEdit(editData)
             }
             setIsloading(false)
             return (currUser.isAdmin) ? true : false;
@@ -46,7 +48,7 @@ const page = () => {
             pageRef.current = true
         }
     }, [])
-    
+
     if (isloading) return <Loading />
     if (!isAdmin) return notFound()
     const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -106,11 +108,11 @@ const page = () => {
     const handleSubmit = async (e: any) => {
         e.preventDefault();
         try {
-            const { createNew, imagesInFolder,editPost } = await import('@/utils/FetchFromApi');
+            const { createNew, imagesInFolder, editPost } = await import('@/utils/FetchFromApi');
 
-            if (from[1] && data) {
+            if (from[1] && beforeEdit) {
                 const changedValues = Object.entries(data as Data)
-                    .filter(([key, value]) => value !== data[key])
+                    .filter(([key, value]) => value !== beforeEdit[key])
                     .reduce((obj, [key, value]) => {
                         obj[key] = value;
                         return obj;
