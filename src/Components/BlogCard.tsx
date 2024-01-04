@@ -1,12 +1,13 @@
 import { Avatar, Box, Typography } from '@mui/material'
 import React, { useEffect, useRef } from 'react'
 import { styles } from '@/utils/styles'
-import { BlogsInterface} from '@/utils/Interfaces'
+import { BlogsInterface } from '@/utils/Interfaces'
 import { DeleteRounded, EditRounded } from '@mui/icons-material'
 import { IBM_Plex_Mono, Kalam, Libre_Baskerville } from 'next/font/google'
 import Link from 'next/link'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/store/store'
+import { useRouter } from 'next/navigation'
 
 const kalam = Kalam({
     subsets: ['latin'],
@@ -33,15 +34,21 @@ const BlogCard = ({
     item: BlogsInterface,
     fetchData: () => Promise<void>;
 }) => {
+    const { session } = useSelector((state: RootState) => state.session)
+    const cardRef = useRef<HTMLDivElement>(null);
+    const [isVisible, setIsVisible] = React.useState(false);
+    const router = useRouter()
+
     const deleteBlog = async () => {
-        const {deletePost} = await import('@/utils/FetchFromApi')
+        const { deletePost } = await import('@/utils/FetchFromApi')
 
         await deletePost(item?._id, 'blog', item)
         await fetchData()
     }
-    const { session } = useSelector((state: RootState) => state.session)
-    const cardRef = useRef<HTMLDivElement>(null);
-    const [isVisible, setIsVisible] = React.useState(false);
+
+    const handleEdit = async () => {
+        router.push(`/create/blog/${item._id}`);
+    }
 
     useEffect(() => {
         const options = {
@@ -178,6 +185,7 @@ const BlogCard = ({
                             color: 'black'
                         }
                     }}
+                    onClick={handleEdit}
                 />
                 <DeleteRounded
                     onClick={deleteBlog}

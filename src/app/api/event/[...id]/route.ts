@@ -34,8 +34,8 @@ export const DELETE = async (request: NextRequest, { params }: any) => {
         // connect to Database
         await connect();
         const { id } = params
-        const deleteBlog = await Event.findByIdAndDelete(id)
-        if (!deleteBlog) return NextResponse.json({ message: 'Blog not found!' })
+        const deletePost = await Event.findByIdAndDelete(id)
+        if (!deletePost) return NextResponse.json({ message: 'Post not found!' })
         return NextResponse.json({ message: 'Delete seccussfully', status: 'success' })
     } catch (err: {
         message: string
@@ -81,13 +81,13 @@ export const PUT = async (request: NextRequest, { params }: any) => {
             label
         }
         const { id } = params
-        const blog = await Event.findByIdAndUpdate(
+        const event = await Event.findByIdAndUpdate(
             id,
             { $set: updatedBlog },
             { new: true }
         );
-        if (!blog) return NextResponse.json({ message: 'Blog not found!', status: 'error' })
-        return NextResponse.json({ message: 'Blog updated!', status: 'success' })
+        if (!event) return NextResponse.json({ message: 'Post not found!', status: 'error' })
+        return NextResponse.json({ message: 'Post updated!', status: 'success' })
     } catch (err: {
         message: string
     } | any) {

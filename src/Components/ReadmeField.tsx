@@ -17,7 +17,7 @@ const ReadmeField = ({
     isDisabled: boolean
     Daata: Data
 }) => {
-    const [markdownContent, setMarkdownContent] = useState('');
+    const [markdownContent, setMarkdownContent] = useState(Daata ? Daata.content as string : '');
     const [isPreview, setIsPreview] = useState(false)
     const [isTrue, setIsTrue] = useState(false);
     const [isEnter, setIsEnter] = useState(false);

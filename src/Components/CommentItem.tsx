@@ -25,7 +25,7 @@ const CommentItem = (
       console.log(error)
     }
   }
-  console.log(session[0]._id === data.authorId._id)
+  
   return (
     <Box
       sx={{

@@ -1,7 +1,7 @@
 import { Box, Typography } from '@mui/material'
 import React from 'react'
 import { styles } from '@/utils/styles'
-import { Rubik_Glitch, IBM_Plex_Mono, Smooch, Dancing_Script } from 'next/font/google';
+import { Rubik_Glitch, IBM_Plex_Mono, Smooch, Dancing_Script, Caveat, Satisfy } from 'next/font/google';
 import Link from 'next/link';
 
 // Load the font using the font loader
@@ -13,7 +13,7 @@ const ibn = IBM_Plex_Mono({
     weight: '400',
     subsets: ['latin']
 })
-const smooch = Dancing_Script({
+const smooch = Satisfy({
     weight: '400',
     subsets: ['latin']
 })
@@ -73,7 +73,7 @@ const HomePage = () => {
             </Box>
             <Box
                 sx={{
-                    width: { xl: '40%', xs: '80%', md: '40%' },
+                    width: { xl: '40%', xs: '70%', md: '40%' },
                     textAlign: 'center',
                     marginTop: 3
                 }}
@@ -81,7 +81,7 @@ const HomePage = () => {
                 <Typography
                     variant='body1'
                     sx={{
-                        fontSize: { xl: 20, md: 17, xs: 14 }
+                        fontSize: { xl: 20, md: 16, xs: 14 }
                     }}
                     className={smooch.className}
                 >

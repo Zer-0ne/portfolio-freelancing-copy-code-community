@@ -6,7 +6,7 @@ import dynamic from 'next/dynamic';
 
 const Loading = dynamic(() => import('@/Components/Loading'))
 const BlogEventsStructure = dynamic(() => import('@/Components/BlogEventsStructure'))
-const BlogCard = dynamic(() => import('@/Components/BlogCard'))
+const BlogCard = dynamic(() => import('@/Components/BlogCard'), { ssr: false })
 
 
 const page = () => {

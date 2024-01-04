@@ -9,6 +9,7 @@ import { deletePost } from '@/utils/FetchFromApi'
 import Link from 'next/link'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/store/store'
+import { useRouter } from 'next/navigation'
 const EventCard = ({
     item,
     fetchData,
@@ -18,6 +19,7 @@ const EventCard = ({
 }) => {
     const { session } = useSelector((state: RootState) => state.session)
     const cardRef = useRef<HTMLDivElement>(null);
+    const router = useRouter()
     const [isVisible, setIsVisible] = React.useState(false);
 
     useEffect(() => {
@@ -72,6 +74,10 @@ const EventCard = ({
     const deleteEvent = async () => {
         await deletePost(item?._id, 'event', item)
         await fetchData()
+    }
+
+    const handleEdit = async () => {
+        router.push(`/create/event/${item._id}`);
     }
 
     return (
@@ -307,6 +313,7 @@ const EventCard = ({
                             color: 'black'
                         }
                     }}
+                    onClick={handleEdit}
                 />
                 <DeleteRounded
                     onClick={deleteEvent}
