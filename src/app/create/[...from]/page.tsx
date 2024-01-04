@@ -20,7 +20,6 @@ const labels = ['Default', 'Featured', 'UpComming']
 const page = () => {
     const pageRef = useRef(false)
     const { from } = useParams()
-    console.log(from[1])
     const [data, setData] = React.useState<Data>()
     const [isAdmin, setIsAdmin] = React.useState<boolean>(true)
     const [isloading, setIsloading] = React.useState<boolean>(true)
@@ -121,7 +120,7 @@ const page = () => {
                 await createNew(data as Data, from as string, setIsDisabled)
             }
             (data?.contentImages) && await imagesInFolder('content/', data?.contentImages as string[])
-            router.push((from === 'blog') ? '/blogs' : '/events')
+            router.push((from[0] === 'blog') ? '/blogs' : '/events')
         } catch (error) {
             console.log(error)
         }
