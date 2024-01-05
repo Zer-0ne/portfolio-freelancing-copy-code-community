@@ -83,15 +83,23 @@ const MemberCard = ({ item }: {
                         mt: 2
                     }}
                 >
-                    <Link href={item.LinkedIn} target='_blank'>
-                        <LinkedIn />
-                    </Link>
-                    <Link href={item.insta} target='_blank'>
-                        <Instagram />
-                    </Link>
-                    <Link href={item.GitHub} target='_blank'>
-                        <GitHub />
-                    </Link>
+                    {item.LinkedIn &&
+                        <Link href={item.LinkedIn} target='_blank'>
+                            <LinkedIn />
+                        </Link>
+                    }
+                    {
+                        item.insta &&
+                        <Link href={item.insta} target='_blank'>
+                            <Instagram />
+                        </Link>
+                    }
+                    {
+                        item.GitHub &&
+                        <Link href={item.GitHub} target='_blank'>
+                            <GitHub />
+                        </Link>
+                    }
                 </Box>
             </Box>
         </>
