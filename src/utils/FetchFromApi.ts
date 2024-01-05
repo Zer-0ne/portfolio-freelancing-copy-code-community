@@ -62,6 +62,18 @@ export const allPost = async (route: string) => {
         console.log(error)
     }
 }
+
+// fetch members from github
+export const fetchMembersFromGithub = async () => {
+    try {
+        const response = await fetch('https://raw.githubusercontent.com/copycodecommunity/portfolio/main/team%20members')
+        const data = await response.json()
+        return data
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 // get all the posts
 export const allUser = async (route: string) => {
     try {

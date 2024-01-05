@@ -1,13 +1,13 @@
 'use client'
 import { Box, Container, Typography } from '@mui/material'
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Kalam, IBM_Plex_Mono } from 'next/font/google';
 import { styles } from '@/utils/styles';
-import { aboutCCC, coreTeamMember } from '@/utils/constant';
+import { aboutCCC } from '@/utils/constant';
 import MemberCard from '@/Components/MemberCard';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/store/store';
 import { colors } from '@/utils/colors';
+import { fetchMembersFromGithub } from '@/utils/FetchFromApi';
+import { coreMember } from '@/utils/Interfaces';
 
 const kalam = Kalam({
     subsets: ['latin'],
@@ -19,8 +19,20 @@ const ibn = IBM_Plex_Mono({
 })
 
 const page = () => {
-    const { session } = useSelector((state: RootState) => state.session)
-    console.log(session)
+    const blogRef = useRef(false);
+    const [coreTeamMember, setCoreTeamMember] = useState<coreMember[]>()
+
+    const fetch = async () => {
+        const data = await fetchMembersFromGithub()
+        setCoreTeamMember(data)
+
+    }
+
+    useEffect(() => {
+        (blogRef.current === false) && fetch()
+        return () => { blogRef.current = true }
+    }, [])
+
     return (
         <>
             <Container
@@ -124,8 +136,8 @@ const page = () => {
                                         justifyContent: 'center',
                                     }}
                                 >
-                                    {
-                                        coreTeamMember.map((item, index) => (
+                                    {coreTeamMember &&
+                                        coreTeamMember?.map((item, index) => (
                                             <MemberCard
                                                 key={index}
                                                 item={item}
