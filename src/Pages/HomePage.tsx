@@ -48,7 +48,8 @@ const HomePage = () => {
                         ...styles.glassphorism('2px'),
                         position: 'absolute',
                         transform: 'rotate(5deg)',
-                        display: { md: 'block', xs: 'none' }
+                        display: { md: 'none', xs: 'none' },
+
                     }
                 }}
             >

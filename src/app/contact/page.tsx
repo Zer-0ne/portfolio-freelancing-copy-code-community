@@ -1,5 +1,5 @@
 'use client'
-import { Box, Button, Container, Typography } from '@mui/material'
+import { Box, Button, Container, Typography, useMediaQuery } from '@mui/material'
 import React, { useState } from 'react'
 import { styles } from '@/utils/styles'
 import { GitHub, Instagram, LinkedIn, WhatsApp } from '@mui/icons-material'
@@ -11,6 +11,7 @@ const Link = dynamic(() => import('next/link'))
 const page = () => {
     const [isDisabled, setIsDisabled] = React.useState(false)
     const [data, setData] = useState<Data>()
+    const matches = useMediaQuery('(max-width:600px)');
 
     // handle change
     const handleChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -93,10 +94,11 @@ const page = () => {
                     <form
                         onSubmit={handleSubmit}
                         style={{
-                            flex: 1,
+                            flex: '1 1 50%',
                             display: 'flex',
                             gap: 15,
-                            flexDirection: 'column'
+                            flexDirection: 'column',
+                            width: '100%'
                         }}
                     >
 
@@ -105,8 +107,8 @@ const page = () => {
                                 display: 'flex',
                                 flexWrap: 'wrap',
                                 gap: 1,
-                                flex: 1,
-                                flexDirection: 'row'
+                                flex: '1 1 100%',
+                                flexDirection: 'row',
                             }}
                         >
                             <input
@@ -114,17 +116,17 @@ const page = () => {
                                 placeholder='Enter first name'
                                 onChange={handleChange}
                                 style={{
-                                    ...styles.customInput(1),
-                                    // width: {md:'50%',xl:'50%',xs}
+                                    ...styles.customInput('1 1 auto'),
+                                    width: `${matches ? '100%' : '30%'}`
                                 }}
-                            />
+                                />
                             <input
                                 name='lastname'
                                 onChange={handleChange}
                                 placeholder='Enter last name'
                                 style={{
-                                    ...styles.customInput(1),
-                                    // Width: '50%'
+                                    ...styles.customInput('1 1 auto'),
+                                    width: `${matches ? '100%' : '30%'}`
                                 }}
                             />
                         </Box>
@@ -133,7 +135,7 @@ const page = () => {
                             placeholder='Enter email'
                             onChange={handleChange}
                             style={{
-                                ...styles.customInput(1)
+                                ...styles.customInput('1 1 50%')
                             }}
                         />
                         <input
@@ -141,7 +143,7 @@ const page = () => {
                             onChange={handleChange}
                             placeholder='Enter phone number'
                             style={{
-                                ...styles.customInput(1)
+                                ...styles.customInput('1 1 50%')
                             }}
                         />
                         <textarea
@@ -151,7 +153,7 @@ const page = () => {
                             name='content'
                             style={{
                                 resize: 'none',
-                                ...styles.customInput(1)
+                                ...styles.customInput('1 1 50%')
                             }}
                         />
 

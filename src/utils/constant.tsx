@@ -12,9 +12,11 @@ import {
     FormatListNumberedRounded,
     FormatQuoteRounded,
     ForumRounded,
+    Group,
     HomeRounded,
     ImageRounded,
     LinkRounded,
+    MailLock,
     Person
 } from '@mui/icons-material';
 import { styles } from "./styles";
@@ -113,7 +115,21 @@ export const navbarContent = [
             sx={styles.iconStyle(currentPath as string, iconPath as string)}
         />),
         path: `/contact`
-    }
+    },
+    {
+        name: 'users',
+        icon: (currentPath: string, iconPath: string) => (<Group
+            sx={styles.iconStyle(currentPath as string, iconPath as string)}
+        />),
+        path: `/admin/users`
+    },
+    {
+        name: 'contacts',
+        icon: (currentPath: string, iconPath: string) => (<MailLock
+            sx={styles.iconStyle(currentPath as string, iconPath as string)}
+        />),
+        path: `/admin/contacts`
+    },
 ]
 
 export const createBlog = [

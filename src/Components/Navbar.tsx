@@ -84,7 +84,18 @@ const Navbar = () => {
                     {
                         navbarContent.map((item, index) => (
                             <Box key={index} sx={{
-                                display: { xs: 'none', md: (item.name === 'home') ? 'none' : 'block' }
+                                display: {
+                                    xs: 'none', md: (item.name === 'home') ? 'none' : ['contacts'].includes(item.name) ?
+                                        ['admin', 'moderator'].includes(session[0]?.role) ?
+                                            'block' :
+                                            'none' :
+                                        ['users'].includes(item.name) ?
+                                            ['admin'].includes(session[0]?.role) ?
+                                                'block' :
+                                                'none' :
+                                            'block'
+                                },
+                                color: ['users', 'contacts'].includes(item.name) ? 'red !important' : 'white'
                             }}>
 
                                 <Link href={`${item.path}`} >
@@ -109,7 +120,15 @@ const Navbar = () => {
                                         flex: 1, alignSelf: 'center'
                                     }}>
 
-                                        <Link href={`${item.path}`} style={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                                        <Link href={`${item.path}`} style={{
+                                            display: ['users', 'contacts'].includes(item.name) ?
+                                                ['admin', 'moderator'].includes(session[0]?.role) ?
+                                                    'flex' :
+                                                    'none' :
+                                                'flex',
+                                            gap: 2, alignItems: 'center',
+                                            color: ['users', 'contacts'].includes(item.name) ? 'red' : 'white'
+                                        }}>
                                             {item.icon(pathName as string, item.path)}
                                             <Typography variant='caption' sx={{
                                                 fontSize: 20,

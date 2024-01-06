@@ -80,7 +80,7 @@ export const AuthOptions: NextAuthOptions = {
                     user.username = username;
                     user.role = isExist?.role;
                     
-                    console.log(user)
+
                     if (isExist) return user
                     await createUser({
                         username: user?.id as string,
