@@ -182,6 +182,7 @@ export const styles = {
         cursor: 'pointer',
         position: 'relative',
         flexWrap: 'wrap',
+        width: { md: 'calc(100% - 40px - 2px)', xs: '100%' },
         mt: { xs: (label && (['UpComming', 'Featured'].includes(label as string))) ? 7 : 4, md: 0, xl: 0 },
         flexDirection: { xs: 'column', md: 'row', xl: 'row' },
         '::before': {
@@ -218,7 +219,7 @@ export const styles = {
     eventCardRight: () => ({
         display: 'flex',
         flex: 1,
-        padding: 3,
+        padding: { md: 3, xs: '24px 0' },
         position: 'relative',
         borderLeft: { md: `1px solid ${colors.transparentGrey}`, xs: 'none', xl: `1px solid ${colors.transparentGrey}` },
         borderTop: { xs: `1px solid ${colors.transparentGrey}`, md: 'none', xl: `none` },

@@ -2,7 +2,7 @@
 import { RootState } from '@/store/store';
 import { styles } from '@/utils/styles'
 import { KeyboardArrowDown } from '@mui/icons-material';
-import { Box, useMediaQuery } from '@mui/material'
+import { Avatar, Box, useMediaQuery } from '@mui/material'
 import React from 'react'
 import { useSelector } from 'react-redux';
 
@@ -36,7 +36,7 @@ const DropDownSkelenton = (
                         position: 'absolute',
                         top: '130%',
                         right: '0%',
-                        left: (status === 'unauthenticated') ? null : (status === 'authenticated') ? { md: 0, xs: -200 } : 0,
+                        left: (status === 'unauthenticated') ? null : (status === 'authenticated') ? { md: -13, xs: -200 } : 0,
                         display: isTrue ? 'flex' : 'none',
                         opacity: isTrue ? 1 : 0,
                         flexDirection: 'column',
@@ -68,7 +68,16 @@ const DropDownSkelenton = (
                 }, 1)}
                 onClick={() => setIsTrue(prev => !prev)}
             >
-                {(value) ? value : (status === 'unauthenticated') ? (matches) ? '' : 'Login' : (matches) ? '' : session[0]?.name}
+                {(value) ? value : (status === 'unauthenticated') ? (matches) ? '' : 'Login' : (matches) ? '' : <>
+                    <Avatar
+                        src={session[0]?.image}
+                        sizes='20px'
+                        sx={{
+                            width: 30,
+                            height: 30,
+                        }}
+                    />
+                </>}
                 <KeyboardArrowDown
                     sx={{
                         transform: isTrue ? 'rotate(180deg)' : 'rotate(0deg)',

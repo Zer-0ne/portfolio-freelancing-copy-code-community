@@ -251,6 +251,11 @@ export const deletePost = async (id: string, route: string, item: BlogsInterface
         const user = await userInfo(session?.user?.username)
         if (['user'].includes(user.role)) return toast.update(Toast, update('Your are not Authorized!', 'error'))
 
+        if ((item as EventsInterface).image) {
+            const storageRef = ref(storage, `/Thumbnails/${item.title}`);
+            await deleteObject(storageRef);
+        }
+
         if (item.contentImage.length) {
 
             const storageRef = ref(storage, `/content/${item.title}`);

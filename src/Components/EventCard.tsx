@@ -10,6 +10,8 @@ import Link from 'next/link'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/store/store'
 import { useRouter } from 'next/navigation'
+import dp from '@/app/favicon.ico'
+
 const EventCard = ({
     item,
     fetchData,
@@ -106,7 +108,7 @@ const EventCard = ({
                         }}
                     >
                         <Image
-                            src={item.image}
+                            src={item.image || dp}
                             alt='img'
                             width={200}
                             height={200}
@@ -228,11 +230,12 @@ const EventCard = ({
                             />
                             <Typography
                                 variant='caption'
-                                fontSize={15}
+                                fontSize={12}
                                 sx={{
                                     padding: '2px 13px',
                                     borderRadius: 7,
-                                    border: `1px solid ${colors.transparentGrey}`
+                                    border: `1px solid ${colors.transparentGrey}`,
+                                    textAlign:'center'
                                 }}
                             >Copy Code</Typography>
                         </Box>
