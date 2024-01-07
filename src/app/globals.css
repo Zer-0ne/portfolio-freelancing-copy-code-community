@@ -94,12 +94,12 @@ blockquote {
 }
 
 iframe {
-  margin: 1rem auto;
+  margin: 1rem auto 2rem auto;
   border-radius: 12px;
   /* padding: 10px; */
   /* border: 1px solid #ffffff14; */
   /* box-shadow: inset #00ff003d 0px 0px 10px; */
-  box-shadow: #00ff001c 0px 0px 10px;
-  max-width: 100%;
-  width: 100%;
+  box-shadow: #7b7e7b1c 0px 0px 10px;
+  max-width: 90%;
+  width: 90%;
 }

@@ -4,10 +4,12 @@ import React from 'react'
 
 const ContentStructure = ({
     children,
-    customStyles
+    customStyles,
+    boxStyle
 }: {
     children: React.ReactNode;
     customStyles?: React.CSSProperties
+    boxStyle?: React.CSSProperties | object
 }) => {
     return (
         <Container
@@ -17,8 +19,8 @@ const ContentStructure = ({
                 flexDirection: 'column',
                 justifyContent: "center",
                 textAlign: 'justify',
-                ...customStyles
                 // alignItems:'center'
+                ...customStyles
             }}
         >
             <Box
@@ -30,7 +32,8 @@ const ContentStructure = ({
                     p: 2,
                     borderRadius: '10px',
                     // boxShadow: 'inset #00ff003d 0px 0px 10px'
-                    boxShadow: 'inset #5d5d5d8f 0px 0px 10px'
+                    boxShadow: 'inset #5d5d5d8f 0px 0px 10px',
+                    ...boxStyle
                 }}
             >
                 {children}

@@ -5,6 +5,7 @@ import { EventsInterface } from '@/utils/Interfaces'
 import { Box, Container, Typography } from '@mui/material'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
+import dp from '@/app/favicon.ico'
 import { useParams } from 'next/navigation'
 import React, { useEffect, useRef, useState } from 'react'
 
@@ -56,15 +57,20 @@ const Header = ({
 }) => {
     return (
         <>
-            <ContentStructure>
+            <ContentStructure
+                boxStyle={{
+                    flexDirection: 'row',
+                    flexWrap: 'wrap'
+                }}
+            >
                 <Image
                     className='headerImage'
-                    src={`${data.image}`}
+                    src={`${data.image || dp}`}
                     width={1200}
                     height={900}
                     alt={data.title}
                     style={{
-                        flex: 1,
+                        // flex: 1,
                         width: '100%!important',
                         minWidth: '100%!important',
                         height: '17rem !important',
@@ -74,7 +80,8 @@ const Header = ({
                 <Box
                     sx={{
                         pl: 1,
-                        pr: 1
+                        pr: 1,
+                        flex: 2
                     }}
                 >
 
@@ -91,10 +98,21 @@ const Header = ({
                         sx={{
                             opacity: .7,
                             ml: 2,
-                            mt: 1
+                            mt: 1,
+                            mb: 1
                         }}
                     >
                         {data.updatedAt?.slice(0, 10)}
+                    </Typography>
+                    <Typography
+                        variant='body1'
+                        sx={{
+                            opacity: .7,
+                            ml: 1,
+                            mt: 1
+                        }}
+                    >
+                        {data.description}
                     </Typography>
                 </Box>
             </ContentStructure>

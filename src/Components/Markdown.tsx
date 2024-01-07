@@ -35,12 +35,12 @@ const Markdown = (
                 components={{
                     h1: ({ children }) => <Typography variant='h1' sx={{
                         ...styles.heading(),
-                        mb: 3
+                        mb: 4
                     }}>{children}</Typography>,
                     h2: ({ children }) => <Typography variant='h2' sx={{
                         ...styles.heading({ md: 40, xs: 25 }, '500'),
                         mt: 3,
-                        mb: 3,
+                        mb: 4,
                     }}>{children}</Typography>,
                     h3: ({ children }) => <Typography variant='h3' sx={{
                         ...styles.heading({ md: 30, xs: 19 }, '500', 'none'),

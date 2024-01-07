@@ -4,10 +4,12 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Kalam, IBM_Plex_Mono } from 'next/font/google';
 import { styles } from '@/utils/styles';
 import { aboutCCC } from '@/utils/constant';
-import MemberCard from '@/Components/MemberCard';
 import { colors } from '@/utils/colors';
-import { fetchMembersFromGithub } from '@/utils/FetchFromApi';
 import { coreMember } from '@/utils/Interfaces';
+import dynamic from 'next/dynamic';
+
+const MemberCard = dynamic(() => import('@/Components/MemberCard'))
+
 
 const kalam = Kalam({
     subsets: ['latin'],
@@ -23,6 +25,7 @@ const page = () => {
     const [coreTeamMember, setCoreTeamMember] = useState<coreMember[]>()
 
     const fetch = async () => {
+        const { fetchMembersFromGithub } = await import('@/utils/FetchFromApi')
         const data = await fetchMembersFromGithub()
         setCoreTeamMember(data)
 
