@@ -2,6 +2,7 @@ import { BlogsInterface, Data, EventsInterface } from '@/utils/Interfaces'
 import { Avatar, Box, Container, Typography } from '@mui/material'
 import { IBM_Plex_Mono, Libre_Baskerville } from 'next/font/google'
 import React from 'react'
+import ContentStructure from './ContentStructure'
 
 export const ibn = IBM_Plex_Mono({
     weight: '400',
@@ -23,14 +24,8 @@ const MarkdownHeader = (
     }
 ) => {
     return (
-        <Container
-            sx={{
-                p: '0 20px',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 1.5
-            }}
-        >
+        <ContentStructure>
+
 
             <Typography
                 variant='h2'
@@ -104,7 +99,8 @@ const MarkdownHeader = (
             >
                 {data?.description}
             </Typography>
-        </Container>
+        </ContentStructure>
+
     )
 }
 
