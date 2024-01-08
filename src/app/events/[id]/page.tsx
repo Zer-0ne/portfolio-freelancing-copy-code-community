@@ -59,7 +59,7 @@ const Header = ({
         <>
             <ContentStructure
                 boxStyle={{
-                    flexDirection: 'row',
+                    flexDirection: 'row !important',
                     flexWrap: 'wrap'
                 }}
             >
@@ -88,7 +88,8 @@ const Header = ({
                     <Typography
                         variant='h3'
                         sx={{
-                            fontWeight: '600'
+                            fontWeight: '600',
+                            fontSize: { xs: 25, md: 30 }
                         }}
                     >
                         {data.title}

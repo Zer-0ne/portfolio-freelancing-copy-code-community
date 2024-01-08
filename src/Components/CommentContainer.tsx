@@ -7,6 +7,7 @@ import { BlogsInterface, CommentInterface, Data, EventsInterface } from '@/utils
 import CommentItem from './CommentItem'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/store/store'
+import ContentStructure from './ContentStructure'
 
 const CommentContainer = (
     {
@@ -45,14 +46,9 @@ const CommentContainer = (
         }
     }
     return (
-        <Container
-            sx={{
-                padding: 2,
-                display: "flex",
-                flexDirection: 'column',
-                justifyContent: "center",
-                textAlign: 'justify',
-                gap: 2
+        <ContentStructure
+            boxStyle={{
+                p: 0
             }}
         >
             {/* input fleid for new comments */}
@@ -140,7 +136,7 @@ const CommentContainer = (
                     ))
                 }
             </Box>
-        </Container>
+        </ContentStructure>
     )
 }
 

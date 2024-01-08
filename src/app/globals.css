@@ -103,3 +103,11 @@ iframe {
   max-width: 90%;
   width: 90%;
 }
+
+.headerImage {
+  flex: 1;
+  min-width: 50% !important;
+  max-width: 100% !important;
+  height: auto;
+  border-radius: 17px;
+}
