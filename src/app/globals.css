@@ -22,16 +22,14 @@ input:focus {
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
   transition: all 2s ease-in-out !important;
-  background: linear-gradient(to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
+  background-color: black;
+  color: white;
   /* overflow: hidden; */
 }
 
 * {
-  color: rgb(var(--foreground-rgb));
+
   -ms-overflow-style: none !important;
   /* Internet Explorer 10+ */
   scrollbar-width: none !important;
