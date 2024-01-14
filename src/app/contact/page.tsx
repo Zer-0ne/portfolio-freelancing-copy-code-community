@@ -28,7 +28,8 @@ const page = () => {
         e.preventDefault();
         try {
             const { createNewContact } = await import('@/utils/FetchFromApi')
-            return await createNewContact(data as Data, setIsDisabled)
+            await createNewContact(data as Data, setIsDisabled)
+            return setData(undefined)
         } catch (error) {
             console.error(error)
         }
@@ -136,6 +137,7 @@ const page = () => {
                                     ...styles.customInput('1 1 auto'),
                                     width: `${matches ? '100%' : '30%'}`
                                 }}
+                                value={data?.firstname || ''}
                             />
                             <input
                                 name='lastname'
@@ -145,6 +147,7 @@ const page = () => {
                                     ...styles.customInput('1 1 auto'),
                                     width: `${matches ? '100%' : '30%'}`
                                 }}
+                                value={data?.lastname || ''}
                             />
                         </Box>
                         <input
@@ -154,6 +157,7 @@ const page = () => {
                             style={{
                                 ...styles.customInput('1 1 50%')
                             }}
+                            value={data?.phone || ''}
                         />
                         <textarea
                             onChange={handleChange}
@@ -164,6 +168,7 @@ const page = () => {
                                 resize: 'none',
                                 ...styles.customInput('1 1 50%')
                             }}
+                            value={data?.content || ''}
                         />
 
                         <Button
