@@ -7,11 +7,15 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { BlogsInterface, Data, EventsInterface } from '@/utils/Interfaces';
 import '@/app/globals.css'
-import { IBM_Plex_Mono } from 'next/font/google';
+import { IBM_Plex_Mono, Libre_Baskerville } from 'next/font/google';
 import rehypeRaw from 'rehype-raw'
 import ContentStructure from './ContentStructure';
 
 export const ibn = IBM_Plex_Mono({
+    weight: '400',
+    subsets: ['latin']
+})
+export const libre_Baskerville = Libre_Baskerville({
     weight: '400',
     subsets: ['latin']
 })
@@ -35,38 +39,47 @@ const Markdown = (
             <ReactMarkdown
                 className={ibn.className}
                 components={{
-                    h1: ({ children }) => <Typography variant='h1' sx={{
-                        ...styles.heading(),
-                        mb: 4
+                    h1: ({ children }) => <Typography variant='h1' className={ibn.className}  sx={{
+                        ...styles.heading('2em', '600'),
+                        mb: 4, lineHeight: 1.25
                     }}>{children}</Typography>,
-                    h2: ({ children }) => <Typography variant='h2' sx={{
-                        ...styles.heading({ md: 40, xs: 25 }, '500', 'none'),
+                    h2: ({ children }) => <Typography variant='h2' className={ibn.className} sx={{
+                        ...styles.heading({ md: '1.5em', xs: '1.5em' }, '600'),
                         mt: 3,
-                        mb: 2,
+                        mb: 2, lineHeight: 1.25
                     }}>{children}</Typography>,
-                    h3: ({ children }) => <Typography variant='h3' sx={{
-                        ...styles.heading({ md: 30, xs: 19 }, '500', 'none'),
-                        mb: 1, mt: 1, p: 1, pl: 1.5
+                    h3: ({ children }) => <Typography variant='h3' className={ibn.className} sx={{
+                        ...styles.heading({ md: '1.25em', xs: '1.25em' }, '600', 'none'),
+                        mt: 3,
+                        mb: 2, pl: 1.5, lineHeight: 1.25
                     }}>{children}</Typography>,
-                    h4: ({ children }) => <Typography variant='h4' sx={{
-                        ...styles.heading(25, '300', 'none'),
-                        pl: 2
+                    h4: ({ children }) => <Typography variant='h4' className={ibn.className} sx={{
+                        ...styles.heading('1em', '600', 'none'),
+                        mt: 3,
+                        mb: 2, lineHeight: 1.25
                     }}>{children}</Typography>,
-                    h5: ({ children }) => <Typography variant='h5' sx={{
-                        ...styles.heading(20, '300', 'none')
+                    h5: ({ children }) => <Typography variant='h5' className={ibn.className} sx={{
+                        ...styles.heading('.875em', '600', 'none'),
+                        mt: 3,
+                        mb: 2, lineHeight: 1.25
+                    }}>{children}</Typography>,
+                    h6: ({ children }) => <Typography variant='h6' className={ibn.className} sx={{
+                        ...styles.heading('.85em', '600', 'none'),
+                        mt: 3,
+                        mb: 2, lineHeight: 1.25
                     }}>{children}</Typography>,
                     pre: ({ children }) => <CodeContainer children={children as {
                         props: {
                             children: string;
                         }
                     }} />,
-                    p: ({ children }) => <Typography variant='body1' sx={{
+                    p: ({ children }) => <Typography className={ibn.className} variant='body1' sx={{
                         fontSize: 16,
-                        lineHeight: 'normal',
+                        lineHeight: 1.5,
                         // textAlign: 'justify',
                         ml: 3,
                         mr: 3,
-                        mb: 2
+                        mb: 2,
                     }}>{children}</Typography>,
                     img: ({ src, alt }) => <Image className='image' style={{
                         alignSelf: 'center',
@@ -90,7 +103,10 @@ const Markdown = (
                         style={{
                             marginTop: '2rem',
                             marginBottom: '1rem',
-                            color: 'gray'
+                            background: 'gray',
+                            height: 3,
+                            borderRadius: '50px',
+                            opacity: .3
                         }}
                     />,
                     // iframe:({src})=><iframe

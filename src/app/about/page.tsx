@@ -25,8 +25,8 @@ const page = () => {
     const [coreTeamMember, setCoreTeamMember] = useState<coreMember[]>()
 
     const fetch = async () => {
-        const { fetchMembersFromGithub } = await import('@/utils/FetchFromApi')
-        const data = await fetchMembersFromGithub()
+        const { fetchFromGithub } = await import('@/utils/FetchFromApi')
+        const data = await fetchFromGithub('team%20members')
         setCoreTeamMember(data)
 
     }

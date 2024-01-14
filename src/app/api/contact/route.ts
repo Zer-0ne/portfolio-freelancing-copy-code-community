@@ -34,7 +34,7 @@ export const POST = async (request: NextRequest) => {
 
         // Save the new post to the database
         await newContent.save();
-        return NextResponse.json({ message: 'created secussfully' })
+        return NextResponse.json({ message: 'Thank you to contact us!' })
     } catch (err: {
         message: string
     } | any) {

@@ -281,7 +281,7 @@ export const styles = {
         mt: 1,
         '::after': {
             content: `""`,
-            height: '2px',
+            height: '1px',
             background: 'grey',
             position: 'absolute',
             left: 0, right: 0,

@@ -3,6 +3,7 @@ import Users from "@/Models/Users";
 import { Session } from "@/utils/Interfaces";
 import { currentSession } from "@/utils/Session";
 import connect from "@/utils/database";
+import { isValidObjectId } from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
 
 // fetching the one blog
@@ -10,6 +11,19 @@ export const GET = async (request: NextRequest, { params }: any) => {
     try {
         await connect();
         const { id } = params;
+        if (!isValidObjectId(id)) {
+            const postLimit = 4
+            const totalPosts = await Blog.countDocuments({});
+            const totalPages = Math.ceil(totalPosts / postLimit);
+            const currentPage = Math.min(Math.max(id || 1, 1), totalPages)
+            if (id === totalPages) return NextResponse.json({ message: 'all done' })
+            console.log(currentPage, totalPages, totalPosts)
+            const blogs = await Blog.find({})
+                .skip((currentPage - 1) * postLimit)
+                .limit(postLimit)
+                // .sort("-createdAt");
+            return NextResponse.json(blogs.reverse())
+        }
         const blog = await Blog.findById(id)
         return NextResponse.json(blog)
     } catch (err: {

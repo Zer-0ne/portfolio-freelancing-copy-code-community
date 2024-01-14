@@ -31,6 +31,7 @@ body {
 }
 
 * {
+  color: rgb(var(--foreground-rgb));
   -ms-overflow-style: none !important;
   /* Internet Explorer 10+ */
   scrollbar-width: none !important;

@@ -6,12 +6,14 @@ import connect from "@/utils/database";
 import { NextRequest, NextResponse } from "next/server";
 
 // Fetching all the blog
-export const GET = async () => {
+export const GET = async (request: NextRequest) => {
+
     await connect();
     const blog = await Blog.find({});
     return NextResponse.json(blog
     );
 }
+
 
 // create blog
 export const POST = async (request: NextRequest) => {

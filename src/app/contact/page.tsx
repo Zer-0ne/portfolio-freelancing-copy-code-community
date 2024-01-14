@@ -1,6 +1,6 @@
 'use client'
-import { Box, Button, Container, Typography, useMediaQuery } from '@mui/material'
-import React, { useState } from 'react'
+import { Avatar, AvatarGroup, Box, Button, Container, Typography, useMediaQuery } from '@mui/material'
+import React, { useRef, useState } from 'react'
 import { styles } from '@/utils/styles'
 import { GitHub, Instagram, LinkedIn, WhatsApp } from '@mui/icons-material'
 import { Data } from '@/utils/Interfaces'
@@ -9,6 +9,11 @@ import dynamic from 'next/dynamic'
 const Link = dynamic(() => import('next/link'))
 
 const page = () => {
+    const blogRef = useRef(false);
+    const [developedBy, setDevelopedBy] = useState<{
+        name: string;
+        image: string
+    }[]>()
     const [isDisabled, setIsDisabled] = React.useState(false)
     const [data, setData] = useState<Data>()
     const matches = useMediaQuery('(max-width:600px)');
@@ -28,6 +33,18 @@ const page = () => {
             console.error(error)
         }
     }
+
+    const fetch = async () => {
+        const { fetchFromGithub } = await import('@/utils/FetchFromApi')
+        const data = await fetchFromGithub('deplovedBy')
+        setDevelopedBy(data)
+        console.log(data)
+    }
+
+    React.useEffect(() => {
+        (blogRef.current === false) && fetch()
+        return () => { blogRef.current = true }
+    }, [])
     return (
         <Container
             sx={{
@@ -119,7 +136,7 @@ const page = () => {
                                     ...styles.customInput('1 1 auto'),
                                     width: `${matches ? '100%' : '30%'}`
                                 }}
-                                />
+                            />
                             <input
                                 name='lastname'
                                 onChange={handleChange}
@@ -130,14 +147,6 @@ const page = () => {
                                 }}
                             />
                         </Box>
-                        <input
-                            name='email'
-                            placeholder='Enter email'
-                            onChange={handleChange}
-                            style={{
-                                ...styles.customInput('1 1 50%')
-                            }}
-                        />
                         <input
                             name='phone'
                             onChange={handleChange}
@@ -216,7 +225,26 @@ const page = () => {
                     </Box>
                 </Box>
             </Box >
+            {/* <AvatarGroup
+                total={20}
+                sx={{
+                    color: 'black',
+                    mt: 18,
+                    "after":{
+                        content:`"Developed By"`,
 
+                    }
+                }}
+            >
+                {
+                    developedBy?.map((item, index) => (
+                        <Avatar
+                            key={index}
+                            src={item.image}
+                        />
+                    ))
+                }
+            </AvatarGroup> */}
         </Container >
     )
 }

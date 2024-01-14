@@ -46,7 +46,7 @@ export const LoginUser = async (data: Data) => {
 }
 
 // get all the posts
-export const allPost = async (route: string) => {
+export const allPost = async (route: string,) => {
     try {
         const response = await fetch(`/api/${route}/`, {
             method: 'GET',
@@ -64,9 +64,9 @@ export const allPost = async (route: string) => {
 }
 
 // fetch members from github
-export const fetchMembersFromGithub = async () => {
+export const fetchFromGithub = async (repo: string = 'team%20members') => {
     try {
-        const response = await fetch('https://raw.githubusercontent.com/copycodecommunity/portfolio/main/team%20members')
+        const response = await fetch(`https://raw.githubusercontent.com/copycodecommunity/portfolio/main/${repo}`)
         const data = await response.json()
         return data
     } catch (error) {
@@ -216,13 +216,17 @@ export const createNewContact = async (data: Data, setIsDisabled: React.Dispatch
         const session = await currentSession() as Session;
         if (!session) { setIsDisabled(false); return toast.update(Toast, update('Please Login!', 'error')) }
 
+        // check the user 
+        const user = await userInfo(session?.user?.username)
+
         const response = await fetch(`/api/contact/`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                ...data
+                ...data,
+                email: user?.email
             })
         })
         const data_from_server = await response.json();
@@ -231,7 +235,7 @@ export const createNewContact = async (data: Data, setIsDisabled: React.Dispatch
             return toast.update(Toast, update(data_from_server.message, data_from_server.status))
         }
         setIsDisabled(false)
-        return toast.update(Toast, update(data_from_server.message, data_from_server.status))
+        return toast.update(Toast, update(data_from_server.message || 'Please Enter Required field', data_from_server.status || 'error'))
     } catch (error) {
         setIsDisabled(false)
         console.log(error)

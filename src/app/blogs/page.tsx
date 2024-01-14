@@ -1,6 +1,6 @@
 'use client'
 import { Box, } from '@mui/material'
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { BlogsInterface, } from '@/utils/Interfaces';
 import dynamic from 'next/dynamic';
 
@@ -13,10 +13,41 @@ const page = () => {
   const blogRef = useRef(false);
   const [searchInput, setSearchInput] = useState<string>('');
   const [data, setData] = useState<BlogsInterface[]>()
-  const [pageCount, setPageCount] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(true)
+  const [pageNo, setPageNo] = useState<number>(1);
+  const [isFetching, setIsFetching] = useState(false)
 
+  useEffect(() => {
+    const handleScroll = () => {
+      if (isFetching) return
+      const windowHeight = window.innerHeight;
+      const scrollY = window.scrollY;
+      const documentHeight = document.documentElement.scrollHeight;
 
+      const scrollPositionFromBottom = documentHeight - (scrollY + windowHeight);
+
+      // Set your threshold here (e.g., 1100px from the bottom)
+      const threshold = documentHeight - 250;
+      console.log(scrollY, scrollPositionFromBottom, documentHeight, scrollY === 101, threshold)
+
+      if (scrollPositionFromBottom === 0) {
+        // Increment pageNo when the scroll position is within the threshold
+        setPageNo((prevPageNo) => prevPageNo + 1);
+      }
+      if (scrollY === 0) {
+        // Decrement pageNo when the scroll position is within the threshold
+        setPageNo((prevPageNo) => prevPageNo - 1);
+      }
+    };
+
+    // Attach the scroll event listener
+    window.addEventListener('scroll', handleScroll);
+
+    // Cleanup the event listener on component unmount
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   const handleSearch = (input: string) => {
     setSearchInput(input);
@@ -26,24 +57,29 @@ const page = () => {
   const fetchData = async () => {
     try {
       const { allPost } = await import('@/utils/FetchFromApi')
-      const fetchedData: BlogsInterface[] = await allPost('blog');
+      setIsFetching(true)
+      const fetchedData: BlogsInterface[] = await allPost(`blog`);
 
       setData(fetchedData)
+      setIsFetching(false)
       setIsLoading(false)
-
-      setPageCount(prevPage => prevPage + 1);
     } catch (error) {
+      setIsFetching(false)
       console.log(error)
     }
   }
 
-
-
   // useEffect
   React.useEffect(() => {
-    (blogRef.current === false) && fetchData()
-    return () => { blogRef.current = true }
+    if (blogRef.current === false) fetchData();
+    return () => { blogRef.current = false }
   }, [])
+
+  // React.useEffect(() => {
+  //   return () => {
+  //     blogRef.current = true;
+  //   };
+  // }, []);
 
   if (isLoading) return <Loading />
 
@@ -56,8 +92,6 @@ const page = () => {
       item?.updatedAt?.toLowerCase().includes(searchInput.toLowerCase())
   );
 
-
-  console.log(pageCount)
 
   return (
     <>
