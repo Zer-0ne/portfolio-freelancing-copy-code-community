@@ -17,7 +17,8 @@ import {
     ImageRounded,
     LinkRounded,
     MailLock,
-    Person
+    Person,
+    School
 } from '@mui/icons-material';
 import { styles } from "./styles";
 import { Typography } from "@mui/material";
@@ -100,6 +101,14 @@ export const navbarContent = [
             sx={styles.iconStyle(currentPath as string, iconPath as string)}
         />),
         path: `/blogs`
+
+    },
+    {
+        name: 'materials',
+        icon: (currentPath: string, iconPath: string) => (<School
+            sx={styles.iconStyle(currentPath as string, iconPath as string)}
+        />),
+        path: `/materials`
 
     },
     {

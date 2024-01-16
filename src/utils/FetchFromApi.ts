@@ -345,3 +345,55 @@ export const deleteComment = async (id: string, authorId: string) => {
         console.log(error)
     }
 }
+
+// fetch the list of the material from the github api 
+export const getMaterialsFromGithub = async (url: string = "https://api.github.com/repos/copycodecommunity/portfolio/git/trees/7ad4458a17316da147b1c917578822cf4dea864a", listData: boolean = false): Promise<string | undefined> => {
+    try {
+        console.log(process.env.GITHUB_KEY)
+        const response = await fetch(`${url}`, {
+            method: 'GET',
+            headers: {
+                // 'Authorization': `${'Bearer' + process.env.GITHUB_KEY as string}`
+            }
+        })
+        const { tree, content } = await response.json()
+        if (response.ok) {
+            if (tree && tree.length > 0 && !listData && !content) {
+                return await getMaterialsFromGithub(tree && tree[0]?.url)
+            } else {
+                return content
+            }
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+// fetch the list of the material from the github api 
+export const getSpecificMaterialGithub = async (_id: string = '7ad4458a17316da147b1c917578822cf4dea864a', url: string = "https://api.github.com/repos/copycodecommunity/portfolio/git/trees") => {
+    try {
+        const response = await fetch(`${url}/${_id}`)
+        const { tree } = await response.json()
+        if (response.ok) {
+            return tree
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+// fetch the list of the material from the github api 
+export const getSpecificContentGithub = async (url: string) => {
+    try {
+        const response = await fetch(`${url}`, {
+            method: 'GET',
+            headers: {
+                // 'Authorization': `${process.env.GITHUB_KEY as string}`
+            }
+        })
+        const data = await response.json()
+        if (response.ok) {
+            return data
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}

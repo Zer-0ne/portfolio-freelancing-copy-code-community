@@ -73,7 +73,7 @@ const Markdown = (
                             children: string;
                         }
                     }} />,
-                    p: ({ children }) => <Typography className={ibn.className} variant='body1' sx={{
+                    p: ({ children }) => <Typography variant='body1' sx={{
                         fontSize: 16,
                         lineHeight: 1.5,
                         // textAlign: 'justify',
