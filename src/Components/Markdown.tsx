@@ -39,7 +39,7 @@ const Markdown = (
             <ReactMarkdown
                 className={ibn.className}
                 components={{
-                    h1: ({ children }) => <Typography variant='h1' className={ibn.className}  sx={{
+                    h1: ({ children }) => <Typography variant='h1' className={ibn.className} sx={{
                         ...styles.heading('2em', '600'),
                         mb: 4, lineHeight: 1.25
                     }}>{children}</Typography>,
@@ -77,8 +77,8 @@ const Markdown = (
                         fontSize: 16,
                         lineHeight: 1.5,
                         // textAlign: 'justify',
-                        ml: 3,
-                        mr: 3,
+                        ml: { xs: 0, md: 3 },
+                        mr: { md: 3, xs: 0 },
                         mb: 2,
                     }}>{children}</Typography>,
                     img: ({ src, alt }) => <Image className='image' style={{
