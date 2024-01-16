@@ -114,7 +114,8 @@ const Sidebar = ({ setIsOpen, isOpen, navData, setUrl, sha, setSearchInput, sear
                                     opacity: (item.url).includes(url) ? 1 : .5,
                                     transition: 'all .5s ease-in-out',
                                     ':hover': {
-                                        opacity: 1
+                                        opacity: 1,
+                                        transform: 'scale(1.018)'
                                     }
                                 }}>
                                     {decodeURIComponent(sha)} {(item.path.split('.').slice(0, -1).join('.')).replace(/([a-z])([A-Z])/g, '$1 $2')}

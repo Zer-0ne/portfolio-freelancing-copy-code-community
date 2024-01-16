@@ -41,32 +41,32 @@ const Markdown = (
                 components={{
                     h1: ({ children }) => <Typography variant='h1' className={ibn.className} sx={{
                         ...styles.heading('2em', '600'),
-                        mb: 4, lineHeight: 1.25
+                        mb: 4, lineHeight: 1.25, p: 0
                     }}>{children}</Typography>,
                     h2: ({ children }) => <Typography variant='h2' className={ibn.className} sx={{
                         ...styles.heading({ md: '1.5em', xs: '1.5em' }, '600'),
                         mt: 3,
-                        mb: 2, lineHeight: 1.25
+                        mb: 2, lineHeight: 1.25, p: 0
                     }}>{children}</Typography>,
                     h3: ({ children }) => <Typography variant='h3' className={ibn.className} sx={{
                         ...styles.heading({ md: '1.25em', xs: '1.25em' }, '600', 'none'),
                         mt: 3,
-                        mb: 2, pl: 1.5, lineHeight: 1.25
+                        mb: 2, pl: 1.5, lineHeight: 1.25, p: 0
                     }}>{children}</Typography>,
                     h4: ({ children }) => <Typography variant='h4' className={ibn.className} sx={{
                         ...styles.heading('1em', '600', 'none'),
                         mt: 3,
-                        mb: 2, lineHeight: 1.25
+                        mb: 2, lineHeight: 1.25, p: 0
                     }}>{children}</Typography>,
                     h5: ({ children }) => <Typography variant='h5' className={ibn.className} sx={{
                         ...styles.heading('.875em', '600', 'none'),
                         mt: 3,
-                        mb: 2, lineHeight: 1.25
+                        mb: 2, lineHeight: 1.25, p: 0
                     }}>{children}</Typography>,
                     h6: ({ children }) => <Typography variant='h6' className={ibn.className} sx={{
                         ...styles.heading('.85em', '600', 'none'),
                         mt: 3,
-                        mb: 2, lineHeight: 1.25
+                        mb: 2, lineHeight: 1.25, p: 0
                     }}>{children}</Typography>,
                     pre: ({ children }) => <CodeContainer children={children as {
                         props: {
@@ -88,6 +88,7 @@ const Markdown = (
                     }} src={src as string} alt={alt as string} width={500} height={400} />,
                     ul: ({ children }) => <ul className='list'>{children}</ul>,
                     ol: ({ children }) => <ol className='olist'>{children}</ol>,
+                    code: ({ children }) => <code style={{ ...styles.inlineCode() }}>{children}</code>,
                     a: ({ children, href }) => (
                         <Link href={href as string}
                             style={{

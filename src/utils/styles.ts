@@ -289,5 +289,11 @@ export const styles = {
             opacity: .6,
             display
         }
+    }),
+    inlineCode: () => ({
+        padding: '2px 7px',
+        background: '#80808026',
+        textDecoration: 'dotted',
+        borderRadius: "6px"
     })
 }

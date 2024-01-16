@@ -114,7 +114,10 @@ iframe {
 @media (max-width: 900px) {
   .list,
   .olist {
-    margin-left: 31px;
+    margin-left: 2.6em;
+  }
+  .list{
+    margin-left: 1em !important;
   }
 
 }
