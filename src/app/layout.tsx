@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { Analytics } from '@vercel/analytics/react';
 import { Inter } from 'next/font/google'
 import './globals.css'
 import Navbar from '@/Components/Navbar'
@@ -42,6 +43,7 @@ export default function RootLayout({
               theme="dark"
             />
             {children}
+            <Analytics />
           </ReduxProdiver>
         </NextAuthProvider>
       </body>
