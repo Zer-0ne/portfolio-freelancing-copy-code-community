@@ -110,3 +110,11 @@ iframe {
   height: auto;
   border-radius: 17px;
 }
+
+@media (max-width: 900px) {
+  .list,
+  .olist {
+    margin-left: 31px;
+  }
+
+}

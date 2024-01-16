@@ -4,8 +4,11 @@ import { styles } from '@/utils/styles';
 import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { NavigateNext } from '@mui/icons-material';
-import Markdown from '@/Components/Markdown';
-import Loading from '@/Components/Loading';
+import dynamic from 'next/dynamic';
+
+const Loading = dynamic(() => import('@/Components/Loading'))
+const Markdown = dynamic(() => import('@/Components/Markdown'))
+
 
 const page = () => {
     const { sha } = useParams()
