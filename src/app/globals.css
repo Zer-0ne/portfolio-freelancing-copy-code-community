@@ -71,6 +71,9 @@ body {
 .list,
 .olist {
   margin-left: 50px;
+  display: flex;
+  flex-direction: column;
+  gap: inherit
 }
 
 blockquote {
@@ -112,12 +115,21 @@ iframe {
 }
 
 @media (max-width: 900px) {
+
   .list,
   .olist {
     margin-left: 2.6em;
   }
-  .list{
+
+  .list {
     margin-left: 1em !important;
   }
 
+}
+
+.class {
+  display: flex;
+  flex-direction: column;
+  gap: 21px;
+  word-spacing: 4px;
 }

@@ -118,7 +118,7 @@ const Sidebar = ({ setIsOpen, isOpen, navData, setUrl, sha, setSearchInput, sear
                                         transform: 'scale(1.018)'
                                     }
                                 }}>
-                                    {decodeURIComponent(sha)} {(item.path.split('.').slice(0, -1).join('.')).replace(/([a-z])([A-Z])/g, '$1 $2')}
+                                    {decodeURIComponent(sha).toString()} {item.path.replace(/^[0-9.]+/, '').replace(/\..+$/, '')}
                                 </Box>
                             ))
                     }

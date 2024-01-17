@@ -294,6 +294,7 @@ export const styles = {
         padding: '2px 7px',
         background: '#80808026',
         textDecoration: 'dotted',
-        borderRadius: "6px"
+        borderRadius: "6px",
+        fontStyle: 'italic'
     })
 }
