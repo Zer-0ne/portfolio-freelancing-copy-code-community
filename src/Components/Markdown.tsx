@@ -71,6 +71,7 @@ const Markdown = (
                     pre: ({ children }) => <CodeContainer children={children as {
                         props: {
                             children: string;
+                            className: string;
                         }
                     }} />,
                     p: ({ children }) => <Typography variant='body1' sx={{
