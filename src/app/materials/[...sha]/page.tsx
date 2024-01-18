@@ -45,6 +45,12 @@ const page = () => {
             const decode = atob(data?.content)
             setData(decode)
             setIsLoading(false)
+
+            // scroll on top
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth', // Optional: Smooth scrolling effect
+            });
         }
         fetch()
     }, [url])
@@ -119,7 +125,7 @@ const Sidebar = ({ setIsOpen, isOpen, navData, setUrl, sha, setSearchInput, sear
                                     }
                                 }}>
                                     {/* {decodeURIComponent(sha.toString()).toString()} */}
-                                     {item.path.replace(/^[0-9.]+/, '').replace(/\..+$/, '')}
+                                    {item.path.replace(/^[0-9.]+/, '').replace(/\..+$/, '')}
                                 </Box>
                             ))
                     }
