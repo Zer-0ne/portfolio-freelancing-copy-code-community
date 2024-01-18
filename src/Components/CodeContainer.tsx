@@ -57,7 +57,7 @@ const CodeContainer = ({ children }: {
                 </SyntaxHighlighter>
                 {/* </pre> */}
             </Box>
-        </>
+    </>
     )
 }
 
