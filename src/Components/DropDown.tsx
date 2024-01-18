@@ -3,7 +3,9 @@ import { Data } from '@/utils/Interfaces';
 import { KeyboardArrowDown } from '@mui/icons-material';
 import { Box, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react'
-import DropDownSkelenton from './DropDownSkelenton';
+import dynamic from 'next/dynamic';
+
+const DropDownSkelenton = dynamic(() => import('./DropDownSkelenton'))
 
 const DropDown = (
     {

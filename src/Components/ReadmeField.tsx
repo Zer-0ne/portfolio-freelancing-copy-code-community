@@ -4,7 +4,10 @@ import React, { LegacyRef, useRef, useState } from 'react'
 import { styles } from '@/utils/styles'
 import { BlogsInterface, Data, InputToMoveCursor, Item } from '@/utils/Interfaces'
 import { wordEditorFunc } from '@/utils/constant'
-import Markdown from './Markdown'
+import dynamic from 'next/dynamic'
+
+const Markdown = dynamic(() => import('./Markdown'))
+
 
 const ReadmeField = ({
     setdata,

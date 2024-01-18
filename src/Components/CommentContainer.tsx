@@ -7,7 +7,10 @@ import { BlogsInterface, CommentInterface, Data, EventsInterface } from '@/utils
 import CommentItem from './CommentItem'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/store/store'
-import ContentStructure from './ContentStructure'
+import dynamic from 'next/dynamic'
+
+const ContentStructure = dynamic(() => import('./ContentStructure'))
+
 
 const CommentContainer = (
     {

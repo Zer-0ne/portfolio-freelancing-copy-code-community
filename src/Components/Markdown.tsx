@@ -1,15 +1,18 @@
 import { styles } from '@/utils/styles';
 import { Box, Container, Typography } from '@mui/material';
 import React from 'react'
-import ReactMarkdown from 'react-markdown';
-import CodeContainer from './CodeContainer';
 import Image from 'next/image';
 import Link from 'next/link';
 import { BlogsInterface, Data, EventsInterface } from '@/utils/Interfaces';
 import '@/app/globals.css'
 import { IBM_Plex_Mono, Libre_Baskerville } from 'next/font/google';
 import rehypeRaw from 'rehype-raw'
-import ContentStructure from './ContentStructure';
+import dynamic from 'next/dynamic';
+
+const ContentStructure = dynamic(() => import('./ContentStructure'))
+const CodeContainer = dynamic(() => import('./CodeContainer'))
+const ReactMarkdown = dynamic(() => import('react-markdown'))
+
 
 export const ibn = IBM_Plex_Mono({
     weight: '400',

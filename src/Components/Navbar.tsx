@@ -4,7 +4,6 @@ import React, { useRef } from 'react'
 import { styles } from '@/utils/styles'
 import { Login, navbarContent, sessionAction } from '@/utils/constant'
 import Link from 'next/link'
-import DropDownSkelenton from './DropDownSkelenton'
 import { signIn, signOut, useSession } from 'next-auth/react'
 import { Data, } from '@/utils/Interfaces'
 import { GitHub, Google, LinkedIn } from '@mui/icons-material'
@@ -14,6 +13,10 @@ import { AppDispatch, RootState } from '@/store/store'
 import { useDispatch, useSelector } from 'react-redux'
 import { removeSession } from '@/slices/sessionSlice'
 import { Rubik_Glitch } from 'next/font/google'
+import dynamic from 'next/dynamic'
+
+const DropDownSkelenton = dynamic(() => import('./DropDownSkelenton'))
+
 
 const rubikGlitchFont = Rubik_Glitch({
     subsets: ['latin'],
