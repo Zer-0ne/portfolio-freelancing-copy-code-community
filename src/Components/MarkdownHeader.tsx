@@ -2,7 +2,10 @@ import { BlogsInterface, Data, EventsInterface } from '@/utils/Interfaces'
 import { Avatar, Box, Container, Typography } from '@mui/material'
 import { IBM_Plex_Mono, Libre_Baskerville } from 'next/font/google'
 import React from 'react'
-import ContentStructure from './ContentStructure'
+import dynamic from 'next/dynamic'
+
+const ContentStructure = dynamic(() => import('./ContentStructure'))
+
 
 export const ibn = IBM_Plex_Mono({
     weight: '400',

@@ -1,11 +1,12 @@
 'use client'
-import Image from 'next/image';
 import React from 'react'
-import Particles from 'react-particles'
 import particleConfig from './Config/particles.config'
 import { loadFull } from 'tsparticles'
-import bg from '@/assests/1.gif'
 import type { Engine, ISourceOptions } from "tsparticles-engine";
+import dynamic from 'next/dynamic';
+
+const Particles = dynamic(() => import('react-particles'))
+
 
 const ParticlesBackground = (
 ) => {

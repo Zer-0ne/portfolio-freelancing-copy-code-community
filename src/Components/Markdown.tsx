@@ -48,27 +48,27 @@ const Markdown = (
                     }}>{children}</Typography>,
                     h2: ({ children }) => <Typography variant='h2' className={ibn.className} sx={{
                         ...styles.heading({ md: '1.5em', xs: '1.5em' }, '600'),
-                        mt: 3,
+                        // mt: 1,
                         lineHeight: 1.25, p: 0
                     }}>{children}</Typography>,
                     h3: ({ children }) => <Typography variant='h3' className={ibn.className} sx={{
                         ...styles.heading({ md: '1.25em', xs: '1.25em' }, '600', 'none'),
-                        mt: 3,
+                        // mt: 1,
                         pl: 1.5, lineHeight: 1.25, p: 0
                     }}>{children}</Typography>,
                     h4: ({ children }) => <Typography variant='h4' className={ibn.className} sx={{
                         ...styles.heading('1em', '600', 'none'),
-                        mt: 3,
+                        // mt: 1,
                         lineHeight: 1.25, p: 0
                     }}>{children}</Typography>,
                     h5: ({ children }) => <Typography variant='h5' className={ibn.className} sx={{
                         ...styles.heading('.875em', '600', 'none'),
-                        mt: 3,
+                        // mt: 1,
                         lineHeight: 1.25, p: 0
                     }}>{children}</Typography>,
                     h6: ({ children }) => <Typography variant='h6' className={ibn.className} sx={{
                         ...styles.heading('.85em', '600', 'none'),
-                        mt: 3,
+                        // mt: 1,
                         lineHeight: 1.25, p: 0
                     }}>{children}</Typography>,
                     pre: ({ children }) => <CodeContainer children={children as {
