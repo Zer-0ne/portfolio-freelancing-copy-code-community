@@ -47,7 +47,7 @@ const page = () => {
             setIsLoading(false)
 
             // scroll on top
-            window.scrollTo({
+            decode && await window.scrollTo({
                 top: 0,
                 behavior: 'smooth', // Optional: Smooth scrolling effect
             });
