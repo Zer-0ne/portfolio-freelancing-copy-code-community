@@ -90,7 +90,7 @@ const HomePage = () => {
                 </Typography>
             </Box>
             <Link
-                href='/blogs'
+                href='/materials'
                 style={{
                     marginTop: 30,
                     padding: '10px 15px',
