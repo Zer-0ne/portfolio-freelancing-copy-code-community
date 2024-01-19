@@ -1,3 +1,4 @@
+import React from "react";
 import { Data, Item } from "./Interfaces";
 import { colors } from "./colors";
 
@@ -265,14 +266,15 @@ export const styles = {
             opacity: 1
         }
     }),
-    codeBox: () => ({
+    codeBox: (customStyle?: React.CSSProperties | object) => ({
         padding: '16px',
         fontSize: '85%',
         lineHeight: '1.45',
         color: '#e6edf3',
         ...styles.glassphorism(),
         margin: '1rem',
-        position: 'relative'
+        position: 'relative',
+        ...customStyle
     }),
     heading: (size: string | number | object = 25, weight: string | number = '800', display: string = 'block') => ({
         fontSize: size,

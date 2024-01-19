@@ -1,6 +1,6 @@
 import { styles } from '@/utils/styles';
 import { ContentCopy, Done } from '@mui/icons-material';
-import { Box } from '@mui/material'
+import { Box, Typography } from '@mui/material'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { synthwave84 } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import React, { useState } from 'react'
@@ -27,37 +27,79 @@ const CodeContainer = ({ children }: {
     }, 2000);
     return (
         <>
-
-            <Box id='text' sx={[styles.codeBox()]}>
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 1
+                }}
+            >
                 <Box
-                    onClick={handleCopyCode}
                     sx={{
-                        position: 'absolute',
-                        top: 10,
-                        right: 10,
-                        fontSize: '1rem',
-                        cursor: 'pointer',
-                        zIndex: 2
+                        ...styles.codeBox({
+                            mb: 0, mt: 1,
+                            borderRadius: '12px 12px 0 0',
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            padding: '8px 16px',
+                            alignItems: 'center'
+                        })
                     }}
-                >{
-                        isCopied ?
-                            <Done /> :
-                            <ContentCopy
-                            />
+                >
+                    <Typography
+                        variant='caption'
+                        sx={{
+                            opacity: .7,
+                            fontSize: '.8rem'
+                        }}
+                    >
+                        {children.props.className?.replace("language-", "")}
+                    </Typography>
+                    <Box
+                        onClick={handleCopyCode}
+                        sx={{
+                            fontSize: '.5rem !important',
+                            cursor: 'pointer',
+                            display: 'flex', opacity: .7,
+                            zIndex: 2, alignItems: 'center', justifyContent: 'center', transition: 'all .2s ease-in-out'
+                        }}
+                    >{
+                            isCopied ?
+                                <Box sx={{ display: 'flex', gap: .6, alignItems: 'center', justifyContent: 'center' }} >
+                                    <Done sx={{ fontSize: '1rem !important' }} />
+                                    <Typography
+                                        variant='caption'
+                                        sx={{ fontSize: '.9rem !important', }}
+                                    >copied</Typography>
+                                </Box> :
+                                <Box sx={{ display: 'flex', gap: .6, alignItems: 'center', justifyContent: 'center' }} >
+                                    <ContentCopy sx={{ fontSize: '1rem !important' }} />
+                                    <Typography
+                                        variant='caption'
+                                        sx={{ fontSize: '.9rem !important', }}
+                                    >copy</Typography>
+                                </Box>
 
-                    }
+                        }
+                    </Box>
                 </Box>
-                {/* <pre
+                <Box id='text' sx={[styles.codeBox({
+                    mt: 0,
+                    borderRadius: '0 0 12px 12px', mb: 1
+                })]}>
+
+                    {/* <pre
                     style={{
                         overflow: 'auto',
                     }}
                 > */}
-                <SyntaxHighlighter customStyle={{ background: 'transparent !important', backgroundImage: 'transparent !important', textShadow: 'none !important', padding: 0, margin: 0 }} language={children.props.className?.replace("language-", "") as string} style={synthwave84}>
-                    {children.props.children as string}
-                </SyntaxHighlighter>
-                {/* </pre> */}
+                    <SyntaxHighlighter customStyle={{ background: 'transparent !important', backgroundImage: 'transparent !important', textShadow: 'none !important', padding: 0, margin: 0 }} language={children.props.className?.replace("language-", "") as string} style={synthwave84}>
+                        {children.props.children as string}
+                    </SyntaxHighlighter>
+                    {/* </pre> */}
+                </Box>
             </Box>
-    </>
+        </>
     )
 }
 
