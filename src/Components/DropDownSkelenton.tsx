@@ -32,7 +32,7 @@ const DropDownSkelenton = (
         >
             <Box
                 sx={{
-                    ...styles?.customInput('', {
+                    ...styles.glassphorism('8px', '10px !important', 'rgba(0, 0, 0, 0.2)', {
                         position: 'absolute',
                         top: '130%',
                         right: '0%',
@@ -42,13 +42,13 @@ const DropDownSkelenton = (
                         flexDirection: 'column',
                         cursor: 'pointer',
                         transition: 'all .5s ease-in-out',
-                        ...styles.glassphorism(),
+                        ...styles.customInput(1, {}, 2),
                         flex: 1,
                         gap: 1,
                         zIndex: 50,
                         fontSize: { xs: 12, md: 18, xl: 25 },
                         textAlign: 'center',
-                    }, 1),
+                    }),
 
                 }}
             >

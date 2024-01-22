@@ -133,3 +133,14 @@ iframe {
   gap: 21px;
   word-spacing: 4px;
 }
+
+.flicker {
+  opacity: 0.5;
+  animation: flickerAnimation 0.1s infinite alternate;
+}
+
+@keyframes flickerAnimation {
+  to {
+    opacity: 1;
+  }
+}

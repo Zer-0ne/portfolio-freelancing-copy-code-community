@@ -16,7 +16,6 @@ const page = () => {
             const { getSpecificMaterialGithub } = await import('@/utils/FetchFromApi')
             const Metrials = await getSpecificMaterialGithub('main', 'https://api.github.com/repos/copycodecommunity/portfolio/git/trees/')
             const materialsEntries = Metrials.filter((entry: Data) => entry.type === "tree" && entry.path === "Metrials");
-            console.log(materialsEntries[0].url)
             const data = await getSpecificMaterialGithub(materialsEntries[0].sha)
             setData(data)
         }

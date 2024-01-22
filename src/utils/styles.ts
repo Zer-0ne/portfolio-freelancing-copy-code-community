@@ -42,12 +42,14 @@ export const styles = {
             md: string | number;
             xl: string | number;
         } = '12px',
-        backgroundColor = 'rgba(0, 0, 0, 0.2)'
+        backgroundColor = 'rgba(0, 0, 0, 0.2)',
+        customStyle?: React.CSSProperties | object
     ) => ({
-        backdropFilter: `blur(${blur}) saturate(187%)`,
-        background: backgroundColor,
-        borderRadius: radius,
+        backdropFilter: `blur(${!blur ? '5px' : blur}) saturate(187%)`,
+        background: !backgroundColor ? 'rgba(0, 0, 0, 0.2)' : backgroundColor,
+        borderRadius: !radius ? '12px' : radius,
         border: '1px solid rgba(255, 255, 255, 0.125)',
+        ...customStyle
     }),
     iconStyle: (currentPath: string, iconPath: string) => ({
         color: 'white',
