@@ -226,7 +226,8 @@ export const createNewContact = async (data: Data, setIsDisabled: React.Dispatch
             },
             body: JSON.stringify({
                 ...data,
-                email: user?.email
+                email: user?.email,
+                username: user?.username
             })
         })
         const data_from_server = await response.json();

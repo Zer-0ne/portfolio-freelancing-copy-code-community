@@ -54,12 +54,18 @@ const Cards = ({ path, sha }: { path: string; sha: string }) => {
                     minHeight: 87,
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: 'center'
+                    justifyContent: 'center',
+                    transition: 'all .2s ease-in-out',
+                    position: 'relative',
+                    zIndex: 1,
+                    ':hover': {
+                        border: '1px solid rgba(255, 255, 255, 1)'
+                    },
                 }}
             >
                 {path}
             </Box>
-        </Link>
+        </Link >
     );
 }
 

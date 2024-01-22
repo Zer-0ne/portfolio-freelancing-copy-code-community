@@ -31,7 +31,10 @@ const CodeContainer = ({ children }: {
                 sx={{
                     display: 'flex',
                     flexDirection: 'column',
-                    gap: 1
+                    gap: 1,
+                    // position: { xs: 'relative', md: 'static' },
+                    // left: { xs: '14px', md: '0' },
+                    // right: 0
                 }}
             >
                 <Box

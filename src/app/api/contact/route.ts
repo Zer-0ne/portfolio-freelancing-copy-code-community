@@ -22,6 +22,7 @@ export const POST = async (request: NextRequest) => {
             email,
             content,
             phone,
+            username
         } = await request.json();
         await connect();
         const newContent = new Contact({
@@ -30,6 +31,7 @@ export const POST = async (request: NextRequest) => {
             email,
             content,
             phone,
+            username
         });
 
         // Save the new post to the database

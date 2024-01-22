@@ -39,8 +39,40 @@ const page = () => {
     if (isloading) return <Loading />
     if (isAdmin === false) return notFound()
     return (
-        <Container>Comming Soon...</Container>
+        <Container
+            className='flex flex-col gap-[2rem]'
+        >Comming Soon...
+            {
+                data?.map((item: Data, index: number) => (
+                    <Card key={index} item={item} />
+                ))
+            }
+        </Container>
     )
 }
 
 export default page
+
+const Card = ({
+    item
+}: {
+    item: Data
+}) => {
+    return (
+        <div
+            className='flex flex-1 flex-col gap-[8px]'
+        >
+            <div
+                className='flex-1 flex rounded-t-[12px] p-[12px] border-[1px] border-[#ffffff46] transition-all delay-[.2s] ease-in-out'
+            >{item?.content}</div>
+            <div
+                className='flex justify-evenly rounded-b-[12px] border-[1px] border-[#ffffff46] p-[12px]'
+            >
+                <a href={`mailto:${item.email}`}>{item.email}</a>
+                <p>{item.phone}</p>
+                <p>{item.username}</p>
+            </div>
+
+        </div >
+    );
+}
