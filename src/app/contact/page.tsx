@@ -200,40 +200,6 @@ const page = () => {
                                 isDisabled ? 'Submiting...' : 'Submit'
                             }
                         </Button>
-                        <Link
-                            href='https://forms.gle/XALWhYStXRbr6gEx9'
-                            style={{
-
-                            }}
-                            className={`${ibn.className}`}
-                        >
-                            <Typography
-                                sx={{
-                                    ...styles.glassphorism(),
-                                    position: 'absolute',
-                                    // right: { xs: 'calc(50% - 3rem)' },
-                                    right: 0, left: 0,
-                                    top: { xs: `calc(${joinUs} + 55px)` },
-                                    transform: { xs: 'rotate(0deg)' },
-                                    padding: { md: '5px 8px !important', xs: '5px 8px !important' },
-                                    backgroundColor: 'rgba(0, 0, 0, .7)',
-                                    borderRadius: { xs: '10px 10px 0 0 !important' },
-                                    backgroundOrigin: 'border-box',
-                                    // width: { md: '6rem', xs: '6rem' },
-                                    textAlign: 'center',
-                                    textTransform: 'uppercase',
-                                    border: '1px solid rgba(255,255,255,.2)',
-                                    transition: 'all 2s ease-in-out',
-                                    fontWeight: '800',
-                                    background: 'linear-gradient(to right, rgba(0,69,255,1) 0%, rgba(255,0,0,1) 35%, rgba(255,0,194,1) 100%)',
-                                    backgroundClip: 'text',
-                                    WebkitTextFillColor: 'transparent',
-                                }}
-                            >
-                                Join us
-
-                            </Typography>
-                        </Link>
                     </form>
 
                     <Box
@@ -277,6 +243,40 @@ const page = () => {
                         </Link>
                     </Box>
                 </Box>
+                <Link
+                    href='https://forms.gle/XALWhYStXRbr6gEx9'
+                    style={{
+
+                    }}
+                    className={`${ibn.className}`}
+                >
+                    <Typography
+                        sx={{
+                            ...styles.glassphorism(),
+                            position: 'absolute',
+                            // right: { xs: 'calc(50% - 3rem)' },
+                            right: 0, left: 0, zIndex: 2,
+                            top: { xs: `calc(${joinUs} + 55px)` },
+                            transform: { xs: 'rotate(0deg)' },
+                            padding: { md: '5px 8px !important', xs: '5px 8px !important' },
+                            backgroundColor: 'rgba(0, 0, 0, .7)',
+                            borderRadius: { xs: '10px 10px 0 0 !important' },
+                            backgroundOrigin: 'border-box',
+                            // width: { md: '6rem', xs: '6rem' },
+                            textAlign: 'center',
+                            textTransform: 'uppercase',
+                            border: '1px solid rgba(255,255,255,.2)',
+                            transition: 'all 2s ease-in-out',
+                            fontWeight: '800',
+                            background: 'linear-gradient(to right, rgba(0,69,255,1) 0%, rgba(255,0,0,1) 35%, rgba(255,0,194,1) 100%)',
+                            backgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
+                        }}
+                    >
+                        Join us
+
+                    </Typography>
+                </Link>
             </Box >
             {/* <AvatarGroup
                 total={20}
