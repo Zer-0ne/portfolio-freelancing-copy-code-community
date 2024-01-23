@@ -28,10 +28,32 @@ const DropDownSkelenton = (
         <Box
             sx={{
                 position: 'relative',
-                zIndex: 1
             }}
         >
+            <Box
+                sx={{
+                    ...styles.glassphorism('8px', '10px !important', 'rgba(0, 0, 0, 0.2)', {
+                        position: 'absolute',
+                        top: '130%',
+                        right: '0%',
+                        left: (status === 'unauthenticated') ? null : (status === 'authenticated') ? { md: -13, xs: -200 } : 0,
+                        display: isTrue ? 'flex' : 'none',
+                        opacity: isTrue ? 1 : 0,
+                        flexDirection: 'column',
+                        cursor: 'pointer',
+                        transition: 'all .5s ease-in-out',
+                        ...styles.customInput(1, {}, 2),
+                        flex: 1,
+                        gap: 1,
+                        zIndex: 50,
+                        fontSize: { xs: 12, md: 18, xl: 25 },
+                        textAlign: 'center',
+                    }),
 
+                }}
+            >
+                {children}
+            </Box>
             <Box
                 sx={styles?.customInput(8, {
                     textTransform: 'capitalize',
@@ -63,30 +85,6 @@ const DropDownSkelenton = (
                         transition: 'all .5s ease-in-out'
                     }}
                 />
-            </Box>
-            <Box
-                sx={{
-                    ...styles.glassphorism('8px', '10px !important', 'rgba(0, 0, 0, 0.2)', {
-                        position: 'absolute',
-                        top: '130%',
-                        right: '0%',
-                        left: (status === 'unauthenticated') ? null : (status === 'authenticated') ? { md: -13, xs: -200 } : 0,
-                        display: isTrue ? 'flex' : 'none',
-                        opacity: isTrue ? 1 : 0,
-                        flexDirection: 'column',
-                        cursor: 'pointer',
-                        transition: 'all .5s ease-in-out',
-                        ...styles.customInput(1, {}, 2),
-                        flex: 1,
-                        gap: 1,
-                        zIndex: 50,
-                        fontSize: { xs: 12, md: 18, xl: 25 },
-                        textAlign: 'center',
-                    }),
-
-                }}
-            >
-                {children}
             </Box>
         </Box >
     )
