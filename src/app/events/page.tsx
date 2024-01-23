@@ -28,12 +28,7 @@ const page = () => {
   // fetch all the events
   const fetchData = async () => {
     try {
-      const { allPost } = await import('@/utils/FetchFromApi')
-
       !events[0] && dispatch(fetchEvents())
-
-
-
       setIsLoading(false)
     } catch (error) {
       console.log(error)

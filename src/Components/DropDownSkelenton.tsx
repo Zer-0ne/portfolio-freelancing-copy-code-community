@@ -42,7 +42,7 @@ const DropDownSkelenton = (
                         flexDirection: 'column',
                         cursor: 'pointer',
                         transition: 'all .5s ease-in-out',
-                        ...styles.customInput(1, {}, 2),
+                        ...styles.glassphorism(),
                         flex: 1,
                         gap: 1,
                         zIndex: 50,
