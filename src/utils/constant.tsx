@@ -360,186 +360,6 @@ export const aboutCCC = [
 
 ]
 
-// export const coreTeamMember: coreMember[] = [
-//     {
-//         name: 'Ziya-ul Rehman',
-//         role: 'Lead',
-//         image: '',
-//         LinkedIn: 'https://www.linkedin.com/in/ziya-ul-rehman/',
-//         insta: '',
-//         GitHub: '',
-//         bio: `I am a 2nd year student at the University of Maryland, College Park majoring in Computer Science and minoring in Mathematics`,
-//         email: 'sahilk@copycodecommunity.org',
-//     },
-//     {
-//         name: 'Sahil khan',
-//         role: 'Co-founder & Tech lead',
-//         image: 'https://avatars.githubusercontent.com/u/118300201?v=4',
-//         LinkedIn: 'https://www.linkedin.com/in/sahil-khan-7a718a259/',
-//         GitHub: 'https://github.com/Zer-0ne/',
-//         insta: 'https://instagram.com/zer.0n3',
-//         bio: `I am a 2nd year student at the University of Maryland, College Park majoring in Computer Science and minoring in Mathematics`,
-//         email: 'sahilk@copycodecommunity.org',
-//     },
-//     {
-//         name: 'Ibrahim Khursheed',
-//         role: 'Outrage',
-//         image: '',
-//         insta: '',
-//         LinkedIn: '',
-//         GitHub: '',
-//         bio: `I am a 2nd year student at the University of Maryland, College Park majoring in Computer Science and minoring in Mathematics`,
-//         email: 'sahilk@copycodecommunity.org',
-//     },
-//     {
-//         name: 'Musab Hussain',
-//         role: 'Management lead',
-//         image: '',
-//         insta: '',
-//         LinkedIn: '',
-//         GitHub: '',
-//         bio: `I am a 2nd year student at the University of Maryland, College Park majoring in Computer Science and minoring in Mathematics`,
-//         email: 'sahilk@copycodecommunity.org',
-//     },
-//     {
-//         name: 'Azmatun nisa',
-//         role: 'Technical member',
-//         image: '',
-//         insta: 'https://www.instagram.com/zahrakhan11794/',
-//         LinkedIn: 'https://www.linkedin.com/in/azmatun-nisa-874815284',
-//         GitHub: 'https://github.com/azmat11794',
-//         bio: `I am a 2nd year student at the University of Maryland, College Park majoring in Computer Science and minoring in Mathematics`,
-//         email: 'sahilk@copycodecommunity.org',
-//     },
-//     {
-//         name: 'Mazhar Saifi',
-//         role: 'Technical member',
-//         image: 'https://media.licdn.com/dms/image/D4D03AQF9xPyLmRI0Og/profile-displayphoto-shrink_200_200/0/1697706116379?e=1709769600&v=beta&t=9Ft_rPJh8D2rbk72b6yPLwaLsBaKA8MHZwn_xMpiqQc',
-//         insta: 'https://www.instagram.com/mazzy_pvt_',
-//         LinkedIn: 'https://www.linkedin.com/in/saifimazhar8',
-//         GitHub: 'https://github.com/twister904',
-//         bio: `I am a 2nd year student at the University of Maryland, College Park majoring in Computer Science and minoring in Mathematics`,
-//         email: 'sahilk@copycodecommunity.org',
-//     },
-//     {
-//         name: 'Sukaina inam naqvi',
-//         role: 'Advisor and Speaker',
-//         image: 'https://media.licdn.com/dms/image/D5603AQGt1u9Rp0PbJw/profile-displayphoto-shrink_200_200/0/1703520297140?e=1709769600&v=beta&t=E5kkHo04Q8Zg5sM8sr_ibyw4dkh17R1fNgKQbTY0wG4',
-//         insta: 'https://www.instagram.com/_sukaina_naqvi',
-//         LinkedIn: 'https://www.linkedin.com/in/sukaina-inam-naqvi-039334293',
-//         GitHub: 'https://github.com/SukainaInamNaqvi',
-//         bio: `I am a 2nd year student at the University of Maryland, College Park majoring in Computer Science and minoring in Mathematics`,
-//         email: 'sahilk@copycodecommunity.org',
-//     },
-//     {
-//         name: 'Zarqua Hashmi',
-//         role: 'Content writer',
-//         image: '',
-//         insta: 'https://www.instagram.com/zarqa_hashmi',
-//         LinkedIn: 'https://www.linkedin.com/in/zarqua-h-4982aa234',
-//         GitHub: '',
-//         bio: `I am a 2nd year student at the University of Maryland, College Park majoring in Computer Science and minoring in Mathematics`,
-//         email: 'sahilk@copycodecommunity.org',
-//     },
-//     {
-//         name: 'Zubiya',
-//         role: 'Graphics',
-//         image: '',
-//         insta: '',
-//         LinkedIn: '',
-//         GitHub: '',
-//         bio: `I am a 2nd year student at the University of Maryland, College Park majoring in Computer Science and minoring in Mathematics`,
-//         email: 'sahilk@copycodecommunity.org',
-//     },
-//     {
-//         name: 'Hayat Ali Ansari',
-//         role: 'Photography',
-//         image: 'https://media.licdn.com/dms/image/D4D03AQFd6aTqgy_WQQ/profile-displayphoto-shrink_200_200/0/1678478202813?e=1709769600&v=beta&t=umcp6Krc0pVM6asIm8hUiy0T_3SPNSwqZhHWAC9luv8',
-//         insta: 'https://www.instagram.com/aggregate__hayat/',
-//         LinkedIn: 'https://www.linkedin.com/in/hayat-ali-ansari-943756269',
-//         GitHub: '',
-//         bio: `I am a 2nd year student at the University of Maryland, College Park majoring in Computer Science and minoring in Mathematics`,
-//         email: 'sahilk@copycodecommunity.org',
-//     },
-//     {
-//         name: 'Maryam abid',
-//         role: 'Managemnent team',
-//         image: '',
-//         insta: '',
-//         LinkedIn: '',
-//         GitHub: '',
-//         bio: `I am a 2nd year student at the University of Maryland, College Park majoring in Computer Science and minoring in Mathematics`,
-//         email: 'sahilk@copycodecommunity.org',
-//     },
-//     {
-//         name: 'Myra ali khan',
-//         role: 'Managemnent team',
-//         image: '',
-//         insta: 'https://www.instagram.com/myraalikhann',
-//         LinkedIn: 'https://www.linkedin.com/in/myra-ali-khan-0b734128a/',
-//         GitHub: 'https://github.com/myraalikhan',
-//         bio: `I am a 2nd year student at the University of Maryland, College Park majoring in Computer Science and minoring in Mathematics`,
-//         email: 'sahilk@copycodecommunity.org',
-//     },
-//     {
-//         name: 'Uzaima siddiqui',
-//         role: 'Management team',
-//         image: '',
-//         insta: '',
-//         LinkedIn: 'https://www.linkedin.com/in/umaiza-siddiqui-02b819280',
-//         GitHub: '',
-//         bio: `I am a 2nd year student at the University of Maryland, College Park majoring in Computer Science and minoring in Mathematics`,
-//         email: 'sahilk@copycodecommunity.org',
-//     },
-//     {
-//         name: 'Safdar Mustafa',
-//         role: 'Management team',
-//         image: 'https://media.licdn.com/dms/image/D4D03AQFhldv1Pf37uw/profile-displayphoto-shrink_200_200/0/1702304618798?e=1709769600&v=beta&t=lw7REzBpZut30EbSgxD_TIEDxao_DtWgMyCKlbpxh6o',
-//         insta: 'https://www.instagram.com/saif_raza.01',
-//         LinkedIn: 'https://www.linkedin.com/in/safdar-mustafa-a84883295',
-//         GitHub: 'https://github.com/Safdar69',
-//         bio: `I am a 2nd year student at the University of Maryland, College Park majoring in Computer Science and minoring in Mathematics`,
-//         email: 'sahilk@copycodecommunity.org',
-//     },
-//     {
-//         name: 'Aditya kumar',
-//         role: 'Management team',
-//         image: 'https://media.licdn.com/dms/image/D5603AQErkyoEdwQgoQ/profile-displayphoto-shrink_200_200/0/1699339967627?e=1709769600&v=beta&t=ZPoqXsNoh_MO3K8YsLSnHSj7RgfsrpLehXj5UpQJMAo',
-//         insta: 'https://www.instagram.com/retardreaction',
-//         LinkedIn: 'https://www.linkedin.com/in/aditya-pal-896b13299',
-//         GitHub: 'https://github.com/Ravenical',
-//         bio: `I am a 2nd year student at the University of Maryland, College Park majoring in Computer Science and minoring in Mathematics`,
-//         email: 'sahilk@copycodecommunity.org',
-//     },
-
-// ]
-
-// export const blogsDetails: BlogsInterface[] = [
-//     {
-//         title: 'React Native CheetSheet',
-//         description: 'React Native CheetSheet is a library that allows you to create a cheatsheet for your React Native app. It is a simple and easy-to-use',
-//         updatedAt: '20 jan 2020',
-//         tag: 'react_native'
-//     },
-//     {
-//         title: 'React CheetSheet',
-//         description: 'React CheetSheet is a library that allows you to create a cheatsheet for your React app. It is a simple and easy-to-use',
-//         updatedAt: '20 jun 2021',
-//         tag: 'react.js'
-//     },
-//     {
-//         title: 'Node CheetSheet',
-//         description: 'Node CheetSheet is a library that allows you to create a cheatsheet for your Node app. It is a simple and easy-to-use',
-//         updatedAt: '31 dec 2020',
-//         tag: 'node.js'
-//     },
-//     {
-//         title: 'Next CheetSheet',
-//         description: 'Next CheetSheet is a library that allows you to create a cheatsheet for your Next app. It is a simple and easy-to-use',
-//         updatedAt: '10 oct 2024',
-//         tag: 'next.js'
-//     },
-// ]
 
 // export const eventsDetails: EventsInterface[] = [
 //     {
@@ -647,3 +467,70 @@ export const contactForm = [
 
 
 export const roles: string[] = ['admin', 'user', 'moderator']
+
+
+
+// regitration form for joining our community
+const fields = [
+    {
+        name: 'email',
+        type: 'email',
+        required: true
+    }, {
+        name: 'name',
+        type: 'text',
+        required: true
+    }, {
+        name: 'collegeName',
+        type: 'text',
+        required: true
+    }, {
+        name: 'course',
+        options: [
+            'bca', 'btech', 'mca', 'mtech'
+        ],
+        type: 'select',
+        required: true
+    }, {
+        name: 'courseYear',
+        options: [
+            1, 2, 3, 4
+        ],
+        type: 'select',
+        required: true
+    }, {
+        name: 'roles',
+        options: [
+            'Technical Team', 'Management Team', 'Graphics', 'Content Writer', 'video Editor', 'Social Handler and Photographer'
+        ],
+        type: 'select',
+        multiple: false,
+        displayAs: 'Checkboxes'
+        , required: true
+    }, {
+        name: 'skills',
+        type: 'text',
+        required: true
+    }, {
+        name: 'resume',
+        type: "text"
+    }
+]
+export const joinCommunityForm = {
+    title: "Join Our Community",
+    subtitle: `Become a part of the community and start sharing knowledge with others.
+
+    What is copy code community?
+    Copy Code Community is an online platform where developers from all over the world come together to learn,
+    ${aboutCCC[0].content}
+    
+    ${aboutCCC[1].heading} 
+    ${aboutCCC[1].content} 
+    `,
+    fields: [...fields],
+    buttons: [
+        {
+            text: "Submit"
+        }
+    ]
+}

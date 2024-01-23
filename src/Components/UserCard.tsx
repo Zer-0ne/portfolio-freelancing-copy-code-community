@@ -6,7 +6,7 @@ import React, { useState } from 'react'
 import DropDown from './DropDown'
 import { Data } from '@/utils/Interfaces'
 import { styles } from '@/utils/styles'
-import {  editPost } from '@/utils/FetchFromApi'
+import { editPost } from '@/utils/FetchFromApi'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/store/store'
 import { roles } from '@/utils/constant'
@@ -135,7 +135,8 @@ const UserCard = (
                     justifyContent: 'space-evenly',
                     ...styles.glassphorism('', '0 0 12px 12px'),
                     mb: 5,
-                    p: 2
+                    p: 2,
+                    flexWrap: 'wrap'
                 }}
             >
                 <Typography

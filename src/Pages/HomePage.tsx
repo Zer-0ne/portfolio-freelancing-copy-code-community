@@ -19,12 +19,7 @@ const smooch = Satisfy({
 })
 
 const HomePage = () => {
-    const [joinUs, setJoinUs] = useState('-1007px')
-    useEffect(() => {
-        setTimeout(() => setJoinUs('-30px'), 1000)
-        setInterval(() => setJoinUs('-50px'), 1500)
-        setInterval(() => setJoinUs('-17px'), 4200)
-    }, [])
+    
 
     return (
         <Box
@@ -121,39 +116,6 @@ const HomePage = () => {
                 }}
                 className={ibn.className}
             >Start Learning...</Link>
-            <Link
-                href='https://forms.gle/XALWhYStXRbr6gEx9'
-                style={{
-
-                }}
-                className={`border-t-[10px] ${ibn.className}`}
-            >
-                <Typography
-                    sx={{
-                        ...styles.glassphorism(),
-                        position: 'absolute',
-                        right: { md: joinUs, xs: 'calc(50% - 4rem)' },
-                        top: { xs: `calc(${joinUs} + 55px)`, md: 'auto' },
-                        transform: { md: 'rotate(270deg)', xs: 'rotate(0deg)' },
-                        padding: '10px 25px !important',
-                        backgroundColor: 'rgba(0, 0, 0, .7)',
-                        borderRadius: '0px !important',
-                        width: { md: '10rem', xs: '8rem' },
-                        textAlign: 'center',
-                        textTransform: 'uppercase',
-                        border: '1px solid rgba(255,255,255,.5)',
-                        transition: 'all 2s ease-in-out',
-                        fontWeight: '800',
-                        background: 'linear-gradient(to right, rgba(0,69,255,1) 0%, rgba(255,0,0,1) 35%, rgba(255,0,194,1) 100%)',
-                        backgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent',
-                        borderImage: 'linear-gradient(to right, rgba(0,69,255,1) 0%, rgba(255,0,0,1) 35%, rgba(255,0,194,1) 100%) 1'
-                    }}
-                >
-                    Join us
-
-                </Typography>
-            </Link>
         </Box >
     )
 }

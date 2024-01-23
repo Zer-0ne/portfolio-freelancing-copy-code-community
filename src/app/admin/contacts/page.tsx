@@ -41,11 +41,12 @@ const page = () => {
     return (
         <Container
             className='flex flex-col gap-[2rem]'
-        >Comming Soon...
+        >Here all the contacts message...
             {
-                data?.map((item: Data, index: number) => (
-                    <Card key={index} item={item} />
-                ))
+                data ?
+                    data?.map((item: Data, index: number) => (
+                        <Card key={index} item={item} />
+                    )) : 'No query yet posted'
             }
         </Container>
     )
@@ -66,11 +67,11 @@ const Card = ({
                 className='flex-1 flex rounded-t-[12px] p-[12px] border-[1px] border-[#ffffff46] transition-all delay-[.2s] ease-in-out'
             >{item?.content}</div>
             <div
-                className='flex justify-evenly rounded-b-[12px] border-[1px] border-[#ffffff46] p-[12px]'
+                className='flex justify-evenly rounded-b-[12px] border-[1px] border-[#ffffff46] p-[5px] flex-wrap gap-2 '
             >
-                <a href={`mailto:${item.email}`}>{item.email}</a>
-                <p>{item.phone}</p>
-                <p>{item.username}</p>
+                <a style={{ opacity: .5 }} href={`mailto:${item.email}`}>{item.email}</a>
+                <p style={{ opacity: .5 }}>{item.phone}</p>
+                <p style={{ opacity: .5 }}>{item.username}</p>
             </div>
 
         </div >

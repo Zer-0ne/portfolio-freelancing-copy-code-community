@@ -1,14 +1,28 @@
 'use client'
 import { Avatar, AvatarGroup, Box, Button, Container, Typography, useMediaQuery } from '@mui/material'
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { styles } from '@/utils/styles'
 import { GitHub, Instagram, LinkedIn, WhatsApp } from '@mui/icons-material'
 import { Data } from '@/utils/Interfaces'
 import dynamic from 'next/dynamic'
+import { IBM_Plex_Mono } from 'next/font/google'
 
 const Link = dynamic(() => import('next/link'))
+const ibn = IBM_Plex_Mono({
+    weight: '400',
+    subsets: ['latin']
+})
 
 const page = () => {
+
+    const [joinUs, setJoinUs] = useState('-1007px')
+    useEffect(() => {
+        setTimeout(() => setJoinUs('-100px'), 1000)
+        setInterval(() => setJoinUs('-100px'), 1500)
+        setInterval(() => setJoinUs('-150px'), 4200)
+    }, [])
+
+
     const blogRef = useRef(false);
     const [developedBy, setDevelopedBy] = useState<{
         name: string;
@@ -88,7 +102,7 @@ const page = () => {
             >
                 <Box
                     sx={{
-                        ...styles.glassphorism('7px'),
+                        ...styles.glassphorism('7px', '0 0 12px 12px'),
                         padding: 4,
                         display: 'flex',
                         flexDirection: 'column',
@@ -186,6 +200,40 @@ const page = () => {
                                 isDisabled ? 'Submiting...' : 'Submit'
                             }
                         </Button>
+                        <Link
+                            href='https://forms.gle/XALWhYStXRbr6gEx9'
+                            style={{
+
+                            }}
+                            className={`${ibn.className}`}
+                        >
+                            <Typography
+                                sx={{
+                                    ...styles.glassphorism(),
+                                    position: 'absolute',
+                                    // right: { xs: 'calc(50% - 3rem)' },
+                                    right: 0, left: 0,
+                                    top: { xs: `calc(${joinUs} + 55px)` },
+                                    transform: { xs: 'rotate(0deg)' },
+                                    padding: { md: '5px 8px !important', xs: '5px 8px !important' },
+                                    backgroundColor: 'rgba(0, 0, 0, .7)',
+                                    borderRadius: { xs: '10px 10px 0 0 !important' },
+                                    backgroundOrigin: 'border-box',
+                                    // width: { md: '6rem', xs: '6rem' },
+                                    textAlign: 'center',
+                                    textTransform: 'uppercase',
+                                    border: '1px solid rgba(255,255,255,.2)',
+                                    transition: 'all 2s ease-in-out',
+                                    fontWeight: '800',
+                                    background: 'linear-gradient(to right, rgba(0,69,255,1) 0%, rgba(255,0,0,1) 35%, rgba(255,0,194,1) 100%)',
+                                    backgroundClip: 'text',
+                                    WebkitTextFillColor: 'transparent',
+                                }}
+                            >
+                                Join us
+
+                            </Typography>
+                        </Link>
                     </form>
 
                     <Box
