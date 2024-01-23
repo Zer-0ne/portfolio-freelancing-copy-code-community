@@ -63,6 +63,7 @@ const UserCard = (
                     justifyContent: 'space-between',
                     ...styles.glassphorism('', '12px 12px 0 0'),
                     p: 2,
+                    flexWrap: 'wrap'
                 }}
             >
 
