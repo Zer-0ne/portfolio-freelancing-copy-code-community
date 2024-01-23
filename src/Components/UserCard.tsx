@@ -55,9 +55,7 @@ const UserCard = (
 
 
     return (
-        <Box sx={{
-            zIndex: -1
-        }}>
+        <>
             <Box
                 sx={{
                     display: 'flex',
@@ -93,7 +91,8 @@ const UserCard = (
                     sx={{
                         display: (item.username === session[0]?.username) ? 'none' : 'flex',
                         gap: 2,
-                        alignItems: 'center'
+                        alignItems: 'center',
+                        zIndex:10
                     }}
                 >
                     <DropDown
@@ -167,7 +166,7 @@ const UserCard = (
                     {item.role}
                 </Typography>
             </Box>
-        </Box>
+        </>
     )
 }
 
