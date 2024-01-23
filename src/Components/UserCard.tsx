@@ -55,7 +55,9 @@ const UserCard = (
 
 
     return (
-        <>
+        <Box sx={{
+            zIndex: -1
+        }}>
             <Box
                 sx={{
                     display: 'flex',
@@ -165,7 +167,7 @@ const UserCard = (
                     {item.role}
                 </Typography>
             </Box>
-        </>
+        </Box>
     )
 }
 
