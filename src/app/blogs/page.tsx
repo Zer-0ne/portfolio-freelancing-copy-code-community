@@ -3,6 +3,8 @@ import { Box, } from '@mui/material'
 import React, { useEffect, useRef, useState } from 'react'
 import { BlogsInterface, } from '@/utils/Interfaces';
 import dynamic from 'next/dynamic';
+import { AppDispatch, RootState } from '@/store/store';
+import { useDispatch, useSelector } from 'react-redux';
 
 const Loading = dynamic(() => import('@/Components/Loading'))
 const BlogEventsStructure = dynamic(() => import('@/Components/BlogEventsStructure'))
@@ -10,9 +12,10 @@ const BlogCard = dynamic(() => import('@/Components/BlogCard'), { ssr: false })
 
 
 const page = () => {
+  const { blogs } = useSelector((state: RootState) => state.blogs)
+  const dispatch = useDispatch<AppDispatch>()
   const blogRef = useRef(false);
   const [searchInput, setSearchInput] = useState<string>('');
-  const [data, setData] = useState<BlogsInterface[]>()
   const [isLoading, setIsLoading] = useState(true)
   const [pageNo, setPageNo] = useState<number>(1);
   const [isFetching, setIsFetching] = useState(false)
@@ -56,11 +59,10 @@ const page = () => {
   // fetch all the blogs
   const fetchData = async () => {
     try {
-      const { allPost } = await import('@/utils/FetchFromApi')
+      const { fetchBlogs } = await import('@/slices/blogsSlice')
       setIsFetching(true)
-      const fetchedData: BlogsInterface[] = await allPost(`blog`);
+      !blogs[0] && dispatch(fetchBlogs())
 
-      setData(fetchedData)
       setIsFetching(false)
       setIsLoading(false)
     } catch (error) {
@@ -72,7 +74,7 @@ const page = () => {
   // useEffect
   React.useEffect(() => {
     if (blogRef.current === false) fetchData();
-    return () => { blogRef.current = false }
+    return () => { blogRef.current = true }
   }, [])
 
   // React.useEffect(() => {
@@ -80,12 +82,13 @@ const page = () => {
   //     blogRef.current = true;
   //   };
   // }, []);
+  console.log(blogs)
 
   if (isLoading) return <Loading />
 
   // Filter events based on search window.addEventListener('scroll', handleScroll);input
-  const filteredEvents = data?.filter(
-    (item) =>
+  const filteredEvents = blogs[0]?.filter(
+    (item: BlogsInterface) =>
       item?.title?.toLowerCase().includes(searchInput.toLowerCase()) ||
       item?.tag?.toLowerCase().includes(searchInput.toLowerCase()) ||
       item?.description?.toLowerCase().includes(searchInput.toLowerCase()) ||
@@ -112,10 +115,10 @@ const page = () => {
           }}
         >
           {
-            !data?.length ? <>
+            !blogs?.length ? <>
               No blog yet!
             </> :
-              filteredEvents?.map((item, index) => (
+              filteredEvents?.map((item: BlogsInterface, index: number) => (
                 <BlogCard
                   fetchData={fetchData}
                   key={index}

@@ -1,9 +1,12 @@
 'use client'
 
+import { fetchEvents } from '@/slices/eventsSlice'
+import { AppDispatch, RootState } from '@/store/store'
 import { EventsInterface } from '@/utils/Interfaces'
 import { Box } from '@mui/material'
 import dynamic from 'next/dynamic'
 import React, { useRef, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
 const Loading = dynamic(() => import('@/Components/Loading'))
 const EventCard = dynamic(() => import('@/Components/EventCard'))
@@ -11,9 +14,10 @@ const BlogEventsStructure = dynamic(() => import('@/Components/BlogEventsStructu
 
 
 const page = () => {
+  const { events } = useSelector((state: RootState) => state.events)
+  const dispatch = useDispatch<AppDispatch>()
   const pageRef = useRef(false)
   const [searchInput, setSearchInput] = useState<string>('');
-  const [data, setData] = useState<EventsInterface[]>()
   const [isLoading, setIsLoading] = useState(true)
 
 
@@ -26,10 +30,10 @@ const page = () => {
     try {
       const { allPost } = await import('@/utils/FetchFromApi')
 
-      const fetchedData: EventsInterface[] = await allPost('event');
+      !events[0] && dispatch(fetchEvents())
 
 
-      setData(fetchedData)
+
       setIsLoading(false)
     } catch (error) {
       console.log(error)
@@ -49,8 +53,8 @@ const page = () => {
   if (isLoading) return <Loading />
 
   // Filter events based on search input
-  const filteredEvents = data?.filter(
-    (item) =>
+  const filteredEvents = events[0]?.filter(
+    (item: EventsInterface) =>
       item.title.toLowerCase().includes(searchInput.toLowerCase()) ||
       item.tag.toLowerCase().includes(searchInput.toLowerCase()) ||
       item.description.toLowerCase().includes(searchInput.toLowerCase()) ||
@@ -78,10 +82,10 @@ const page = () => {
         >
 
           {
-            !data?.length ? <>
+            !events[0]?.length ? <>
               No Events Yet!
             </> :
-              filteredEvents?.map((item, index) => (
+              filteredEvents?.map((item: EventsInterface, index: number) => (
                 <EventCard
                   fetchData={fetchData}
                   key={index}

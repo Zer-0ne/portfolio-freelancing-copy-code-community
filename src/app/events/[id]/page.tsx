@@ -8,6 +8,9 @@ import Image from 'next/image'
 import dp from '@/app/favicon.ico'
 import { useParams } from 'next/navigation'
 import React, { useEffect, useRef, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { AppDispatch, RootState } from '@/store/store'
+import { fetchEvents } from '@/slices/eventsSlice'
 
 const Loading = dynamic(() => import('@/Components/Loading'))
 const ContentStructure = dynamic(() => import('@/Components/ContentStructure'))
@@ -15,18 +18,20 @@ const Markdown = dynamic(() => import('@/Components/Markdown'))
 
 
 const page = () => {
+    const { events } = useSelector((state: RootState) => state.events)
+    const dispatch = useDispatch<AppDispatch>()
     const pageRef = useRef(false)
     const [data, setData] = useState<EventsInterface>()
     const { id } = useParams()
     const [isLoading, setIsLoading] = useState(true)
 
+    // event
+    const event = events[0]?.find((item: EventsInterface) => item._id === id);
 
     useEffect(() => {
         const fetchedData = async () => {
             try {
-                const { Post } = await import('@/utils/FetchFromApi')
-                const res = await Post('event', id as string)
-                setData(res)
+                !events[0] && dispatch(fetchEvents())
                 setIsLoading(false)
             } catch (error) {
                 console.log(error)
@@ -40,9 +45,9 @@ const page = () => {
     if (isLoading) return <Loading />
     return (
         <>
-            <Header data={data as EventsInterface} />
+            <Header data={event as EventsInterface} />
             <Markdown
-                data={data as EventsInterface}
+                data={event as EventsInterface}
             />
         </>
     )
