@@ -24,16 +24,16 @@ const blogsSlice = createSlice({
             const updatedBlog = action.payload.updateBlog;
 
             // Find the index of the event with the specified id
-            const blogIndex = state.events[0].findIndex(
-                (event: BlogsInterface) => event._id === blogIdToUpdate
+            const blogIndex = state.blogs[0].findIndex(
+                (blog: BlogsInterface) => blog._id === blogIdToUpdate
             );
 
             // check if the id is available or not 
             if (blogIndex !== -1) {
                 // If the event is found delete
-                state.events[0].splice(blogIndex, 1);
+                state.blogs[0].splice(blogIndex, 1);
                 if (updatedBlog !== null) {
-                    state.events[0] = [...state.events[0], updatedBlog];
+                    state.blogs[0] = [...state.blogs[0], updatedBlog];
                 }
             }
         },
