@@ -50,14 +50,14 @@ const page = () => {
   // Filter events based on search input
   const filteredEvents = events[0]?.filter(
     (item: EventsInterface) =>
-      item.title.toLowerCase().includes(searchInput.toLowerCase()) ||
-      item.tag.toLowerCase().includes(searchInput.toLowerCase()) ||
-      item.description.toLowerCase().includes(searchInput.toLowerCase()) ||
-      item.eventDate.toLowerCase().includes(searchInput.toLowerCase()) ||
-      item.status.toLowerCase().includes(searchInput.toLowerCase()) ||
-      item.headingDate.toLowerCase().includes(searchInput.toLowerCase()) ||
-      item.mode.toLowerCase().includes(searchInput.toLowerCase()) ||
-      item.label?.toLowerCase().includes(searchInput.toLowerCase())
+      item?.title?.toLowerCase().includes(searchInput.toLowerCase()) ||
+      item?.tag?.toLowerCase().includes(searchInput.toLowerCase()) ||
+      item?.description?.toLowerCase().includes(searchInput.toLowerCase()) ||
+      item?.eventDate?.toLowerCase().includes(searchInput.toLowerCase()) ||
+      item?.status?.toLowerCase().includes(searchInput.toLowerCase()) ||
+      item?.headingDate?.toLowerCase().includes(searchInput.toLowerCase()) ||
+      item?.mode?.toLowerCase().includes(searchInput.toLowerCase()) ||
+      item?.label?.toLowerCase().includes(searchInput.toLowerCase())
   );
   return (
     <>

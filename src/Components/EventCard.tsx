@@ -7,10 +7,11 @@ import { colors } from '@/utils/colors'
 import { EventsInterface, } from '@/utils/Interfaces'
 import { deletePost } from '@/utils/FetchFromApi'
 import Link from 'next/link'
-import { useSelector } from 'react-redux'
-import { RootState } from '@/store/store'
+import { useDispatch, useSelector } from 'react-redux'
+import { AppDispatch, RootState } from '@/store/store'
 import { useRouter } from 'next/navigation'
 import dp from '@/app/favicon.ico'
+import { updateEvent } from '@/slices/eventsSlice'
 
 const EventCard = ({
     item,
@@ -20,6 +21,7 @@ const EventCard = ({
     fetchData: () => Promise<void>;
 }) => {
     const { session } = useSelector((state: RootState) => state.session)
+    const dispatch = useDispatch<AppDispatch>()
     const cardRef = useRef<HTMLDivElement>(null);
     const router = useRouter()
     const [isVisible, setIsVisible] = React.useState(false);
@@ -75,6 +77,7 @@ const EventCard = ({
 
     const deleteEvent = async () => {
         await deletePost(item?._id, 'event', item)
+        dispatch(updateEvent({ id: item?._id, updatedEvent: null }));
         await fetchData()
     }
 
@@ -235,7 +238,7 @@ const EventCard = ({
                                     padding: '2px 13px',
                                     borderRadius: 7,
                                     border: `1px solid ${colors.transparentGrey}`,
-                                    textAlign:'center'
+                                    textAlign: 'center'
                                 }}
                             >Copy Code</Typography>
                         </Box>

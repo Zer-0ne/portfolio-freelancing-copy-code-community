@@ -8,6 +8,10 @@ import { Box, Container, Typography } from '@mui/material'
 import React, { useEffect, useRef } from 'react'
 import { AddAPhotoRounded, } from '@mui/icons-material'
 import dynamic from 'next/dynamic'
+import { AppDispatch } from '@/store/store'
+import { useDispatch } from 'react-redux'
+import { Post } from '@/utils/FetchFromApi'
+
 
 const Loading = dynamic(() => import('@/Components/Loading'))
 const DropDown = dynamic(() => import('@/Components/DropDown'))
@@ -20,6 +24,7 @@ const labels = ['Default', 'Featured', 'UpComming']
 const page = () => {
     const pageRef = useRef(false)
     const { from } = useParams()
+    const dispatch = useDispatch<AppDispatch>()
     const [data, setData] = React.useState<Data>()
     const [isAdmin, setIsAdmin] = React.useState<boolean>(true)
     const [isloading, setIsloading] = React.useState<boolean>(true)
@@ -108,7 +113,9 @@ const page = () => {
     const handleSubmit = async (e: any) => {
         e.preventDefault();
         try {
-            const { createNew, imagesInFolder, editPost } = await import('@/utils/FetchFromApi');
+            const { createNew, imagesInFolder, editPost, Post } = await import('@/utils/FetchFromApi');
+            const { fetchBlogs, updateBlog } = await import('@/slices/blogsSlice');
+            const { fetchEvents, updateEvent } = await import('@/slices/eventsSlice');
 
             if (from[1] && beforeEdit) {
                 const changedValues = Object.entries(data as Data)
@@ -118,8 +125,11 @@ const page = () => {
                         return obj;
                     }, {} as Data);
                 await editPost(from[1] as string, changedValues, from[0]);
+                const PostData = await Post(from[0], from[1]);
+                (from[0] === 'blog') ? dispatch(updateBlog({ id: from[1], updatedEvent: PostData })) : dispatch(updateEvent({ id: from[1], updatedEvent: PostData }));
             } if (!from[1]) {
-                await createNew(data as Data, from as string, setIsDisabled)
+                await createNew(data as Data, from as string, setIsDisabled);
+                (from[0] === 'blog') ? dispatch(fetchBlogs) : dispatch(fetchEvents);
             }
             (data?.contentImages) && await imagesInFolder('content/', data?.contentImages as string[])
             router.push((from[0] === 'blog') ? '/blogs' : '/events')

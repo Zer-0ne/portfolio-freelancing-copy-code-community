@@ -5,8 +5,8 @@ import { BlogsInterface } from '@/utils/Interfaces'
 import { DeleteRounded, EditRounded } from '@mui/icons-material'
 import { IBM_Plex_Mono, Kalam, Libre_Baskerville } from 'next/font/google'
 import Link from 'next/link'
-import { useSelector } from 'react-redux'
-import { RootState } from '@/store/store'
+import { useDispatch, useSelector } from 'react-redux'
+import { AppDispatch, RootState } from '@/store/store'
 import { useRouter } from 'next/navigation'
 
 const kalam = Kalam({
@@ -35,14 +35,17 @@ const BlogCard = ({
     fetchData: () => Promise<void>;
 }) => {
     const { session } = useSelector((state: RootState) => state.session)
+    const dispatch = useDispatch<AppDispatch>()
     const cardRef = useRef<HTMLDivElement>(null);
     const [isVisible, setIsVisible] = React.useState(false);
     const router = useRouter()
 
     const deleteBlog = async () => {
         const { deletePost } = await import('@/utils/FetchFromApi')
+        const { updateBlog } = await import('@/slices/blogsSlice');
 
         await deletePost(item?._id, 'blog', item)
+        dispatch(updateBlog({ id: item?._id, updatedEvent: null }));
         await fetchData()
     }
 
