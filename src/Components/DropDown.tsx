@@ -12,9 +12,10 @@ const DropDown = (
         style,
         values,
         onChange,
-        name
+        name,
+        placeholder
     }: {
-        style: {
+        style?: {
             customInput: (flex?: string | number, customStyles?: object | undefined, radius?: number) => {
                 flex: string | number;
                 background: string;
@@ -25,9 +26,10 @@ const DropDown = (
         },
         values: string[],
         onChange: React.Dispatch<React.SetStateAction<Data | undefined>>,
-        name: string
+        name: string;
+        placeholder?: string;
     }) => {
-    const [value, setValue] = useState(values[0])
+    const [value, setValue] = useState(placeholder ? placeholder : values[0]);
 
     // useEffect
     useEffect(() => {
@@ -37,6 +39,10 @@ const DropDown = (
     return (
         <DropDownSkelenton
             value={value}
+            customStyle={{
+                opacity: (placeholder ? .7 : 1),
+                fontSize: (placeholder) ? { sx: 12, md: 15, xl: 16 } : { xs: 12, md: 18, xl: 20 }
+            }}
         >
             {
                 values.map((item, index) => (

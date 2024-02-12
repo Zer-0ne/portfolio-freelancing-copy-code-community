@@ -53,7 +53,6 @@ const page = () => {
         const { fetchFromGithub } = await import('@/utils/FetchFromApi')
         const data = await fetchFromGithub('deplovedBy')
         setDevelopedBy(data)
-        console.log(data)
     }
 
     React.useEffect(() => {
@@ -244,7 +243,7 @@ const page = () => {
                     </Box>
                 </Box>
                 <Link
-                    href='https://forms.gle/XALWhYStXRbr6gEx9'
+                    href='/forms'
                     style={{
 
                     }}

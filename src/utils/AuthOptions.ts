@@ -33,12 +33,14 @@ export const AuthOptions: NextAuthOptions = {
                 password: { label: 'Password', type: 'password' }
             },
             async authorize(credentials) {
-
                 try {
                     const { username, password } = credentials as {
                         username: string;
                         password: string
                     };
+                
+                    if(!password || !username) return 'Please Provide the Credentials';
+                
                     // Find user by email
                     await connect()
                     const user = await Users.findOne<any>({ username });
@@ -87,7 +89,6 @@ export const AuthOptions: NextAuthOptions = {
                         name: user?.name as string,
                         image: user?.image as string,
                         email: user?.email as string,
-                        password: `${new Date().getTime().toString()}${process.env.random_char}` as string
                     } as Data)
                     return user
                 }

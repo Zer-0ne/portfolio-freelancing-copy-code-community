@@ -1,6 +1,6 @@
 'use client'
 import { Box, } from '@mui/material'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { BlogsInterface, } from '@/utils/Interfaces';
 import dynamic from 'next/dynamic';
 import { AppDispatch, RootState } from '@/store/store';
@@ -20,37 +20,20 @@ const page = () => {
   const [pageNo, setPageNo] = useState<number>(1);
   const [isFetching, setIsFetching] = useState(false)
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (isFetching) return
-      const windowHeight = window.innerHeight;
-      const scrollY = window.scrollY;
-      const documentHeight = document.documentElement.scrollHeight;
+  // create observer of useRef 
+  const observer = useRef<IntersectionObserver | null>(null)
 
-      const scrollPositionFromBottom = documentHeight - (scrollY + windowHeight);
-
-      // Set your threshold here (e.g., 1100px from the bottom)
-      const threshold = documentHeight - 250;
-      console.log(scrollY, scrollPositionFromBottom, documentHeight, scrollY === 101, threshold)
-
-      if (scrollPositionFromBottom === 0) {
-        // Increment pageNo when the scroll position is within the threshold
-        setPageNo((prevPageNo) => prevPageNo + 1);
+  // create callback for lastElement of data 
+  const lastElement = useCallback((node: Element) => {
+    if (isLoading) return
+    if (observer.current) observer.current.disconnect()
+    observer.current = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting) {
+        console.log('Visible')
       }
-      if (scrollY === 0) {
-        // Decrement pageNo when the scroll position is within the threshold
-        setPageNo((prevPageNo) => prevPageNo - 1);
-      }
-    };
-
-    // Attach the scroll event listener
-    window.addEventListener('scroll', handleScroll);
-
-    // Cleanup the event listener on component unmount
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
+    })
+    if (node) observer.current?.observe(node)
+  }, [isLoading])
 
   const handleSearch = (input: string) => {
     setSearchInput(input);
@@ -76,13 +59,6 @@ const page = () => {
     if (blogRef.current === false) fetchData();
     return () => { blogRef.current = true }
   }, [])
-
-  // React.useEffect(() => {
-  //   return () => {
-  //     blogRef.current = true;
-  //   };
-  // }, []);
-  console.log(blogs)
 
   if (isLoading) return <Loading />
 
@@ -119,11 +95,16 @@ const page = () => {
               No blog yet!
             </> :
               filteredEvents?.map((item: BlogsInterface, index: number) => (
-                <BlogCard
-                  fetchData={fetchData}
-                  key={index}
-                  item={item}
-                />
+                <Box
+                  ref={(filteredEvents.length === index + 1) ? lastElement : undefined}
+                >
+
+                  <BlogCard
+                    fetchData={fetchData}
+                    key={index}
+                    item={item}
+                  />
+                </Box>
               ))
           }
         </Box>

@@ -19,6 +19,10 @@ const page = () => {
         const { currentSession } = await import('@/utils/Session');
 
         const session = await currentSession() as Session
+        if (!session) {
+            setIsloading(false)
+            return notFound()
+        }
         const currUser = await userInfo(session?.user.username);
         (session && ['user'].includes(currUser.role)) ? setIsAdmin(false) : setIsAdmin(true)
 

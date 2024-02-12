@@ -13,7 +13,6 @@ const UserSchema = new Schema<UserDocument>({
     },
     password: {
         type: String,
-        required: [true, 'Please add password']
     },
     email: {
         type: String,

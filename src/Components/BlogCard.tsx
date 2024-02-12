@@ -29,10 +29,12 @@ export const libre_Baskerville = Libre_Baskerville({
 
 const BlogCard = ({
     item,
-    fetchData
+    fetchData,
+    ref
 }: {
     item: BlogsInterface,
     fetchData: () => Promise<void>;
+    ref?: React.MutableRefObject<HTMLDivElement | null>
 }) => {
     const { session } = useSelector((state: RootState) => state.session)
     const dispatch = useDispatch<AppDispatch>()
@@ -77,6 +79,7 @@ const BlogCard = ({
             observer.disconnect();
         };
     }, []);
+
     return (
         <Box
             ref={cardRef}
@@ -91,6 +94,7 @@ const BlogCard = ({
         >
             <Link href={`/blogs/${item._id}`}>
                 <Box
+                    ref={ref}
                     sx={styles.blogCard(session as {
                         role: string
                     }[])}

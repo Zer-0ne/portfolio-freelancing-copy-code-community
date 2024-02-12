@@ -178,7 +178,7 @@ export const createNew = async (data: Data, route: string, setIsDisabled: React.
 
         // check the user is admin or not 
         const user = await userInfo(session?.user?.username)
-        if (route !== 'comment') {
+        if (!['comment','form'].includes(route)) {
             if (['user'].includes(user.role)) return toast.update(Toast, update('Your are not Authorized!', 'error'))
         }
 

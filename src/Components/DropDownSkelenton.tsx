@@ -16,7 +16,7 @@ const DropDownSkelenton = (
         value?: string;
         children: React.ReactNode;
         status?: string
-        customStyle?: React.CSSProperties
+        customStyle?: React.CSSProperties | object
     }
 ) => {
     const { session } = useSelector((state: RootState) => state.session)

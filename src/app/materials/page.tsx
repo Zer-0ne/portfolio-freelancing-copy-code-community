@@ -28,7 +28,8 @@ const page = () => {
                     sx={{
                         display: 'flex',
                         flexWrap: 'wrap',
-                        gap: 2
+                        gap: 2,
+                        mb: 2
                     }}
                 >
 
