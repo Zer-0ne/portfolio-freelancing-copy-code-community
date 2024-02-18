@@ -13,6 +13,35 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
   title: 'Copy Code Community',
   description: `Copy Code Community is like a cool online club for people who love playing with computers and making websites and apps. Whether you're a total pro or just starting, everyone is invited to share their computer codes and chat about tech stuff.`,
+  authors: [
+    {
+      name: 'Copy Code Community',
+      url:'https://copycode.vercel.app'
+    },
+    {
+      name:'Jamia Hamdard',
+      url:'jamiahamdard.edu'
+    }
+  ],
+  keywords: `Code, Programming, Web Development, Software Engineering, Computer Science, Developer, JamiaHamdard, Copy Code, Open Source, Jamia hamdard, Students community, Tutorial, java, python, c,c++, react,next,node,full stack, hackthon`,
+  openGraph:{
+    type:'website',
+    url:'https://copycode.vercel.app',
+    title:'Copy Code Community',
+    description: "A copy code community for sharing code snippets and learning from others.",
+    siteName:'Copy Code Community',
+    images:[{url:'https://raw.githubusercontent.com/Zer-0ne/portfolio-freelancing-copy-code-community/main/src/app/favicon.ico'}]
+  },
+  twitter:{
+    card:'summary_large_image',
+    site:'https://copycode.vercel.app',
+    creator:'Copy Code Team',
+    'images':'https://raw.githubusercontent.com/Zer-0ne/portfolio-freelancing-copy-code-community/main/src/app/favicon.ico',
+    title:'Copy Code Community',
+    description: "A copy code community for sharing code snippets and learning from others."
+  },
+  robots: 'follow, index',
+  publisher:'Copy Code Community',
 }
 
 export default function RootLayout({
