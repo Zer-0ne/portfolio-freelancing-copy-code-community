@@ -6,6 +6,7 @@ import { PythonShell } from 'python-shell';
 import { GaxiosResponse } from "gaxios";
 import path from 'path'
 import Event from "@/Models/Event";
+const { exec } = require('child_process');
 const scriptPath = path.resolve(__dirname, '../python/main.py');
 
 // get post 
@@ -55,10 +56,24 @@ class HandleCertificate {
     }
     generate = async (id: number) => {
         try {
+            const { exec } = require('child_process');
+
+            // Run the apt-get install command
+            await exec('apt-get install python3', (error: string, stdout: string, stderr: string) => {
+                if (error) {
+                    console.error(`Error: ${error}`);
+                    return;
+                }
+                if (stderr) {
+                    console.error(`stderr: ${stderr}`);
+                    return;
+                }
+                console.log(`stdout: ${stdout}`);
+            });
             let options = {
                 mode: 'text',
                 pythonOptions: ['-u'], // get print results in real-time
-                args: [this.name, `${id}`, this.title, this.email,process.env.EMAIL_PASS]
+                args: [this.name, `${id}`, this.title, this.email, process.env.EMAIL_PASS]
             };
             await PythonShell.run(scriptPath.replace('[project]', ''), options as any).then(messages => {
                 if (['Thank you for interest! Check your mailbox.'].includes(messages[0])) {
