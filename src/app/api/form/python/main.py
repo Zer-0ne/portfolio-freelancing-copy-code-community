@@ -18,7 +18,7 @@ except ImportError:
 class  ImageProcessor:
     def __init__(self):
         self.common_path = '/src/app/api/form/python/'
-        self.name = sys.argv[1]
+        self.name = sys.argv[1].replace('-',' ')
         self.image_path = f'{os.getcwd()}{self.common_path}certificate.png'
         self.font_path = f'{os.getcwd()}{self.common_path}font.ttf'
         self.font1_path = f'{os.getcwd()}{self.common_path}font1.ttf'
@@ -79,7 +79,7 @@ class  ImageProcessor:
             # Set your email credentials and details
             sender_email = "copycodecommunity@gmail.com"
             receiver_email = sys.argv[4]
-            password = sys.argv[5]
+            password = sys.argv[5].replace('-',' ')
             subject = self.event_name
 
             # Create the MIME object
