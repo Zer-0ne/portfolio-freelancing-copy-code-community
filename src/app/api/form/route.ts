@@ -126,8 +126,6 @@ export const POST = async (request: NextRequest) => {
             const certificates = new HandleCertificate(fields['Name'], fields['certificate'], session.user.email);
             await certificates.generate(id)
             values[0] = [`${id}`].concat(values[0])
-            return NextResponse.json({ message: '1', status: 'success' })
-
         }
         const option: {
             create: GaxiosResponse<sheets_v4.Schema$Spreadsheet>,
