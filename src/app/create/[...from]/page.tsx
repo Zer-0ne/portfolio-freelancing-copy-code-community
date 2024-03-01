@@ -10,7 +10,6 @@ import { AddAPhotoRounded, } from '@mui/icons-material'
 import dynamic from 'next/dynamic'
 import { AppDispatch } from '@/store/store'
 import { useDispatch } from 'react-redux'
-import { Post } from '@/utils/FetchFromApi'
 
 
 const Loading = dynamic(() => import('@/Components/Loading'))
@@ -220,7 +219,7 @@ const page = () => {
                                         type={item?.type}
                                         style={styles.customInput(item.size)}
                                         key={index}
-                                        value={data && data[item.name]}
+                                        value={data && data[item.name] as string}
                                         name={item.name}
                                         placeholder={item.placeholder}
                                         required={item.required}

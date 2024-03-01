@@ -65,11 +65,12 @@ export interface UserDocument {
         type: string;
         required: boolean;
     },
+    certificate: string[]
     saved?: mongoose.SchemaDefinitionProperty<string[]>
 }
 
 export interface Data {
-    [key: string]: string | string[];
+    [key: string]: string | string[] | boolean | React.ReactNode | object;
 }
 
 export interface InputToMoveCursor {
@@ -112,4 +113,23 @@ export interface CommentInterface {
     updatedAt: string;
     createdAt: string;
     authorId: User;
+}
+
+export interface FormStructure {
+    _id?: string;
+    title: string
+    subtitle: string;
+    'Accepting Response': boolean;
+    fields: [
+        {
+            key: string;
+            value: string;
+            type: string;
+            placeholder: string;
+            name: string
+            options: string[];
+            required: boolean;
+        }
+    ],
+    sheetId: string;
 }

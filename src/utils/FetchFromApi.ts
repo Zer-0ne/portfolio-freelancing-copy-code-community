@@ -178,10 +178,10 @@ export const createNew = async (data: Data, route: string, setIsDisabled: React.
 
         // check the user is admin or not 
         const user = await userInfo(session?.user?.username)
-        if (!['comment','form'].includes(route)) {
+        if (!['comment', 'form'].includes(route)) {
             if (['user'].includes(user.role)) return toast.update(Toast, update('Your are not Authorized!', 'error'))
         }
-
+        console.log(data)
 
         setIsDisabled(true)
         const response = await fetch(`/api/${route}/`, {
@@ -197,7 +197,8 @@ export const createNew = async (data: Data, route: string, setIsDisabled: React.
         const res = await response.json()
         if (response.ok) {
             setIsDisabled(false)
-            return toast.update(Toast, update(res.message, res.status))
+            toast.update(Toast, update(res.message, res.status))
+            return res
         }
         setIsDisabled(false)
         return toast.update(Toast, update(res.message, res.status))

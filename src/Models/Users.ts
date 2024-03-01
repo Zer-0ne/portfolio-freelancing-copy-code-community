@@ -48,6 +48,7 @@ const UserSchema = new Schema<UserDocument>({
         ref: 'Blog',
         default: [],
     },
+    certificate:[],
     image: String
 }, {
     timestamps: true

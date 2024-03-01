@@ -27,6 +27,11 @@ const BlogEventsStructure = (
     return (
         <Box
         >
+            {/* <div className="dotted-background"> */}
+            {/* <div className="grid-lines">hi</div> */}
+
+            {/* Your content goes here */}
+            {/* </div> */}
             <Container
 
                 sx={[styles.containerStyle()]}

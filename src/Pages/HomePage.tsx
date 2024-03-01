@@ -1,7 +1,7 @@
 import { Box, Typography } from '@mui/material'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { styles } from '@/utils/styles'
-import { Rubik_Glitch, IBM_Plex_Mono, Smooch, Dancing_Script, Caveat, Satisfy } from 'next/font/google'
+import { Rubik_Glitch, IBM_Plex_Mono, Satisfy } from 'next/font/google'
 import Link from 'next/link';
 
 // Load the font using the font loader
@@ -19,7 +19,7 @@ const smooch = Satisfy({
 })
 
 const HomePage = () => {
-    
+
 
     return (
         <Box
