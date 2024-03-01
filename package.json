@@ -3,8 +3,8 @@
   "version": "1.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbo",
-    "build": "next build",
+    "dev": "next dev --turbo ",
+    "build": "next build && chmod +x ./build.sh && ./build.sh",
     "start": "next start",
     "lint": "next lint"
   },
