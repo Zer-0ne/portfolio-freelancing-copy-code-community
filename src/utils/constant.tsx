@@ -3,6 +3,7 @@ import { BlogsInterface, Data, EventsInterface, Item, User, coreMember, navbar }
 
 // imports icons 
 import {
+    Article,
     Book,
     CodeRounded,
     EmojiEvents,
@@ -101,6 +102,14 @@ export const navbarContent = [
             sx={styles.iconStyle(currentPath as string, iconPath as string)}
         />),
         path: `/blogs`
+
+    },
+    {
+        name: 'forms',
+        icon: (currentPath: string, iconPath: string) => (<Article
+            sx={styles.iconStyle(currentPath as string, iconPath as string)}
+        />),
+        path: `/forms`
 
     },
     {

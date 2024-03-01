@@ -47,6 +47,7 @@ const page = () => {
 
     useEffect(() => {
         const fetch = async () => {
+            const { realTimeDatabase } = await import('@/utils/Firebase')
             const snapshot = await get(child(ref(realTimeDatabase), `forms/${id}`))
             // const { createNew } = await import('@/utils/FetchFromApi')
             // const nameArray = await array.map((obj) => obj?.name);

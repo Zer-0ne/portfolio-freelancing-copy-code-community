@@ -69,13 +69,13 @@ const Card = ({
         >
             <div
                 className='flex-1 flex rounded-t-[12px] p-[12px] border-[1px] border-[#ffffff46] transition-all delay-[.2s] ease-in-out'
-            >{item?.content}</div>
+            >{item?.content as string}</div>
             <div
                 className='flex justify-evenly rounded-b-[12px] border-[1px] border-[#ffffff46] p-[5px] flex-wrap gap-2 '
             >
-                <a style={{ opacity: .5 }} href={`mailto:${item.email}`}>{item.email}</a>
-                <p style={{ opacity: .5 }}>{item.phone}</p>
-                <p style={{ opacity: .5 }}>{item.username}</p>
+                <a style={{ opacity: .5 }} href={`mailto:${item.email}`}>{item?.email as string}</a>
+                <p style={{ opacity: .5 }}>{item?.phone as string}</p>
+                <p style={{ opacity: .5 }}>{item?.username as string}</p>
             </div>
 
         </div >

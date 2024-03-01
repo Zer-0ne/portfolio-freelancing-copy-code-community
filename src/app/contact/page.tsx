@@ -150,7 +150,7 @@ const page = () => {
                                     ...styles.customInput('1 1 auto'),
                                     width: `${matches ? '100%' : '30%'}`
                                 }}
-                                value={data?.firstname || ''}
+                                value={data?.firstname as string || ''}
                             />
                             <input
                                 name='lastname'
@@ -160,7 +160,7 @@ const page = () => {
                                     ...styles.customInput('1 1 auto'),
                                     width: `${matches ? '100%' : '30%'}`
                                 }}
-                                value={data?.lastname || ''}
+                                value={data?.lastname as string || ''}
                             />
                         </Box>
                         <input
@@ -170,7 +170,7 @@ const page = () => {
                             style={{
                                 ...styles.customInput('1 1 50%')
                             }}
-                            value={data?.phone || ''}
+                            value={data?.phone as string || ''}
                         />
                         <textarea
                             onChange={handleChange}
@@ -181,7 +181,7 @@ const page = () => {
                                 resize: 'none',
                                 ...styles.customInput('1 1 50%')
                             }}
-                            value={data?.content || ''}
+                            value={data?.content as string || ''}
                         />
 
                         <Button

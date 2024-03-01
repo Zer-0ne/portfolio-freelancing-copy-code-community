@@ -76,7 +76,7 @@ const MarkdownHeader = (
                         src={user?.image as string}
                         sx={{ width: 22, height: 22 }}
                     />
-                    {user?.name}
+                    {user?.name as string}
                 </Typography>
 
                 <Typography

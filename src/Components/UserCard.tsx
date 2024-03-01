@@ -84,7 +84,7 @@ const UserCard = (
                     <Typography
                         variant='body1'
                     >
-                        {item.name}
+                        {item?.name as string}
                     </Typography>
                 </Box>
                 <Box
@@ -92,7 +92,7 @@ const UserCard = (
                         display: (item.username === session[0]?.username) ? 'none' : 'flex',
                         gap: 2,
                         alignItems: 'center',
-                        zIndex:10
+                        zIndex: 10
                     }}
                 >
                     <DropDown
@@ -147,7 +147,7 @@ const UserCard = (
                         opacity: .5
                     }}
                 >
-                    {item.username}
+                    {item?.username as string}
                 </Typography>
                 <Typography
                     variant='caption'
@@ -155,7 +155,7 @@ const UserCard = (
                         opacity: .5
                     }}
                 >
-                    {item.email}
+                    {item?.email as string}
                 </Typography>
                 <Typography
                     variant='caption'
@@ -163,7 +163,7 @@ const UserCard = (
                         opacity: .5
                     }}
                 >
-                    {item.role}
+                    {item?.role as string}
                 </Typography>
             </Box>
         </>
