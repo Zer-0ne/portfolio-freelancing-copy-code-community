@@ -168,7 +168,7 @@ export const imagesInFolder = async (folderName: string, imageLinks: string[]) =
 }
 
 // create a new post
-export const createNew = async (data: Data, route: string, setIsDisabled: React.Dispatch<React.SetStateAction<boolean>>) => {
+export const createNew = async (data: Data, route: string, setIsDisabled?: React.Dispatch<React.SetStateAction<boolean>>) => {
     const Toast = toast.loading('Please wait')
     try {
 
@@ -183,7 +183,7 @@ export const createNew = async (data: Data, route: string, setIsDisabled: React.
         }
         console.log(data)
 
-        setIsDisabled(true)
+        setIsDisabled && setIsDisabled(true)
         const response = await fetch(`/api/${route}/`, {
             method: "POST",
             headers: {
@@ -196,14 +196,14 @@ export const createNew = async (data: Data, route: string, setIsDisabled: React.
         })
         const res = await response.json()
         if (response.ok) {
-            setIsDisabled(false)
+            setIsDisabled && setIsDisabled(false)
             toast.update(Toast, update(res.message, res.status))
             return res
         }
-        setIsDisabled(false)
+        setIsDisabled && setIsDisabled(false)
         return toast.update(Toast, update(res.message, res.status))
     } catch (error) {
-        setIsDisabled(false)
+        setIsDisabled && setIsDisabled(false)
         console.log('error')
         return toast.update(Toast, update('Something went wrong!', 'error'))
     }
