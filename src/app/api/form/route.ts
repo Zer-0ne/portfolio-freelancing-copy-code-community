@@ -6,7 +6,6 @@ import { GaxiosResponse } from "gaxios";
 import path from 'path'
 import Event from "@/Models/Event";
 import { exec } from 'child_process';
-const scriptPath = path.resolve(__dirname, '../python/bash.sh');
 
 
 
@@ -154,20 +153,25 @@ class HandleCertificate {
             const args = [this.name.replace(' ', '-'), `${id}`, this.title, this.email, process.env.EMAIL_PASS]
 
             // Combine the script path and arguments into a single command
-            const command = await `python script.py ${args.join(' ')}`;
+            const command = await `python ${pythonScript} ${args.join(' ')}`;
 
             await exec(command, (error: Error | null, stdout: string, stderr: string) => {
                 if (error) {
                     console.error(`Error: ${error}`);
                     return;
                 }
+                if(stderr){
+                    console.error(`Error: ${error}`);
+                    return;
+                    
+                }
 
                 // Process the output if needed
                 console.log(`Output: ${stdout}`);
                 return
             });
-        } catch (error) {
-            return NextResponse.json({ message: error, status: 500 })
+        } catch (error: any) {
+            return NextResponse.json({ message: error.message, status: 500 }, { status: 500 })
         }
     }
 }

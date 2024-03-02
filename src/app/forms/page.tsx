@@ -65,9 +65,9 @@ const FormCard = ({ item, session }: { item: FormStructure, session: any }) => {
             <div className={`flex gap-1 self-end ${['admin', 'moderator'].includes(session[0]?.role) ? 'block' : 'hidden'}`}>
                 <div onClick={handleClick} className='cursor-pointer flex gap-3 items-center'>
                     <div className='p-4 rounded-[20px] relative bg-[#3d38389d] inline-block w-[60px] my-2'>
-                        <input className={`cursor-pointer w-[40%] btnAnimations absolute ${isAccepting ? 'right-[5px]' : 'left-[5px]'} top-[5px] bottom-[5px] ${isAccepting ? 'bg-[green]' : 'bg-[grey]'} rounded-full transition-all duration-1000 ease-in-out `} style={{
+                        <div className={`cursor-pointer w-[40%] btnAnimations absolute ${isAccepting ? 'right-[5px]' : 'left-[5px]'} top-[5px] bottom-[5px] ${isAccepting ? 'bg-[green]' : 'bg-[grey]'} rounded-full transition-all duration-1000 ease-in-out `} style={{
                             transition: 'all .3s ease-in-out',
-                        }}></input>
+                        }}></div>
                     </div>
                 </div>
             </div>
