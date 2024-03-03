@@ -3,10 +3,8 @@ import { currentSession } from "@/utils/Session";
 import { NextRequest, NextResponse } from "next/server";
 import { google, sheets_v4 } from 'googleapis'
 import { GaxiosResponse } from "gaxios";
-import path from 'path'
 import Event from "@/Models/Event";
-import { exec } from 'child_process';
-import { createNew } from "@/utils/FetchFromApi";
+import { monthName } from "@/utils/constant";
 
 // create certificate and send to the image of user
 class HandleCertificate {
@@ -20,7 +18,7 @@ class HandleCertificate {
     }
     generate = async (id: number) => {
         try {
-            const data = { name: this.name, id: `${id}`, title: this.title, email: this.email, password: process.env.EMAIL_PASS }
+            const data = { name: this.name, id: `${id}`, title: this.title, email: this.email, password: process.env.EMAIL_PASS,date: `${monthName[new Date().getMonth()]} ${new Date().getDate()},${new Date().getFullYear()}` }
 
             const response = await fetch(`${process.env.FLASK_URL}`, {
                 method: "POST",

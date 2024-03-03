@@ -478,3 +478,8 @@ export const contactForm = [
 export const roles: string[] = ['admin', 'user', 'moderator']
 
 export const controls: string[] = ['certificate', 'joinus', 'feedback']
+
+export const monthName = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+];
