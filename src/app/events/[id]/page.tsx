@@ -1,6 +1,4 @@
 'use client'
-
-
 import { EventsInterface } from '@/utils/Interfaces'
 import { Box, Container, Typography } from '@mui/material'
 import dynamic from 'next/dynamic'
@@ -21,27 +19,27 @@ const page = () => {
     const { events } = useSelector((state: RootState) => state.events)
     const dispatch = useDispatch<AppDispatch>()
     const pageRef = useRef(false)
-    const [data, setData] = useState<EventsInterface>()
     const { id } = useParams()
     const [isLoading, setIsLoading] = useState(true)
 
     // event
-    const event = events[0]?.find((item: EventsInterface) => item._id === id);
-
+    let event = events[0]?.find((item: EventsInterface) => item._id === id);
     useEffect(() => {
         const fetchedData = async () => {
             try {
                 !events[0] && dispatch(fetchEvents())
-                setIsLoading(false)
+                event = events[0]?.find((item: EventsInterface) => item._id === id);
             } catch (error) {
                 console.log(error)
+            }finally{
+                setIsLoading(false)
             }
         }
         (pageRef.current === false) && fetchedData()
         return () => {
             pageRef.current = true
         }
-    }, [])
+    }, [events])
     if (isLoading) return <Loading />
     return (
         <>
@@ -70,10 +68,10 @@ const Header = ({
             >
                 <Image
                     className='headerImage'
-                    src={`${data.image || dp}`}
+                    src={`${data?.image}`}
                     width={1200}
                     height={900}
-                    alt={data.title}
+                    alt={data?.title}
                     style={{
                         // flex: 1,
                         width: '100%!important',
@@ -97,7 +95,7 @@ const Header = ({
                             fontSize: { xs: 25, md: 30 }
                         }}
                     >
-                        {data.title}
+                        {data?.title}
                     </Typography>
                     <Typography
                         variant='caption'
@@ -108,7 +106,7 @@ const Header = ({
                             mb: 1
                         }}
                     >
-                        {data.updatedAt?.slice(0, 10)}
+                        {data?.updatedAt?.slice(0, 10)}
                     </Typography>
                     <Typography
                         variant='body1'
@@ -118,7 +116,7 @@ const Header = ({
                             mt: 1
                         }}
                     >
-                        {data.description}
+                        {data?.description}
                     </Typography>
                 </Box>
             </ContentStructure>
