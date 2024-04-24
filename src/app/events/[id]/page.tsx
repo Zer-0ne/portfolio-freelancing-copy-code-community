@@ -19,7 +19,7 @@ const page = () => {
     const { events } = useSelector((state: RootState) => state.events)
     const dispatch = useDispatch<AppDispatch>()
     const pageRef = useRef(false)
-    const { id } = useParams()
+    const { id }:any = useParams()
     const [isLoading, setIsLoading] = useState(true)
 
     // event

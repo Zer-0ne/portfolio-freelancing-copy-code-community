@@ -13,7 +13,7 @@ const Loading = dynamic(() => import('@/Components/Loading'))
 
 const page = () => {
     const [forms, setForms] = useState<FormStructure>()
-    const { id } = useParams()
+    const { id }: any | null = useParams()
     const dispatch = useDispatch<AppDispatch>()
     const { events } = useSelector((state: RootState) => state.events)
 

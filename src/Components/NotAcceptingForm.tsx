@@ -1,6 +1,6 @@
 import React from 'react'
 import { Container } from './Forms'
-import { Box } from '@mui/material'
+import { Container as BOX } from '@mui/material'
 
 const NotAcceptingForm = ({
     title
@@ -8,9 +8,7 @@ const NotAcceptingForm = ({
     title: string
 }) => {
     return (
-        <Box sx={{
-            width: { xs: '90%', md: '60vw' }
-        }} className="container mx-[auto]">
+        <BOX>
 
             <Container customStyle={{
                 border: 'solid #ff000085',
@@ -20,7 +18,7 @@ const NotAcceptingForm = ({
                 <p> The form {title} is no longer accepting response.</p>
                 <p>Try contacting the owner of the form if you think is a mistake.</p>
             </Container>
-        </Box>
+        </BOX>
     )
 }
 

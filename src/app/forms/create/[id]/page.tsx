@@ -1,11 +1,11 @@
 'use client'
-import { RootState } from '@/store/store'
+import { AppDispatch, RootState } from '@/store/store'
 import { Data } from '@/utils/Interfaces'
 import { colors } from '@/utils/colors'
 import { child, get, ref, set } from 'firebase/database'
 import { notFound, useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 const page = () => {
     /**
@@ -14,8 +14,9 @@ const page = () => {
     const [array, setArray] = useState<Data[]>([])
     const { session } = useSelector((state: RootState) => state.session)
     const [data, setdata] = useState<Data>()
+    const dispatch = useDispatch<AppDispatch>()
     const [isDisabled, setIsDisabled] = useState<boolean>(false)
-    const { id } = useParams()
+    const { id }: any = useParams()
 
     /**
      * declaration and defination of addFeild function
@@ -26,7 +27,7 @@ const page = () => {
         setArray([...array, { key: '', value: '' }])
     }
 
-    if (!['admin', 'moderator'].includes(session[0]?.role)) return notFound()
+    if (!['admin', 'moderator'].includes(session[0]?.role) && session[0]) return notFound()
 
     useEffect(() => {
         const write = async () => {
@@ -43,7 +44,7 @@ const page = () => {
             });
         }
         write()
-    }, [array, data])
+    }, [array, data, session])
 
     useEffect(() => {
         const fetch = async () => {

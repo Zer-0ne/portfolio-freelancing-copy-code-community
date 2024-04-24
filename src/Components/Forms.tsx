@@ -73,22 +73,22 @@ const Forms = ({
                                     <div>
                                         {
                                             ["text", 'email'].includes(field.type) ?
-                                                <input onChange={handleChange} name={field.name} value={data?.[field.name] as string || ''} required={field.required} placeholder={field.placeholder} style={styles.customInput()} type={field.type} key={`${field.name}-${index}`} className='w-[100%]' /> : ['select'].includes(field.type) ? <DropDown
+                                                <input onChange={handleChange} name={field.name} value={data?.[field.name] as string || ''} required={field.required} placeholder={field.placeholder} style={{...styles.customInput()}} type={field.type} key={`${field.name}-${index}`} className='w-[100%]' /> : ['select'].includes(field.type) ? <DropDown
                                                     placeholder={field.placeholder}
                                                     values={field.options as string[]}
                                                     onChange={setData}
                                                     name={field.name}
                                                 /> :
-                                                    <>
+                                                    <div className='flex flex-row flex-wrap gap-1'>
                                                         {
                                                             field.options?.map((option, index) => (
-                                                                <div key={index} className='gap-[10px] flex items-center pl-2 text-[1rem]' >
+                                                                <div key={index} className='gap-[10px] flex items-center pl-2 text-[1rem] flex-wrap flex-row' >
                                                                     <input onChange={handleChange} className='text-[2rem] bg-transparent cursor-pointer' required={field.required} id={option} type={field.type} name={field.name} value={option || ''} />
-                                                                    <label className='cursor-pointer capitalize' htmlFor={option}>{option}</label>
+                                                                    <label className='cursor-pointer capitalize hover:!text-[green]' htmlFor={option}>{option}</label>
                                                                 </div>
                                                             ))
                                                         }
-                                                    </>
+                                                    </div>
                                         }
                                     </div>
                                 </Container>

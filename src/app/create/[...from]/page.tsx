@@ -22,7 +22,7 @@ const labels = ['Default', 'Featured', 'UpComming']
 
 const page = () => {
     const pageRef = useRef(false)
-    const { from } = useParams()
+    const { from }: any = useParams()
     const dispatch = useDispatch<AppDispatch>()
     const [data, setData] = React.useState<Data>()
     const [isAdmin, setIsAdmin] = React.useState<boolean>(true)

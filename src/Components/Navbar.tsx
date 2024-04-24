@@ -69,7 +69,7 @@ const Navbar = () => {
     return (
         <NoSsr>
             <Box
-                sx={styles.navbar(pathName)}
+                sx={styles.navbar(pathName as string)}
             >
                 <Link href={`/`} style={{ flex: 1.5 }} >
 
@@ -135,7 +135,7 @@ const Navbar = () => {
                                             {item.icon(pathName as string, item.path)}
                                             <Typography variant='caption' sx={{
                                                 fontSize: 20,
-                                                ...styles.iconStyle(pathName, item.path)
+                                                ...styles.iconStyle(pathName as string, item.path)
                                             }}>{item.name}</Typography>
                                         </Link>
                                     </Box>

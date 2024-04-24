@@ -11,7 +11,7 @@ const Markdown = dynamic(() => import('@/Components/Markdown'))
 
 
 const page = () => {
-    const { sha } = useParams()
+    const { sha }: any = useParams()
     const [url, setUrl] = useState<string>('')
     const [data, setData] = useState<string>();
     const [isloading, setIsLoading] = useState<boolean>(true)

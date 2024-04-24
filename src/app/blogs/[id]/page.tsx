@@ -20,7 +20,7 @@ const page = () => {
   const pageRef = useRef(false)
   const [comment, setComment] = useState<CommentInterface[]>()
   const [user, setUser] = useState<Data>()
-  const { id } = useParams()
+  const { id }:any = useParams()
   const [isLoading, setIsLoading] = useState(true)
 
   const result = blogs[0]?.find((item: BlogsInterface) => item._id === id);
