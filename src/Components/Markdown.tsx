@@ -45,8 +45,8 @@ const Markdown = ({
                 sx={{
                     position: 'absolute'
                     , height: '1px',
-                    left: {md:'-15px',xs:'-10px'},
-                    right: {md:'-15px',xs:'-10px'}
+                    left: {md:'-15px',xs:'-0px'},
+                    right: {md:'-15px',xs:'-0px'}
                     , top: '15px',
                     background:'linear-gradient(90deg, rgba(0,0,0,0) 0%,rgba(255,255,255,.19) 5%, rgba(255,255,255,.19) 50%,rgba(255,255,255,.19) 95%, rgba(0,0,0,0) 100%)'
                 }}
@@ -55,8 +55,8 @@ const Markdown = ({
                 sx={{
                     position: 'absolute'
                     , height: '1px',
-                    left: {md:'-15px',xs:'-10px'},
-                    right: {md:'-15px',xs:'-10px'}
+                    left: {md:'-15px',xs:'-0px'},
+                    right: {md:'-15px',xs:'-0px'}
                     , bottom: '15px',
                     background:'linear-gradient(90deg, rgba(0,0,0,0) 0%,rgba(255,255,255,.19) 5%, rgba(255,255,255,.19) 50%,rgba(255,255,255,.19) 95%, rgba(0,0,0,0) 100%)'
                 }}
