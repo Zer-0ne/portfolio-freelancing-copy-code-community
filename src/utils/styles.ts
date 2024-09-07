@@ -300,5 +300,13 @@ export const styles = {
         textDecoration: 'dotted',
         borderRadius: "6px",
         fontStyle: 'italic'
-    })
+    }),
+    markdownBorder: {
+        background: 'linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(255,255,255,1) 50%, rgba(0,0,0,0) 100%)'
+        , position: 'absolute'
+        , height: '1px',
+        left: '-15px',
+        right: '-15px'
+        , bottom: '15px',
+    }
 }

@@ -35,8 +35,52 @@ const Markdown = ({
             customStyles={{
                 ...customStyles,
                 textAlign: 'left',
+                padding: 2,
+                position: 'relative'
+                
+                // maxWidth:'1000px',
             }}
         >
+            <Box
+                sx={{
+                    position: 'absolute'
+                    , height: '1px',
+                    left: {md:'-15px',xs:'-10px'},
+                    right: {md:'-15px',xs:'-10px'}
+                    , top: '15px',
+                    background:'linear-gradient(90deg, rgba(0,0,0,0) 0%,rgba(255,255,255,.19) 5%, rgba(255,255,255,.19) 50%,rgba(255,255,255,.19) 95%, rgba(0,0,0,0) 100%)'
+                }}
+            />
+            <Box
+                sx={{
+                    position: 'absolute'
+                    , height: '1px',
+                    left: {md:'-15px',xs:'-10px'},
+                    right: {md:'-15px',xs:'-10px'}
+                    , bottom: '15px',
+                    background:'linear-gradient(90deg, rgba(0,0,0,0) 0%,rgba(255,255,255,.19) 5%, rgba(255,255,255,.19) 50%,rgba(255,255,255,.19) 95%, rgba(0,0,0,0) 100%)'
+                }}
+            />
+            <Box
+                sx={{
+                    position: 'absolute'
+                    , width: '1px',
+                    top: '-20px',
+                    bottom: '-20px'
+                    , left: '15px',
+                    background:'linear-gradient(0deg, rgba(0,0,0,0) 0%,rgba(255,255,255,.19) 1%, rgba(255,255,255,.19) 50%,rgba(255,255,255,.19) 99%, rgba(0,0,0,0) 100%)'
+                }}
+            />
+            <Box
+                sx={{
+                    position: 'absolute'
+                    , width: '1px',
+                    top: '-20px',
+                    bottom: '-20px'
+                    , right: '15px',
+                    background:'linear-gradient(0deg, rgba(0,0,0,0) 0%,rgba(255,255,255,.19) 1%, rgba(255,255,255,.19) 50%,rgba(255,255,255,.19) 99%, rgba(0,0,0,0) 100%)'
+                }}
+            />
             <ReactMarkdown
                 className={` class`}
                 components={{
@@ -136,8 +180,8 @@ const Markdown = ({
                             sx={{
                                 fontSize: 16,
                                 lineHeight: 1.5,
-                                ml: { xs: 0, md: 3 },
-                                mr: { md: 3, xs: 0 },
+                                ml: { xs: 0, md: 0 },
+                                mr: { md: 0, xs: 0 },
                             }}
                         >
                             {children}

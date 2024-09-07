@@ -24,22 +24,22 @@ export const metadata: Metadata = {
     }
   ],
   keywords: `Code, Programming, Web Development, Software Engineering,Copy Code Community,Copy Code Community Official, Computer Science, Developer, JamiaHamdard, Copy Code, Open Source, Jamia hamdard, Students community, Tutorial, java, python, c,c++, react,next,node,full stack, hackthon,Code, Programming, Web Development, Software Engineering,Copy Code Community, Computer Science, Developer, JamiaHamdard, Copy Code, Open Source, Jamia hamdard, Students community, Tutorial, java, python, c,c++, react,next,node,full stack, hackthon,Jamia Hamdard College, Technical Students Community, Jamia Hamdard Students, College Technology Forum, Student Tech Hub, Technical Discussions, Student Projects, Coding Community, Technology Events, Engineering Students, Computer Science Club, Tech Enthusiasts, Programming Challenges, Campus Tech News,Jamia Hamdard, Technical College, Student Technology Network, Coding Community, STEM Education, Programming Languages, Innovation Hub, IT Projects, Tech Workshops, Student Tech Blog, Digital Learning, Computer Science Society, Campus Tech Events, Engineering Projects, IT Networking, Hackathons, Software Development, Open Source Contributions, Tech Meetups, College Tech News,Copy Code Community Official,Copy Code Community Official`,
-  openGraph: {
-    type: 'website',
-    url: 'https://copycode.vercel.app',
-    title: 'Copy Code Community',
-    description: "A copy code community for sharing code snippets and learning from others.",
-    siteName: 'Copy Code Community',
-    images: [{ url: 'https://raw.githubusercontent.com/Zer-0ne/portfolio-freelancing-copy-code-community/main/src/app/favicon.ico' }]
-  },
-  twitter: {
-    card: 'summary_large_image',
-    site: 'https://copycode.vercel.app',
-    creator: 'Copy Code Team',
-    'images': 'https://raw.githubusercontent.com/Zer-0ne/portfolio-freelancing-copy-code-community/main/src/app/favicon.ico',
-    title: 'Copy Code Community',
-    description: "A copy code community for sharing code snippets and learning from others."
-  },
+  // openGraph: {
+  //   type: 'website',
+  //   url: 'https://copycode.vercel.app',
+  //   title: 'Copy Code Community',
+  //   description: "A copy code community for sharing code snippets and learning from others.",
+  //   siteName: 'Copy Code Community',
+  //   images: [{ url: 'https://raw.githubusercontent.com/Zer-0ne/portfolio-freelancing-copy-code-community/main/src/app/favicon.ico' }]
+  // },
+  // twitter: {
+  //   card: 'summary_large_image',
+  //   site: 'https://copycode.vercel.app',
+  //   creator: 'Copy Code Team',
+  //   'images': 'https://raw.githubusercontent.com/Zer-0ne/portfolio-freelancing-copy-code-community/main/src/app/favicon.ico',
+  //   title: 'Copy Code Community',
+  //   description: "A copy code community for sharing code snippets and learning from others."
+  // },
   robots: 'follow, index',
   publisher: 'Copy Code Community',
 }

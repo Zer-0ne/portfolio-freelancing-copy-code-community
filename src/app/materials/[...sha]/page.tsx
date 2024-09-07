@@ -1,5 +1,5 @@
 'use client'
-import { Box } from '@mui/material'
+import { Box, Container } from '@mui/material'
 import { styles } from '@/utils/styles';
 import { useParams } from 'next/navigation'
 import React, { useEffect, useRef, useState } from 'react'
@@ -56,7 +56,8 @@ const page = () => {
         fetch()
     }, [url])
     return (
-        <div>
+        <div
+        >
             <Sidebar setIsOpen={setIsOpen} isOpen={isOpen} setUrl={setUrl} navData={navData as {
                 path: string;
                 url: string;
@@ -79,7 +80,7 @@ const Sidebar = ({ setIsOpen, isOpen, navData, setUrl, sha, setSearchInput, sear
     setUrl: React.Dispatch<React.SetStateAction<string>>
     setSearchInput: React.Dispatch<React.SetStateAction<string>>
 }) => {
-    const mobileView = useMediaQuery('(max-width:1000px)');
+    const mobileView = useMediaQuery('(max-width:900px)');
     const scrollRef = useRef<any>(null);
 
     const filteredEvents = navData?.filter(
@@ -130,9 +131,9 @@ const Sidebar = ({ setIsOpen, isOpen, navData, setUrl, sha, setSearchInput, sear
             <Box
                 sx={{
                     position: 'fixed', display: 'flex',
-                    top: { md: 'calc(50px + 24px + 22px)', xs: 'auto' }, bottom: { md: 0, xs: isVisible ? 10 : '-50px' }, transform: { md: 'scale(1)', xs: isVisible ? 'scale(1)' : 'scale(0)' }, width: { xs: 'auto', xl: '10vw' }, left: { xs: 13, xl: 10 }, zIndex: 10,
+                    top: { md: 'calc(50px + 24px + 22px)', xs: 'auto' }, bottom: { md: 0, xs: isVisible ? 10 : '-50px' }, transform: { md: 'scale(1)', xs: isVisible ? 'scale(1)' : 'scale(0)' }, width: { xs: 'auto', xl: 'auto' }, left: { xs: mobileView ? 16 : isOpen ? 10 : '-270px', xl: 16 }, zIndex: 10,
                     ...styles.glassphorism(), gap: { md: 2, xs: 0 },
-                    p: 2, mb: { md: 2, xs: 0 }, pt: { md: 3, xs: 2 }, pb: { md: 3, xs: 2 }, transition: 'all .5s ease-in-out', flexDirection: 'column', right: { xs: 13, md: 'auto' }, height: { xs: 'auto', md: 'auto' },
+                    p: 2, mb: { md: 2, xs: 0 }, pt: { md: 3, xs: 1.7 }, pb: { md: 3, xs: 1.7 }, transition: 'all .5s ease-in-out', flexDirection: 'column', right: { xs: 16, md: 'auto' }, height: { xs: 'auto', md: 'auto' },
                     '::after': {
                         content: '""',
                         position: 'absolute',

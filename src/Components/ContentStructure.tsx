@@ -19,6 +19,7 @@ const ContentStructure = ({
                 flexDirection: 'column',
                 justifyContent: "center",
                 textAlign: 'justify',
+                maxWidth:'800px !important',
                 // alignItems:'center'
                 ...customStyles
             }}
@@ -28,11 +29,11 @@ const ContentStructure = ({
                     display: 'flex',
                     gap: 2,
                     flexDirection: 'column',
-                    background: colors.commentConatinerBg,
+                    // background: colors.commentConatinerBg,
                     p: 2,
                     borderRadius: '10px',
                     // boxShadow: 'inset #00ff003d 0px 0px 10px'
-                    boxShadow: 'inset #5d5d5d8f 0px 0px 10px',
+                    // boxShadow: 'inset #5d5d5d8f 0px 0px 10px',
                     ...boxStyle
                 }}
             >
