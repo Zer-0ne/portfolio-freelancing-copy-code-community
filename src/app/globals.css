@@ -73,7 +73,7 @@ body {
   margin-left: 50px;
   display: flex;
   flex-direction: column;
-  gap: inherit
+  gap: '2px'
 }
 
 blockquote {
@@ -130,7 +130,7 @@ iframe {
 .class {
   display: flex;
   flex-direction: column;
-  gap: 21px;
+  gap: 10px;
   word-spacing: 4px;
 }
 

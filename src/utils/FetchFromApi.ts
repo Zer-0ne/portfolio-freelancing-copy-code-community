@@ -349,27 +349,82 @@ export const deleteComment = async (id: string, authorId: string) => {
 }
 
 // fetch the list of the material from the github api 
-export const getMaterialsFromGithub = async (url: string = "https://api.github.com/repos/copycodecommunity/portfolio/git/trees/7ad4458a17316da147b1c917578822cf4dea864a", listData: boolean = false): Promise<string | undefined> => {
+export interface TreeNode {
+    path: string;
+    type: 'file' | 'tree';
+    sha?: string; // Add SHA for both files and folders
+    url: string
+    children?: TreeNode[];
+}
+
+// Function to get the latest commit SHA for the default branch
+export const getLatestSha = async (owner: string, repo: string): Promise<string | undefined> => {
     try {
-        console.log(process.env.GITHUB_KEY)
-        const response = await fetch(`${url}`, {
+        const response = await fetch(`https://api.github.com/repos/${owner}/${repo}/git/refs/heads/main`); // Assuming 'main' is the default branch
+        if (!response.ok) {
+            throw new Error(`Error fetching latest SHA: ${response.statusText}`);
+        }
+        const data = await response.json();
+        return data.object.sha; // Return the latest SHA
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+export const getMaterialsFromGithub = async (sha: string = "34b1e0cba19e85cf6c2e07c9e576f98dba6a6323"): Promise<TreeNode | undefined> => {
+    try {
+        const response = await fetch(`https://api.github.com/repos/copycodecommunity/portfolio/git/trees/${sha}`, {
             method: 'GET',
             headers: {
-                // 'Authorization': `${'Bearer' + process.env.GITHUB_KEY as string}`
+                // Uncomment the line below if you need to use the GitHub API key
+                // 'Authorization': `Bearer ${process.env.GITHUB_KEY}`
             }
-        })
-        const { tree, content } = await response.json()
-        if (response.ok) {
-            if (tree && tree.length > 0 && !listData && !content) {
-                return await getMaterialsFromGithub(tree && tree[0]?.url)
-            } else {
-                return content
-            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error fetching data: ${response.statusText}`);
         }
+
+        const { tree } = await response.json();
+
+        // Create a tree structure
+        const buildTree = async (nodes: any[]): Promise<TreeNode[]> => {
+            const treeNodes: TreeNode[] = [];
+
+            for (const node of nodes) {
+                if (node.type === 'tree') {
+                    // If it's a folder, fetch its contents recursively
+                    const children = await getMaterialsFromGithub(node.sha);
+                    treeNodes.push({
+                        path: node.path,
+                        type: 'tree',
+                        sha: node.sha, // Include SHA for the folder
+                        url: node.url, // Include url for the folder
+                        children: children ? children.children : []
+                    });
+                } else if (node.type === 'blob') {
+                    // If it's a file, fetch its content
+                    // const content = await getSpecificContentGithub(node.url);
+                    treeNodes.push({
+                        path: node.path,
+                        type: 'file',
+                        sha: node.sha, // Include SHA for the file
+                        url: node.url, // Include url for the file
+                        // content: content // Include content for the file
+                    });
+                }
+            }
+
+            return treeNodes;
+        };
+
+        const treeStructure = await buildTree(tree);
+        return { path: '',url:tree.url, type: 'tree', children: treeStructure }; // Return the root node
     } catch (error) {
-        console.log(error)
+        console.error(error);
     }
-}
+};
+
 // fetch the list of the material from the github api 
 export const getSpecificMaterialGithub = async (_id: string = '7ad4458a17316da147b1c917578822cf4dea864a', url: string = "https://api.github.com/repos/copycodecommunity/portfolio/git/trees") => {
     try {
@@ -399,3 +454,41 @@ export const getSpecificContentGithub = async (url: string) => {
         console.log(error)
     }
 }
+
+export const getFileURLRecursively = async (url: string): Promise<string> => {
+    try {
+        console.log(process.env.GITHUB_KEY);
+        const response = await fetch(`${url}`, {
+            method: 'GET',
+            headers: {
+                // Uncomment the line below if you need to use the GitHub API key
+                // 'Authorization': `Bearer ${process.env.GITHUB_KEY}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error fetching data: ${response.statusText}`);
+        }
+
+        const { tree } = await response.json();
+
+        // If tree is available, iterate through it
+        if (tree && tree.length > 0) {
+            for (const item of tree) {
+                if (item.type === 'blob') {
+                    // If the item is a file (blob), return its URL
+                    return item.url; // Return the URL of the file
+                } else if (item.type === 'tree') {
+                    // If the item is a directory (tree), make a recursive call
+                    const result = await getFileURLRecursively(item.url);
+                    if (result) {
+                        return result; // Return the URL found in the recursive call
+                    }
+                }
+            }
+        }
+    } catch (error) {
+        console.log(error);
+    }
+    return ''; // Return undefined if no URL is found
+};

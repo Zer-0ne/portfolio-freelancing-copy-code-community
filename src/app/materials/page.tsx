@@ -13,11 +13,13 @@ const page = () => {
     }[]>()
     useEffect(() => {
         const fetch = async () => {
-            const { getSpecificMaterialGithub } = await import('@/utils/FetchFromApi')
+            const { getSpecificMaterialGithub,  } = await import('@/utils/FetchFromApi')
             const Metrials = await getSpecificMaterialGithub('main', 'https://api.github.com/repos/copycodecommunity/portfolio/git/trees/')
             const materialsEntries = Metrials.filter((entry: Data) => entry.type === "tree" && entry.path === "Metrials");
             const data = await getSpecificMaterialGithub(materialsEntries[0].sha)
             setData(data)
+            // const sha = await getLatestSha('copycodecommunity', 'portfolio')
+            // console.log(await getMaterialsFromGithub(sha));
         }
         fetch()
     }, [])
@@ -58,6 +60,7 @@ const Cards = ({ path, sha }: { path: string; sha: string }) => {
                     transition: 'all .2s ease-in-out',
                     position: 'relative',
                     zIndex: 1,
+                    textTransform: 'capitalize',
                     ':hover': {
                         border: '1px solid rgba(255, 255, 255, 1)'
                     },
