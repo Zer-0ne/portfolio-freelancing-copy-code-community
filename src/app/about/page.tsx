@@ -7,6 +7,7 @@ import { aboutCCC } from '@/utils/constant';
 import { colors } from '@/utils/colors';
 import { coreMember } from '@/utils/Interfaces';
 import dynamic from 'next/dynamic';
+import { Node } from '@/utils/FetchFromApi';
 
 const MemberCard = dynamic(() => import('@/Components/MemberCard'))
 
@@ -25,10 +26,11 @@ const page = () => {
     const [coreTeamMember, setCoreTeamMember] = useState<coreMember[]>()
 
     const fetch = async () => {
-        const { fetchFromGithub } = await import('@/utils/FetchFromApi')
-        const data = await fetchFromGithub('team%20members')
-        setCoreTeamMember(data)
-
+        const { getSpecificContentGithub, getSpecificMaterialGithub } = await import('@/utils/FetchFromApi')
+        // const data = await fetchFromGithub('team%20members')
+        const tree  = await getSpecificMaterialGithub('main', 'https://api.github.com/repos/copycodecommunity/portfolio/git/trees/');
+        const data = await getSpecificContentGithub((tree && tree as Node[]).find((item: any) => item.path === 'team members.json').url)
+        setCoreTeamMember(JSON.parse(atob(data?.content)))
     }
 
     useEffect(() => {

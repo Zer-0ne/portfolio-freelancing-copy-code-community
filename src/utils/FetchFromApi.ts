@@ -68,6 +68,7 @@ export const fetchFromGithub = async (repo: string = 'team%20members') => {
     try {
         const response = await fetch(`https://raw.githubusercontent.com/copycodecommunity/portfolio/main/${repo}`)
         const data = await response.json()
+        // console.log(data)
         return data
     } catch (error) {
         console.log(error)
@@ -349,11 +350,14 @@ export const deleteComment = async (id: string, authorId: string) => {
 }
 
 // fetch the list of the material from the github api 
-export interface TreeNode {
+export interface Node {
     path: string;
     type: 'file' | 'tree';
     sha?: string; // Add SHA for both files and folders
     url: string
+
+}
+export interface TreeNode extends Node {
     children?: TreeNode[];
 }
 
@@ -419,7 +423,7 @@ export const getMaterialsFromGithub = async (sha: string = "34b1e0cba19e85cf6c2e
         };
 
         const treeStructure = await buildTree(tree);
-        return { path: '',url:tree.url, type: 'tree', children: treeStructure }; // Return the root node
+        return { path: '', url: tree.url, type: 'tree', children: treeStructure }; // Return the root node
     } catch (error) {
         console.error(error);
     }
