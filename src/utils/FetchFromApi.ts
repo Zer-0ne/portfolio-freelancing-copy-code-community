@@ -154,7 +154,7 @@ export const imagesInFolder = async (folderName: string, imageLinks: string[]) =
         const result = await listAll(storageRef);
 
         // Iterate through each item in the folder
-        await Promise.all(result.items.map(async (imageRef) => {
+        await Promise.all(result.items.map(async (imageRef: any) => {
             // Get the download URL for the image
             const downloadURL = await getDownloadURL(imageRef);
             // Check if the download URL is present in the imageLinks array
@@ -269,7 +269,7 @@ export const deletePost = async (id: string, route: string, item: BlogsInterface
             const result = await listAll(storageRef);
 
             // Iterate through each item in the folder
-            await Promise.all(result.items.map(async (imageRef) => {
+            await Promise.all(result.items.map(async (imageRef: any) => {
                 // Get the download URL for the image
                 const downloadURL = await getDownloadURL(imageRef);
                 // Check if the download URL is present in the imageLinks array
