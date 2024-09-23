@@ -14,11 +14,9 @@ const BlogEventsStructure = dynamic(() => import('@/Components/BlogEventsStructu
 
 
 const page = () => {
-  const { events } = useSelector((state: RootState) => state.events)
+  const { events,loading } = useSelector((state: RootState) => state.events)
   const dispatch = useDispatch<AppDispatch>()
-  const pageRef = useRef(false)
   const [searchInput, setSearchInput] = useState<string>('');
-  const [isLoading, setIsLoading] = useState(true)
 
 
   const handleSearch = (input: string) => {
@@ -28,8 +26,7 @@ const page = () => {
   // fetch all the events
   const fetchData = async () => {
     try {
-      !events[0] && dispatch(fetchEvents())
-      setIsLoading(false)
+      !events.length && dispatch(fetchEvents())
     } catch (error) {
       console.log(error)
     }
@@ -38,17 +35,14 @@ const page = () => {
 
   // useEffect
   React.useEffect(() => {
-    (pageRef.current === false) && fetchData()
-    return () => {
-      pageRef.current = true
-    }
+    fetchData()
   }, [])
 
 
-  if (isLoading) return <Loading />
+  if (loading) return <Loading />
 
   // Filter events based on search input
-  const filteredEvents = events[0]?.filter(
+  const filteredEvents = events?.filter(
     (item: EventsInterface) =>
       item?.title?.toLowerCase().includes(searchInput.toLowerCase()) ||
       item?.tag?.toLowerCase().includes(searchInput.toLowerCase()) ||
@@ -77,7 +71,7 @@ const page = () => {
         >
 
           {
-            !events[0]?.length ? <>
+            (!events?.length && !loading) ? <>
               No Events Yet!
             </> :
               filteredEvents?.map((item: EventsInterface, index: number) => (

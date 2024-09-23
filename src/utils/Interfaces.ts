@@ -36,6 +36,7 @@ export interface BlogsInterface {
     description: string;
     updatedAt: string;
     contentImage: string[];
+    authorId: string
     tag: string;
     comments: string[];
     _id: string;

@@ -35,7 +35,7 @@ const page = () => {
     // handle change
     const handleChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
         const { name, value } = e.target;
-        setData((prevFormData) => ({ ...prevFormData, [name]: value }));
+        setData((prevFormData?:Data) => ({ ...prevFormData, [name]: value }));
     }
 
     const handleSubmit = async (e: any) => {
@@ -243,7 +243,7 @@ const page = () => {
                     </Box>
                 </Box>
                 <Link
-                    href='/forms'
+                    href='/forms/join'
                     style={{
 
                     }}

@@ -43,9 +43,9 @@ const Forms = ({
 
     const today = new Date(); // This will get the current date
 
-    const todayEvents = (events[0])?.filter((event: EventsInterface) => {
+    const todayEvents = (events)?.filter((event: EventsInterface) => {
         const eventDate = new Date(event.eventDate);
-        console.log(event.eventDate)
+        // console.log(event.eventDate)
         return (
             eventDate.getDate() === today.getDate() &&
             eventDate.getMonth() === today.getMonth() &&

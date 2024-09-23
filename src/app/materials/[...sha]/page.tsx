@@ -57,7 +57,7 @@ const Page = () => {
     useEffect(() => {
         const fetchTreeData = async () => {
             try {
-            const { getMaterialsFromGithub,getFileURLRecursively } = await import('@/utils/FetchFromApi');
+                const { getMaterialsFromGithub, getFileURLRecursively } = await import('@/utils/FetchFromApi');
                 const fetchedData: TreeNode | undefined = await getMaterialsFromGithub(sha[1]); // Fetch the data
                 if (fetchedData) {
                     setTreeData(fetchedData); // Set the state with the fetched data
@@ -89,7 +89,7 @@ const Page = () => {
                 isOpen={isOpen}
                 setUrl={setUrl}
                 navData={treeData}
-                path={decodeURIComponent(sha[0])}
+                isLoading={isLoading}
                 setSearchInput={setSearchInput}
                 searchInput={searchInput}
                 url={url}
@@ -105,7 +105,7 @@ const Sidebar = ({
     isOpen,
     navData,
     setUrl,
-    path,
+    isLoading,
     setSearchInput,
     searchInput,
     url,
@@ -113,7 +113,7 @@ const Sidebar = ({
     setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
     isOpen: boolean;
     navData?: TreeNode;
-    path: string;
+    isLoading: boolean;
     url: string;
     searchInput: string;
     setUrl: React.Dispatch<React.SetStateAction<string>>;
@@ -161,7 +161,7 @@ const Sidebar = ({
     const renderTreeNode = (node: TreeNode): JSX.Element => {
         return (
             <>
-                {node.type === 'tree' ? (
+                {node?.type === 'tree' ? (
                     // Render folder
                     <strong
                         style={{
@@ -171,20 +171,20 @@ const Sidebar = ({
                             textTransform: 'capitalize',
                         }}
                     >
-                        {node.path.replace(/^[0-9.]+/, '')}
+                        {node?.path.replace(/^[0-9.]+/, '')}
                     </strong>
                 ) : (
                     // Render file
                     <Box
-                        data-url={node.url}
+                        data-url={node?.url}
                         onClick={() => setUrl(node?.url)} // Set URL on click
                         sx={{
-                            flex:1,
+                            flex: 1,
                             display: 'flex',
                             height: 'auto',
-                            textWrap:{xs:'nowrap',md:'wrap'},
+                            textWrap: { xs: 'nowrap', md: 'wrap' },
                             cursor: 'pointer',
-                            opacity: node.url?.includes(url) ? 1 : 0.5,
+                            opacity: node?.url?.includes(url) ? 1 : 0.5,
                             transition: 'all .5s ease-in-out',
                             ':hover': {
                                 opacity: 1,
@@ -192,12 +192,12 @@ const Sidebar = ({
                             },
                         }}
                     >
-                        {node.path.replace(/^[0-9.]+/, '').replace(/\..+$/, '')} {/* Clean up the file name */}
+                        {node?.path.replace(/^[0-9.]+/, '').replace(/\..+$/, '')} {/* Clean up the file name */}
                     </Box>
                 )}
-                {node.children && node.children.length > 0 && (
+                {node?.children && node?.children.length > 0 && (
                     <>
-                        {node.children.map((childNode) => renderTreeNode(childNode))} {/* Recursively render children */}
+                        {node?.children.map((childNode) => renderTreeNode(childNode))} {/* Recursively render children */}
                     </>
                 )}
             </>
@@ -302,8 +302,8 @@ const Sidebar = ({
                     }}
                 >
                     {
-                        !filteredNavData ? <>No post yet!</> : // Display message if no data
-                            renderTreeNode(filteredNavData) // Render filtered navigation data
+                        (!filteredNavData && !isLoading) ? <>No post yet!</> : // Display message if no data
+                            renderTreeNode(filteredNavData as TreeNode) // Render filtered navigation data
                     }
                 </Box>
             </Box>
@@ -316,7 +316,7 @@ const ContentPage = ({ data, isLoading }: { data: string; isLoading: boolean }) 
     return (
         <>
             {isLoading && <Loading />} {/* Show loading component while loading */}
-            {!data ? <>No post yet!</> : <Markdown data={{ content: data }} />} {/* Render markdown content */}
+            {(!data && !isLoading) ? <>No post yet!</> : <Markdown data={{ content: data }} />} {/* Render markdown content */}
         </>
     );
 };

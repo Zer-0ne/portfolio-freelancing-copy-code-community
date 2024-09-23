@@ -3,7 +3,6 @@ import { EventsInterface } from '@/utils/Interfaces'
 import { Box, Container, Typography } from '@mui/material'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
-import dp from '@/app/favicon.ico'
 import { useParams } from 'next/navigation'
 import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -16,31 +15,24 @@ const Markdown = dynamic(() => import('@/Components/Markdown'))
 
 
 const page = () => {
-    const { events } = useSelector((state: RootState) => state.events)
+    const { events,loading } = useSelector((state: RootState) => state.events)
     const dispatch = useDispatch<AppDispatch>()
-    const pageRef = useRef(false)
     const { id }:any = useParams()
-    const [isLoading, setIsLoading] = useState(true)
 
     // event
-    let event = events[0]?.find((item: EventsInterface) => item._id === id);
+    let event = events?.find((item: EventsInterface) => item._id === id);
     useEffect(() => {
         const fetchedData = async () => {
             try {
-                !events[0] && dispatch(fetchEvents())
-                event = events[0]?.find((item: EventsInterface) => item._id === id);
+                !events.length && dispatch(fetchEvents())
+                event = events?.find((item: EventsInterface) => item._id === id);
             } catch (error) {
                 console.log(error)
-            }finally{
-                setIsLoading(false)
             }
         }
-        (pageRef.current === false) && fetchedData()
-        return () => {
-            pageRef.current = true
-        }
+        fetchedData();
     }, [events])
-    if (isLoading) return <Loading />
+    if (loading) return <Loading />
     return (
         <>
             <Header data={event as EventsInterface} />

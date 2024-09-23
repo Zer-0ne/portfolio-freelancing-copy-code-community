@@ -20,11 +20,10 @@ const page = () => {
             console.log(error)
         }
     }
-    if (!['admin', 'moderator'].includes(session[0]?.role)) return notFound()
     useEffect(() => {
         fetch()
     }, [])
-
+    if (session[0] && !['admin', 'moderator'].includes(session[0]?.role)) return notFound()
     return (
         <div
             className='container self-center mx-[auto] p-5 flex flex-1 flex-col gap-3'

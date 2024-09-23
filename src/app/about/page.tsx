@@ -32,7 +32,7 @@ const page = () => {
         const data = await getSpecificContentGithub((tree && tree as Node[]).find((item: any) => item.path === 'team members.json').url)
         setCoreTeamMember(JSON.parse(atob(data?.content)))
     }
-    console.log(coreTeamMember);
+    // console.log(coreTeamMember);
     useEffect(() => {
         (blogRef.current === false) && fetch()
         return () => { blogRef.current = true }

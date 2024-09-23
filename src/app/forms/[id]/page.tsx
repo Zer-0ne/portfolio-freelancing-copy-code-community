@@ -28,7 +28,7 @@ const page = () => {
             const snapshot = await get(child(ref(realTimeDatabase), `forms/${id}`))
             if (!snapshot.exists()) throw new Error("No such form exists")
             const { fetchEvents } = await import('@/slices/eventsSlice')
-            !events[0] && dispatch(fetchEvents())
+            !events && dispatch(fetchEvents())
             setForms(snapshot.val() || null)
         }
         fetch()

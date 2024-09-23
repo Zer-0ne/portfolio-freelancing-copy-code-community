@@ -12,20 +12,17 @@ const BlogCard = dynamic(() => import('@/Components/BlogCard'), { ssr: false })
 
 
 const page = () => {
-  const { blogs } = useSelector((state: RootState) => state.blogs)
+  const { blogs,loading } = useSelector((state: RootState) => state.blogs)
   const dispatch = useDispatch<AppDispatch>()
-  const blogRef = useRef(false);
   const [searchInput, setSearchInput] = useState<string>('');
-  const [isLoading, setIsLoading] = useState(true)
   const [pageNo, setPageNo] = useState<number>(1);
-  const [isFetching, setIsFetching] = useState(false)
 
   // create observer of useRef 
   const observer = useRef<IntersectionObserver | null>(null)
 
   // create callback for lastElement of data 
   const lastElement = useCallback((node: Element) => {
-    if (isLoading) return
+    if (loading) return
     if (observer.current) observer.current.disconnect()
     observer.current = new IntersectionObserver(entries => {
       if (entries[0].isIntersecting) {
@@ -33,7 +30,7 @@ const page = () => {
       }
     })
     if (node) observer.current?.observe(node)
-  }, [isLoading])
+  }, [loading])
 
   const handleSearch = (input: string) => {
     setSearchInput(input);
@@ -43,27 +40,21 @@ const page = () => {
   const fetchData = async () => {
     try {
       const { fetchBlogs } = await import('@/slices/blogsSlice')
-      setIsFetching(true)
-      !blogs[0] && dispatch(fetchBlogs())
-
-      setIsFetching(false)
-      setIsLoading(false)
+      !blogs.length && dispatch(fetchBlogs())
     } catch (error) {
-      setIsFetching(false)
       console.log(error)
     }
   }
 
   // useEffect
-  React.useEffect(() => {
-    if (blogRef.current === false) fetchData();
-    return () => { blogRef.current = true }
+  useEffect(() => {
+    fetchData();
   }, [])
 
-  if (isLoading) return <Loading />
+  if (loading) return <Loading />
 
   // Filter events based on search window.addEventListener('scroll', handleScroll);input
-  const filteredEvents = blogs[0]?.filter(
+  const filteredEvents = blogs && blogs?.filter(
     (item: BlogsInterface) =>
       item?.title?.toLowerCase().includes(searchInput.toLowerCase()) ||
       item?.tag?.toLowerCase().includes(searchInput.toLowerCase()) ||
@@ -71,6 +62,7 @@ const page = () => {
       item?.updatedAt?.toLowerCase().includes(searchInput.toLowerCase())
   );
 
+  // console.log(blogs)
 
   return (
     <>
@@ -91,7 +83,7 @@ const page = () => {
           }}
         >
           {
-            !blogs?.length ? <>
+            (!blogs?.length && !loading) ? <>
               No blog yet!
             </> :
               filteredEvents?.map((item: BlogsInterface, index: number) => (

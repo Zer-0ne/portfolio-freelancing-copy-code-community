@@ -483,3 +483,19 @@ export const monthName = [
     "January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December"
 ];
+
+export const adminControls = [
+    {
+        control: 'maintenance',
+        pages: navbarContent.map(item => item.name)
+    }, {
+        name: 'User Management',
+        pages: [
+            'Ban User',
+            'Edit User',
+            'Delete User',
+            'Role Management'
+        ]
+
+    }
+]

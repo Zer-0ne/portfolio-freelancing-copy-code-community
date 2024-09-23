@@ -1,19 +1,22 @@
 import { BlogsInterface, EventsInterface } from "@/utils/Interfaces";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-export const fetchEvents = createAsyncThunk('events', async (thunkApi) => {
+export const fetchEvents = createAsyncThunk('events/fetchEvents', async (thunkApi) => {
     try {
-        const { allPost } = await import('@/utils/FetchFromApi')
-        return await allPost('event') as BlogsInterface[] | EventsInterface
+        const { allPost } = await import('@/utils/FetchFromApi');
+        return await allPost('event') as EventsInterface[];
     } catch (error) {
-        console.log(error)
+        console.log(error);
+        // return
+        // return thunkApi.rejectWithValue(error); // Reject with error
     }
-})
+});
 
 const initialState = {
-    events: [],
-    loading: false
-} as any
+    events: [] as EventsInterface[],
+    loading: false,
+    error: null, // Optional: to store error messages
+};
 
 const eventsSlice = createSlice({
     name: 'events',
@@ -24,27 +27,39 @@ const eventsSlice = createSlice({
             const updatedEvent = action.payload.updatedEvent;
 
             // Find the index of the event with the specified id
-            const eventIndex = state.events[0].findIndex(
+            const eventIndex = state.events.findIndex(
                 (event: EventsInterface) => event._id === eventIdToUpdate
             );
 
-            // check if the id is available or not 
+            // Check if the id is available or not 
             if (eventIndex !== -1) {
-                // If the event is found delete
-                state.events[0].splice(eventIndex, 1);
+                // If the event is found, delete it
+                state.events.splice(eventIndex, 1);
                 if (updatedEvent !== null) {
-                    state.events[0] = [...state.events[0], updatedEvent];
+                    state.events.push(updatedEvent as EventsInterface);
                 }
             }
         },
     },
     extraReducers: (builder) => {
-        builder.addCase(fetchEvents.fulfilled, (state, action) => {
-            if (action.payload) state.events.push(action.payload as any)
-        })
+        builder
+            .addCase(fetchEvents.pending, (state) => {
+                state.loading = true; // Set loading to true when fetching starts
+                state.error = null; // Reset error state
+            })
+            .addCase(fetchEvents.fulfilled, (state, action) => {
+                state.loading = false; // Set loading to false when fetching is successful
+                if (action.payload) {
+                    state.events = action.payload; // Update events with fetched data
+                }
+            })
+            .addCase(fetchEvents.rejected, (state, action) => {
+                state.loading = false; // Set loading to false when fetching fails
+                state.error = action.payload as any; // Store the error message
+            });
     }
 });
 
 export const { updateEvent } = eventsSlice.actions;
 
-export default eventsSlice.reducer
+export default eventsSlice.reducer;

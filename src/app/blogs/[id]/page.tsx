@@ -5,7 +5,7 @@ import { AppDispatch, RootState } from '@/store/store'
 import { BlogsInterface, CommentInterface, Data } from '@/utils/Interfaces'
 import dynamic from 'next/dynamic'
 import { useParams } from 'next/navigation'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 const Loading = dynamic(() => import('@/Components/Loading'))
@@ -16,20 +16,18 @@ const CommentContainer = dynamic(() => import('@/Components/CommentContainer'))
 
 const page = () => {
   const dispatch = useDispatch<AppDispatch>()
-  const { blogs } = useSelector((state: RootState) => state.blogs)
-  const pageRef = useRef(false)
+  const { blogs,loading } = useSelector((state: RootState) => state.blogs)
   const [comment, setComment] = useState<CommentInterface[]>()
   const [user, setUser] = useState<Data>()
   const { id }:any = useParams()
-  const [isLoading, setIsLoading] = useState(true)
 
-  const result = blogs[0]?.find((item: BlogsInterface) => item._id === id);
+  const result = blogs?.find((item: BlogsInterface) => item._id === id);
 
   const fetchedData = async () => {
     try {
       const { Post, userInfo } = await import('@/utils/FetchFromApi')
 
-      !blogs[0] && dispatch(fetchBlogs())
+      !blogs.length && dispatch(fetchBlogs())
       // fetching the post means blog
       // const res = await Post('blog', id as string)
 
@@ -40,21 +38,17 @@ const page = () => {
 
         setComment(comments)
       }
-      const user = await userInfo(result?.authorId)
+      const user = await userInfo(result?.authorId as string)
       setUser(user)
-      setIsLoading(false)
     } catch (error) {
       console.log(error)
     }
   }
   useEffect(() => {
-    (pageRef.current === false) && fetchedData()
-    return () => {
-      pageRef.current = true;
-    }
+    fetchedData()
   }, [])
 
-  if (isLoading) return <Loading />
+  if (loading) return <Loading />
   return (
     <>
       <MarkdownHeader
