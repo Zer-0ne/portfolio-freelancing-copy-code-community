@@ -499,3 +499,45 @@ export const adminControls = [
 
     }
 ]
+
+// for material data variable
+const materials = [
+    {
+        name: 'DBMS',
+        sha: '',
+        type:'',
+        tree: [
+            {
+                name:'SQL Tutorial',
+                sha:'',
+                type:'',
+                tree: [
+                    {
+                        name:'',
+                        sha:'',
+                        content:'',
+                        type:''
+                    }
+                ]
+            },{
+                name:'SQL Database',
+                type:'',
+                sha:'',
+                tree:[
+                    {
+                        name:'',
+                        sha:'',
+                        content:'',
+                        type:''
+                    },
+                    {
+                        name:'',
+                        sha:'',
+                        content:'',
+                        type:''
+                    },
+                ]
+            }
+        ]
+    }
+]

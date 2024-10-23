@@ -1,32 +1,25 @@
 'use client'
 
-import { Data, Session } from '@/utils/Interfaces'
-import { Container } from '@mui/material'
+import useSession from '@/hooks/useSession'
+import { Data, } from '@/utils/Interfaces'
+import { styles } from '@/utils/styles'
+import { Container, Typography } from '@mui/material'
 import dynamic from 'next/dynamic'
-import { notFound } from 'next/navigation'
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, } from 'react'
 
 const Loading = dynamic(() => import('@/Components/Loading'))
 
 const page = () => {
-    const pageRef = useRef(false)
+    const { isAdmin, error } = useSession()
     const [isloading, setIsloading] = React.useState<boolean>(true)
     const [data, setData] = React.useState<Data[]>()
-    const [isAdmin, setIsAdmin] = React.useState(false)
+
+
 
     const fetchAllContact = async () => {
-        const { allUser, userInfo } = await import('@/utils/FetchFromApi')
-        const { currentSession } = await import('@/utils/Session');
+        const { allUser } = await import('@/utils/FetchFromApi')
 
-        const session = await currentSession() as Session
-        if (!session) {
-            setIsloading(false)
-            return notFound()
-        }
-        const currUser = await userInfo(session?.user.username);
-        (session && ['user'].includes(currUser.role)) ? setIsAdmin(false) : setIsAdmin(true)
-
-        if (session && ['admin', 'moderator'].includes(currUser.role)) {
+        if (isAdmin && !error) {
             // dont judge the name of the function i am trying to reuse the function this is for fetching the all contacts comments from the contact page
             const alluser = await allUser('contact')
             setData(alluser)
@@ -35,13 +28,24 @@ const page = () => {
     }
     // console.log(data)
     useEffect(() => {
-        (pageRef.current === false) && fetchAllContact()
-        return () => {
-            pageRef.current = true
-        }
-    }, [])
+        fetchAllContact()
+    }, [isAdmin])
+
+    if (error) {
+        return <div
+            className='flex flex-1 w-full py-auto absolute top-[50%] right-[50%] translate-x-[50%] -translate-y-[50%] justify-center my-auto items-center'
+        >
+            <Typography
+                sx={{
+                    ...styles.glassphorism()
+                }}
+                className='flex w-[70%] md:w-[40%] min-h-[100px] p-10 justify-center items-center font-bold text-center  text-[#ffffff] capitalize  text-3xl rounded border-[#ff000034] border-[1px]'
+            >
+                something went wrong!
+            </Typography>
+        </div>
+    }
     if (isloading) return <Loading />
-    if (isAdmin === false) return notFound()
     return (
         <Container
             className='flex flex-col gap-[2rem]'

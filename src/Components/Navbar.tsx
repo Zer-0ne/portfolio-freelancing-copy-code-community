@@ -184,7 +184,8 @@ const Navbar = () => {
                                             {item.name}
                                         </Typography>
                                     )) : <>
-                                        {
+
+                                        {['admin', 'moderator'].includes(session[0]?.role) &&
                                             Login.map((item, index) => (
                                                 <input
                                                     placeholder={item.label}
@@ -200,10 +201,13 @@ const Navbar = () => {
                                                 />
                                             ))
                                         }
-                                        <button
-                                            type='submit'
-                                            style={styles.greenBtn() as React.CSSProperties | undefined}
-                                        >Login</button>
+                                        {
+                                            ['admin', 'moderator'].includes(session[0]?.role) &&
+                                            <button
+                                                type='submit'
+                                                style={styles.greenBtn() as React.CSSProperties | undefined}
+                                            >Login</button>
+                                        }
                                         <Box
                                             sx={{
                                                 display: 'flex',

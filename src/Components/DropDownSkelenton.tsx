@@ -1,7 +1,7 @@
 
 import { RootState } from '@/store/store';
 import { styles } from '@/utils/styles'
-import { KeyboardArrowDown } from '@mui/icons-material';
+import { KeyboardArrowDown, } from '@mui/icons-material';
 import { Avatar, Box, useMediaQuery } from '@mui/material'
 import React from 'react'
 import { useSelector } from 'react-redux';
@@ -28,6 +28,7 @@ const DropDownSkelenton = (
         <Box
             sx={{
                 position: 'relative',
+                zIndex: isTrue ? 100 : 'auto'
             }}
         >
             <Box
@@ -42,17 +43,36 @@ const DropDownSkelenton = (
                         flexDirection: 'column',
                         cursor: 'pointer',
                         transition: 'all .5s ease-in-out',
-                        ...styles.glassphorism(),
                         flex: 1,
+                        padding:0,
                         gap: 1,
-                        zIndex: 50,
                         fontSize: { xs: 12, md: 18, xl: 25 },
                         textAlign: 'center',
-                    }, 1)
+                        border:'0px'
+                    }, 0)
 
                 }}
             >
-                {children}
+                <Box
+                    sx={{
+                        ...styles?.customInput('', {
+                            position:'static',
+                            display: isTrue ? 'flex' : 'none',
+                            opacity: isTrue ? 1 : 0,
+                            flexDirection: 'column',
+                            cursor: 'pointer',
+                            transition: 'all .5s ease-in-out',
+                            ...styles.glassphorism(),
+                            flex: 1,
+                            gap: 1,
+                            zIndex:10,
+                            fontSize: { xs: 12, md: 18, xl: 25 },
+                            textAlign: 'center',
+                        }, 1),
+                    }}
+                >
+                    {children}
+                </Box>
             </Box>
             <Box
                 sx={styles?.customInput(8, {
@@ -63,6 +83,7 @@ const DropDownSkelenton = (
                     justifyContent: 'space-between',
                     alignItems: 'center',
                     ...customStyle,
+                    zIndex: 10,
                     fontSize: { xs: 12, md: 18, xl: 20 }
                 }, 1)}
                 onClick={() => setIsTrue(prev => !prev)}

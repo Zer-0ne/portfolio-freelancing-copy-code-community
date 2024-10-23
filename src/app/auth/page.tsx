@@ -4,39 +4,15 @@ import { Data, Session } from '@/utils/Interfaces'
 import { Login, authMode, signup } from '@/utils/constant'
 import { styles } from '@/utils/styles'
 import { Avatar, Box, Button, Typography } from '@mui/material'
-import dynamic from 'next/dynamic'
-import { notFound } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 
-const Loading = dynamic(() => import('@/Components/Loading'))
 
 
 const page = () => {
     const [isLogin, setIsLogin] = React.useState(true);
-    const [isAdmin, setIsAdmin] = React.useState<boolean>(true)
-    const [isloading, setIsloading] = React.useState<boolean>(true)
     const [mode, setMode] = useState('login')
     const [data, setData] = useState<Data>({})
     const inputRef = React.useRef<HTMLDivElement>(null)
-
-    useEffect(() => {
-        const user = async () => {
-            const { userInfo } = await import('@/utils/FetchFromApi')
-            const { currentSession } = await import('@/utils/Session')
-            const session = await currentSession() as Session
-            if (!session) {
-                setIsloading(false)
-                return notFound()
-            }
-            const currUser = await userInfo(session?.user.username);
-            (session && currUser.isAdmin === true) ? setIsAdmin(true) : setIsAdmin(false)
-            setIsloading(false)
-            return (currUser.isAdmin) ? true : false;
-        }
-        user()
-    }, [])
-    if (isloading) return <Loading />
-    if (!isAdmin) return notFound()
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -65,6 +41,7 @@ const page = () => {
         e.preventDefault();
         try {
             const { LoginUser, createUser } = await import('@/utils/FetchFromApi');
+            // (isLogin) && await LoginUser(data as Data)
             (isLogin) ? await LoginUser(data as Data) : await createUser(data)
 
         } catch (error) {
@@ -113,7 +90,7 @@ const page = () => {
                                 (authMode).map((item, index) => (
                                     <Typography
                                         sx={[styles.loginSignUpBtn(mode, item)]}
-                                        onClick={() => { setIsLogin(prev => !prev); setMode(item.name) }}
+                                        onClick={() => { setIsLogin(prev => !prev); setMode(item.name); setData({}) }}
                                         key={index}
                                     >{item.name}</Typography>
                                 ))

@@ -1,16 +1,12 @@
 'use client'
-import { RootState } from '@/store/store'
 import { realTimeDatabase } from '@/utils/Firebase'
 import { Data } from '@/utils/Interfaces'
 import { controls } from '@/utils/constant'
 import { child, get, onValue, ref, set } from 'firebase/database'
-import { notFound } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
 
 const page = () => {
     const [data, setData] = useState<Data>()
-    const { session } = useSelector((state: RootState) => state.session)
     const fetch = async () => {
         try {
             const snapshot = await get(child(ref(realTimeDatabase), `controls`))
@@ -23,7 +19,6 @@ const page = () => {
     useEffect(() => {
         fetch()
     }, [])
-    if (session[0] && !['admin', 'moderator'].includes(session[0]?.role)) return notFound()
     return (
         <div
             className='container self-center mx-[auto] p-5 flex flex-1 flex-col gap-3'

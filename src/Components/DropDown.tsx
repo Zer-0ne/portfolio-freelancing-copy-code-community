@@ -1,7 +1,7 @@
 
 import { Data } from '@/utils/Interfaces';
 import { KeyboardArrowDown } from '@mui/icons-material';
-import { Box, Typography } from '@mui/material';
+import { Box, SxProps, Theme, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react'
 import dynamic from 'next/dynamic';
 
@@ -10,6 +10,7 @@ const DropDownSkelenton = dynamic(() => import('./DropDownSkelenton'))
 const DropDown = (
     {
         style,
+        valuesStyles,
         values,
         onChange,
         name,
@@ -24,6 +25,7 @@ const DropDown = (
                 padding: string;
             }
         },
+        valuesStyles?:SxProps<Theme> | undefined
         values: string[],
         onChange: React.Dispatch<React.SetStateAction<Data | undefined>>,
         name: string;
@@ -55,7 +57,8 @@ const DropDown = (
                                 background: 'white',
                             },
                             padding: 1,
-                            borderRadius: 1
+                            borderRadius: 1,
+                            ...valuesStyles
                         }}
                         onClick={() => { setValue(item) }}
                     >

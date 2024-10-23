@@ -101,7 +101,7 @@ const HomePage = () => {
                     width: { xl: '40%', xs: '70%', md: '40%' },
                     textAlign: 'center',
                     marginTop: 2,
-                    minHeight: !isFinish ? { md: '120px', xs: '150px' } : 'auto'
+                    minHeight: !isFinish ? { md: '80px', xs: '80px' } : 'auto'
                 }}
             >
                 <Typewriter
@@ -132,7 +132,7 @@ const HomePage = () => {
                     href='/materials'
                     style={{
                         // transform: !isFinish ? 'skew(180deg,10deg)' : 'skew(0deg,0deg)',
-                        transform: isFinish ? 'scale(1)' : 'scale(0)',
+                        // transform: isFinish ? 'scale(1)' : 'scale(0)',
                         transition: 'all .5s ease-in-out',
                         marginTop: 15,
                         padding: '10px 15px',

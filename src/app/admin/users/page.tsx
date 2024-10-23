@@ -1,10 +1,12 @@
 'use client'
 
-import { Data, Session } from '@/utils/Interfaces'
-import { Container, } from '@mui/material'
+import useSession from '@/hooks/useSession'
+import { Data } from '@/utils/Interfaces'
+import { Container, Typography, } from '@mui/material'
 import dynamic from 'next/dynamic'
 import { notFound } from 'next/navigation'
-import React, { useEffect, useRef } from 'react'
+import { styles } from '@/utils/styles'
+import React, { useEffect } from 'react'
 
 const Loading = dynamic(() => import('@/Components/Loading'))
 const CustomModal = dynamic(() => import('@/Components/CustomModal'))
@@ -12,39 +14,24 @@ const UserCard = dynamic(() => import('@/Components/UserCard'))
 // const { fetchSession } = dynamic(() => import('@/slices/sessionSlice'))
 
 const page = () => {
-  const pageRef = useRef(false)
-  const [isloading, setIsloading] = React.useState<boolean>(true)
   const [open, setOpen] = React.useState(false);
   const [data, setData] = React.useState<Data[]>()
-  const [isAdmin, setIsAdmin] = React.useState(false)
   const [isUpdate, setIsUpdate] = React.useState<Data>()
+  const { isLoading, isAdmin, error } = useSession()
 
   const user = async () => {
-    const { allUser, userInfo } = await import('@/utils/FetchFromApi')
-    const { currentSession } = await import('@/utils/Session');
-
-    const session = await currentSession() as Session
-    if (!session) {
-      setIsloading(false)
-      return notFound()
-    }
-    const currUser = await userInfo(session?.user.username);
-    (session && ['user', 'moderator'].includes(currUser.role)) ? setIsAdmin(false) : setIsAdmin(true)
-
-    if (session && ['admin'].includes(currUser.role)) {
+    const { allUser } = await import('@/utils/FetchFromApi')
+    if (isAdmin && !error) {
       const alluser = await allUser('user')
       setData(alluser)
     }
-    setIsloading(false)
   }
 
   useEffect(() => {
-    (pageRef.current === false) && user()
-    return () => {
-      pageRef.current = true
-    }
-  }, [])
-  if (isloading) return <Loading />
+    user()
+  }, [isAdmin])
+
+  if (isLoading) return <Loading />
   if (isAdmin === false) return notFound()
 
   const handleDelete = async () => {
@@ -57,6 +44,21 @@ const page = () => {
     } catch (error) {
       console.log(error)
     }
+  }
+
+  if (error) {
+    return <div
+      className='flex flex-1 w-full py-auto absolute top-[50%] right-[50%] translate-x-[50%] -translate-y-[50%] justify-center my-auto items-center'
+    >
+      <Typography
+        sx={{
+          ...styles.glassphorism()
+        }}
+        className='flex w-[70%] md:w-[40%] min-h-[100px] p-10 justify-center items-center font-bold text-center  text-[#ffffff] capitalize  text-3xl rounded border-[#ff000034] border-[1px]'
+      >
+        something went wrong!
+      </Typography>
+    </div>
   }
 
   return (

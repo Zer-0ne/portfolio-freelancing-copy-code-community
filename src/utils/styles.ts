@@ -8,7 +8,7 @@ export const styles = {
         left: 0,
         right: 0,
         height: 50,
-        zIndex: 5,
+        zIndex: 50,
         flex: 1,
         top: '10px',
         padding: 3,

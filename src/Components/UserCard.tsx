@@ -63,7 +63,8 @@ const UserCard = (
                     justifyContent: 'space-between',
                     ...styles.glassphorism('', '12px 12px 0 0'),
                     p: 2,
-                    flexWrap: 'wrap'
+                    flexWrap: 'wrap',
+                    zIndex: 10
                 }}
             >
 
@@ -92,7 +93,6 @@ const UserCard = (
                         display: (item.username === session[0]?.username) ? 'none' : 'flex',
                         gap: 2,
                         alignItems: 'center',
-                        zIndex: 10
                     }}
                 >
                     <DropDown
@@ -100,6 +100,9 @@ const UserCard = (
                         onChange={setData}
                         style={styles}
                         values={roles as string[]}
+                        valuesStyles={{
+                            p:'3px'
+                        }}
                     />
                     <NotInterested
                         sx={{

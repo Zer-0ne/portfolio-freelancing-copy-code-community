@@ -2,6 +2,8 @@ import Users from "@/Models/Users";
 import connect from "@/utils/database";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from 'bcrypt'
+import { currentSession } from "@/utils/Session";
+import { Session } from "@/utils/Interfaces";
 
 
 export const POST = async (request: NextRequest) => {
@@ -15,6 +17,12 @@ export const POST = async (request: NextRequest) => {
             isAdmin,
             image,
         } = await request.json()
+        const session = await currentSession() as Session;
+        if (!session) return NextResponse.json({ message: 'Your are not Authorized!' }, { status: 401 })
+        const currUser = await Users.findOne({ username: session?.user?.username })
+
+        if (['user'].includes(currUser?.role) || !session) return NextResponse.json({ message: 'Your are not Authorized!' }, { status: 401 })
+
         const existingUser = await Users.findOne({ username })
         if (existingUser) return NextResponse.json({ message: 'User Already exists' }, { status: 300 })
 
