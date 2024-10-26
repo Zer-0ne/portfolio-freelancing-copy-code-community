@@ -6,9 +6,11 @@ import { useParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 
+
 const Forms = dynamic(() => import('@/Components/Forms'))
 const NotAcceptingForm = dynamic(() => import('@/Components/NotAcceptingForm'))
 const Loading = dynamic(() => import('@/Components/Loading'))
+const AuthModal = dynamic(() => import('@/Components/AuthModal'))
 
 
 const page = () => {
@@ -16,8 +18,6 @@ const page = () => {
     const { id }: any | null = useParams()
     const dispatch = useDispatch<AppDispatch>()
     const { events } = useSelector((state: RootState) => state.events)
-
-
 
     // fetch form 
     useEffect(() => {
@@ -33,14 +33,18 @@ const page = () => {
         }
         fetch()
     }, [])
+
     if (forms === undefined) return <Loading />
 
     if (!forms?.['Accepting Response']) return <NotAcceptingForm title={forms?.title as string} />
 
     return (
-        <Forms
-            forms={forms as FormStructure}
-        />
+        <>
+            <AuthModal />
+            <Forms
+                forms={forms as FormStructure}
+            />
+        </>
     )
 }
 

@@ -33,7 +33,8 @@ const MarkdownHeader = (
             <Typography
                 variant='h2'
                 sx={{
-                    fontSize: 35
+                    fontSize: 35,
+                    ...libre_Baskerville.style
                 }}
                 className={libre_Baskerville.className}
             >{data?.title}</Typography>
@@ -66,7 +67,8 @@ const MarkdownHeader = (
                             top: '50%',
                             bottom: '50%',
                             background: 'white',
-                            opacity: .7
+                            opacity: .7,
+                            ...ibn.style
                         }
                         // alignSelf:'end'
                     }}
@@ -87,6 +89,7 @@ const MarkdownHeader = (
                         ml: 0,
                         opacity: .7,
                         // alignSelf:'end'
+                        ...ibn.style
                     }}
                     className={ibn.className}
                 >
@@ -96,7 +99,8 @@ const MarkdownHeader = (
             <Typography
                 variant='caption'
                 sx={{
-                    textAlign: 'justify'
+                    textAlign: 'justify',
+                    ...ibn.style
                 }}
                 className={ibn.className}
             >

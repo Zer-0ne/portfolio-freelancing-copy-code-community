@@ -245,7 +245,7 @@ const page = () => {
                 <Link
                     href='/forms/join'
                     style={{
-
+                        ...ibn.style
                     }}
                     className={`${ibn.className}`}
                 >

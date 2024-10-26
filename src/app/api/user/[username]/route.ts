@@ -1,6 +1,6 @@
 import Users from "@/Models/Users";
 import { userInfo } from "@/utils/FetchFromApi";
-import { Data, Session } from "@/utils/Interfaces";
+import { Session } from "@/utils/Interfaces";
 import { currentSession } from "@/utils/Session";
 import connect from "@/utils/database";
 import { isValidObjectId } from "mongoose";
@@ -84,22 +84,23 @@ export const PUT = async (request: NextRequest, { params }: any) => {
 // delete one user
 export const DELETE = async (request: NextRequest, { params }: any) => {
     try {
-        // check the session
-        const session = await currentSession() as Session;
-        if (!session) return NextResponse.json({ message: 'Please login' }, { status: 401 })
-
-        // check the user is admin or not 
-        const user = await userInfo(session?.user?.username)
-        if (['user','moderator'].includes(user.role)) return NextResponse.json({ message: 'You are not Authorized!' }, { status: 401 })
-
-
         // connect to Database
         await connect();
         const { username } = params
+        
+        // check the session
+        const session = await currentSession() as Session;
+        if (!session) return NextResponse.json({ message: 'Please login' }, { status: 401 })
+            
+            // check the user is admin or not 
+            const user = await userInfo(session?.user?.username)
+            if (['user','moderator'].includes(user?.role)) return NextResponse.json({ message: 'You are not Authorized!' }, { status: 401 })
+                
+                
         if (user?.username === username) return NextResponse.json({ message: 'Cant do this action!' }, { status: 400 })
         const deleteUser = await Users.findOneAndDelete({ username })
         if (!deleteUser) return NextResponse.json({ message: 'User not found!' })
-        return NextResponse.json({ message: 'Delete seccussfully' })
+        return NextResponse.json({ message: 'User deleted successfully.' })
     } catch (err: {
         message: string
     } | any) {

@@ -1,5 +1,4 @@
 import { styles } from '@/utils/styles';
-import { Box, Container, Typography } from '@mui/material';
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -9,6 +8,9 @@ import { IBM_Plex_Mono, Libre_Baskerville } from 'next/font/google';
 import rehypeRaw from 'rehype-raw';
 import remarkGfm from 'remark-gfm';
 import dynamic from 'next/dynamic';
+
+const Box = dynamic(() => import('@mui/material/Box'), { ssr: false });
+const Typography = dynamic(() => import('@mui/material/Typography'), { ssr: false });
 
 const ContentStructure = dynamic(() => import('./ContentStructure'));
 const CodeContainer = dynamic(() => import('./CodeContainer'));
@@ -93,6 +95,7 @@ const Markdown = ({
                                 mb: 4,
                                 lineHeight: 1.25,
                                 p: 0,
+                                ...ibn.style
                             }}
                         >
                             {children}
@@ -106,6 +109,7 @@ const Markdown = ({
                                 ...styles.heading({ md: '1.5em', xs: '1.5em' }, '600'),
                                 lineHeight: 1.25,
                                 p: 0,
+                                ...ibn.style
                             }}
                         >
                             {children}
@@ -120,6 +124,7 @@ const Markdown = ({
                                 pl: 1.5,
                                 lineHeight: 1.25,
                                 p: 0,
+                                ...ibn.style
                             }}
                         >
                             {children}
@@ -133,6 +138,7 @@ const Markdown = ({
                                 ...styles.heading('1em', '600', 'none'),
                                 lineHeight: 1.25,
                                 p: 0,
+                                ...ibn.style
                             }}
                         >
                             {children}
@@ -146,6 +152,7 @@ const Markdown = ({
                                 ...styles.heading('.875em', '600', 'none'),
                                 lineHeight: 1.25,
                                 p: 0,
+                                ...ibn.style
                             }}
                         >
                             {children}
@@ -159,6 +166,7 @@ const Markdown = ({
                                 ...styles.heading('.85em', '600', 'none'),
                                 lineHeight: 1.25,
                                 p: 0,
+                                ...ibn.style
                             }}
                         >
                             {children}
@@ -201,8 +209,8 @@ const Markdown = ({
                             height={400}
                         />
                     ),
-                    ul: ({ children }) => <ul className='list'>{children}</ul>,
-                    ol: ({ children }) => <ol className='olist'>{children}</ol>,
+                    ul: ({ children }) => <ul className='flex gap-3 list'>{children}</ul>,
+                    ol: ({ children }) => <ol className='flex gap-3 olist'>{children}</ol>,
                     code: ({ children }) => (
                         <code style={{ ...styles.inlineCode() }}>{children}</code>
                     ),

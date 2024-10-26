@@ -76,7 +76,8 @@ const page = () => {
                                     <Typography
                                         variant='h3'
                                         sx={[styles.heading1(), {
-                                            display: 'inline'
+                                            display: 'inline',
+                                            ...kalam.style
                                         }]}
                                         className={kalam.className}
                                     >
@@ -87,7 +88,8 @@ const page = () => {
                                     variant='body1'
                                     sx={{
                                         textAlign: 'justify',
-                                        opacity: 0.7
+                                        opacity: 0.7,
+                                        ...ibn.style
                                     }}
                                     className={ibn.className}
                                 >

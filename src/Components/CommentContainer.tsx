@@ -4,12 +4,13 @@ import React, { useState } from 'react'
 import { SendRounded } from '@mui/icons-material'
 import { colors } from '@/utils/colors'
 import { BlogsInterface, CommentInterface, Data, EventsInterface } from '@/utils/Interfaces'
-import CommentItem from './CommentItem'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/store/store'
 import dynamic from 'next/dynamic'
 
 const ContentStructure = dynamic(() => import('./ContentStructure'))
+const AuthModal = dynamic(() => import('./AuthModal'))
+const CommentItem = dynamic(() => import('./CommentItem'))
 
 
 const CommentContainer = (
@@ -26,6 +27,7 @@ const CommentContainer = (
     const { session } = useSelector((state: RootState) => state.session)
     const [comment, setComment] = useState<Data>()
     const [isDisabled, setIsDisabled] = useState(false)
+    const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -34,8 +36,17 @@ const CommentContainer = (
         }))
     }
 
+    const handleFocus = () => {
+        if (!session.length) {
+            setIsAuthModalOpen(true); // Open the AuthModal if not logged in
+        }
+    };
+
     const handleSubmit = async () => {
         setIsDisabled(true)
+        if (!session.length) {
+            setIsAuthModalOpen(true); // Open the AuthModal if not logged in
+        }
         try {
             const { createNew } = await import('@/utils/FetchFromApi')
 
@@ -54,6 +65,9 @@ const CommentContainer = (
                 p: 0
             }}
         >
+            {
+                isAuthModalOpen && <AuthModal />
+            }
             {/* input fleid for new comments */}
             <Box
                 sx={{
@@ -90,10 +104,11 @@ const CommentContainer = (
                         <textarea
                             name='comment'
                             onChange={handleChange}
+                            onFocus={handleFocus}
                             style={{
                                 ...styles.customInput(1, {
                                     borderRadius: 10,
-                                    height: 150,
+                                    height: 'auto',
                                     resize: 'none'
                                 })
                             }}

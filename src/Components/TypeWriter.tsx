@@ -1,11 +1,12 @@
 'use client'
 import { Typography } from "@mui/material";
+import { NextFont } from "next/dist/compiled/@next/font";
 import { useEffect, useState } from "react";
 
 const Typewriter = ({ texts, speed, onFinish, className, ref, style }: {
     texts: string[];
     speed: number;
-    className?: string
+    className?: NextFont
     onFinish: () => void,
     ref?: any;
     style?: any
@@ -58,7 +59,8 @@ const Typewriter = ({ texts, speed, onFinish, className, ref, style }: {
             variant='body1'
             sx={{
                 fontSize: { xl: 20, md: 16, xs: 14 },
-            }} style={style} className={`${className}`}>
+                fontFamily: `${className?.style?.fontFamily} !important`
+            }} style={style} className={`${className?.className}`}>
             {displayedText}
         </Typography>
     );

@@ -7,6 +7,7 @@ import dynamic from 'next/dynamic';
 import React, { useState } from 'react'
 
 const DropDown = dynamic(() => import('@/Components/DropDown'))
+const AuthModal = dynamic(() => import('@/Components/AuthModal'))
 
 
 const page = () => {
@@ -35,6 +36,7 @@ const page = () => {
 
     return (
         <form onSubmit={handleSubmit}>
+            <AuthModal />
             <div className='flex justify-center items-center'>
                 <div className='flex gap-[1rem] flex-1 flex-col px-[2rem] justify-center items-center py-[1rem] max-w-[1200px]'>
                     <Container>

@@ -2,7 +2,7 @@
 import React from 'react'
 import particleConfig from './Config/particles.config'
 import { loadFull } from 'tsparticles'
-import type { Engine, ISourceOptions } from "tsparticles-engine";
+import type {  Engine, ISourceOptions } from "tsparticles-engine";
 import dynamic from 'next/dynamic';
 
 const Particles = dynamic(() => import('react-particles'))

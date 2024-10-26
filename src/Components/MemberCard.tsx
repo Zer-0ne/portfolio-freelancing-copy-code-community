@@ -22,10 +22,24 @@ const MemberCard = ({ item }: {
                             border: '1px solid #ffffff57',
                             background: 'transparent',
                             width: 120,
+                            position:'relative',
                             height: 120,
                             display: 'flex',
                             alignItems: 'center',
-                            justifyContent: 'center'
+                            justifyContent: 'center',
+                            "::after": {
+                                content: "''",
+                                position: 'absolute',
+                                top: 0,
+                                zIndex: -1,
+                                left: 0,
+                                right: 0,
+                                bottom: 0,
+                                backgroundImage: `url('${item.image}')`, // Shadow color
+                                borderRadius: '50%',
+                                filter: 'blur(10px)', // Blur effect for ambient shadow
+                                transition: 'opacity 0.2s',
+                            }
                         }}
                     >
 
@@ -33,7 +47,8 @@ const MemberCard = ({ item }: {
                             sx={{
                                 width: 100,
                                 height: 100,
-                                boxShadow: '0 0 10px black'
+                                boxShadow: '0 0 10px black',
+
                             }}
                             src={item.image}
                         />

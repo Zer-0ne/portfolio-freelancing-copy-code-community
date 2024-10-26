@@ -79,7 +79,8 @@ const Navbar = () => {
                             color: 'green',
                             fontWeight: 800,
                             fontSize: '1.3rem',
-                            textAlign: { xs: 'center', md: 'start' }
+                            textAlign: { xs: 'center', md: 'start' },
+                            ...rubikGlitchFont.style
                         }}
                         className={rubikGlitchFont.className}
                     >Copy code community</Typography></Link>
@@ -212,6 +213,7 @@ const Navbar = () => {
                                             sx={{
                                                 display: 'flex',
                                                 gap: 5,
+                                                paddingX:1,
                                                 mt: 4,
                                                 mb: 1,
                                                 flex: 1,
@@ -226,7 +228,8 @@ const Navbar = () => {
                                                     justifyContent: 'center',
                                                     left: 0,
                                                     right: 0,
-                                                    opacity: .5
+                                                    opacity: .5,
+                                                    fontSize: { md: 14, xl: 16, xs: 12 }
                                                 }
                                             }}
                                         >

@@ -1,27 +1,21 @@
-import { Backdrop, Box, Modal, Typography } from '@mui/material'
+import { Backdrop, Box, Modal } from '@mui/material'
 import React from 'react'
 import { styles } from '@/utils/styles'
-import { Data } from '@/utils/Interfaces';
 
 const CustomModal = (
     {
         open,
         setOpen,
-        item,
-        content,
-        title,
-        onClick
+        children
     }: {
         open: boolean;
         setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-        item: Data,
-        content: string,
-        title: string,
-        onClick: () => Promise<void>
+        children: React.ReactNode
     }
 ) => {
     return (
         <Modal
+            keepMounted
             aria-labelledby="transition-modal-title"
             aria-describedby="transition-modal-description"
             open={open}
@@ -46,36 +40,11 @@ const CustomModal = (
                     display: 'flex',
                     flexDirection: 'column',
                     gap: 2,
-                    minWidth: { xs: '40%', md: '40%' },
-                    maxWidth: { xs: '70%', md: '40%' },
+                    minWidth: { xs: '40%', md: '30%' },
+                    maxWidth: { xs: '70%', md: '30%' },
                 }}
             >
-                <Typography
-                    variant='h3'
-                    sx={{
-                        fontWeight: '600'
-                        , fontSize: 25
-                    }}
-                >{
-                        title
-                    }</Typography>
-                <Typography
-                    variant='caption'
-                    sx={{
-                        fontWeight: '300'
-                        , fontSize: 18
-                    }}
-                >
-                    {content}
-                </Typography>
-                <button
-                    style={{
-                        background: 'red',
-                        padding: 6,
-                        borderRadius: "10px",
-                    }}
-                    onClick={onClick}
-                >Delete</button>
+                {children}
             </Box>
         </Modal>
     )

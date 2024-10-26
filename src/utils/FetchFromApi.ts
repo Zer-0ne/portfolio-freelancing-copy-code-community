@@ -129,7 +129,7 @@ export const userInfo = async (id: string, method: string = 'GET') => {
             return await res.json()
         }
     } catch (error) {
-        console.log(error)
+        // console.log(error)
     }
 }
 

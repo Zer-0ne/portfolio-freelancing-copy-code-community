@@ -54,6 +54,7 @@ const DropDownSkelenton = (
                 }}
             >
                 <Box
+                    className='capitalize'
                     sx={{
                         ...styles?.customInput('', {
                             position:'static',
@@ -84,7 +85,8 @@ const DropDownSkelenton = (
                     alignItems: 'center',
                     ...customStyle,
                     zIndex: 10,
-                    fontSize: { xs: 12, md: 18, xl: 20 }
+                    opacity:.8,
+                    fontSize: { xs: 12, md: 14, xl: 14 }
                 }, 1)}
                 onClick={() => setIsTrue(prev => !prev)}
             >

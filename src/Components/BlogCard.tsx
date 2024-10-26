@@ -102,6 +102,9 @@ const BlogCard = ({
 
                     <Typography
                         variant='h5'
+                        sx={{
+                            ...libre_Baskerville.style
+                        }}
                         className={libre_Baskerville.className}
                     >
                         {item.title}
@@ -135,7 +138,8 @@ const BlogCard = ({
                                     top: '50%',
                                     bottom: '50%',
                                     background: 'white',
-                                    opacity: .7
+                                    opacity: .7,
+                                    ...ibn.style
                                 }
                                 // alignSelf:'end'
                             }}
@@ -154,6 +158,7 @@ const BlogCard = ({
                                 ml: 0,
                                 opacity: .7,
                                 // alignSelf:'end'
+                                ...ibn.style
                             }}
                             className={ibn.className}
                         >
@@ -162,6 +167,9 @@ const BlogCard = ({
                     </Box>
                     <Typography
                         variant='caption'
+                        sx={{
+                            ...ibn.style
+                        }}
                         className={ibn.className}
                     >
                         {item.description}
