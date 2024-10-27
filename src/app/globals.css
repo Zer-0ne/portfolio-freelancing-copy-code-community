@@ -25,6 +25,7 @@ body {
   transition: all 2s ease-in-out !important;
   background-color: black;
   color: white;
+  /* padding: 10px; */
   /* overflow: hidden; */
 }
 

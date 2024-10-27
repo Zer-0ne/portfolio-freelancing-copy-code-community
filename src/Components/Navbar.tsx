@@ -1,5 +1,5 @@
 'use client'
-import { Avatar, Box, NoSsr, Tooltip, Typography } from '@mui/material'
+import { Avatar, Box, Container, NoSsr, Tooltip, Typography } from '@mui/material'
 import React, { useRef } from 'react'
 import { styles } from '@/utils/styles'
 import { Login, navbarContent, sessionAction } from '@/utils/constant'
@@ -67,32 +67,37 @@ const Navbar = () => {
     }
 
     return (
-        <NoSsr>
+        <NoSsr
+        >
             <Box
                 sx={styles.navbar(pathName as string)}
             >
-                <Link href={`/`} style={{ flex: 1.5 }} >
+                <Box
+                    sx={{ flex: 1.5 }}
+                >
+                    <Link href={`/`}  >
 
-                    <Typography variant='h1'
-                        sx={{
-                            textTransform: 'capitalize',
-                            color: 'green',
-                            fontWeight: 800,
-                            fontSize: '1.3rem',
-                            textAlign: { xs: 'center', md: 'start' },
-                            ...rubikGlitchFont.style,
-                            position: 'relative',
-                            '::after': {
-                                content: "'Copy code community'",
+                        <Typography variant='h1'
+                            sx={{
+                                textTransform: 'capitalize',
                                 color: 'green',
-                                position: 'absolute',
-                                inset: '-5px',
-                                filter: 'blur(20px)', // Blur effect for ambient shadow
-                                zIndex: -1,
-                            }
-                        }}
-                        className={rubikGlitchFont.className}
-                    >Copy code community</Typography></Link>
+                                fontWeight: 800,
+                                fontSize: '1.3rem',
+                                textAlign: { xs: 'center', md: 'start' },
+                                ...rubikGlitchFont.style,
+                                position: 'relative',
+                                '::after': {
+                                    content: "'Copy code community'",
+                                    color: 'green',
+                                    position: 'absolute',
+                                    inset: '-5px',
+                                    filter: 'blur(20px)', // Blur effect for ambient shadow
+                                    zIndex: -1,
+                                }
+                            }}
+                            className={rubikGlitchFont.className}
+                        >Copy code community</Typography></Link>
+                </Box>
                 <Box sx={{ display: 'flex', justifyContent: 'space-evenly', flex: 1, alignItems: 'center', position: { xs: 'absolute', md: 'static' }, right: 10 }}>
                     {
                         navbarContent.map((item, index) => (
@@ -165,7 +170,7 @@ const Navbar = () => {
                                 navbarContent.map((item, index) => (
                                     <Box key={index} sx={{
                                         display: { xs: 'flex', md: 'none' },
-                                        flex: 1, alignSelf: 'center', position: 'relative', width:'100%', textAlign:'center',justifyContent:'center',
+                                        flex: 1, alignSelf: 'center', position: 'relative', width: '100%', textAlign: 'center', justifyContent: 'center',
                                         '::before': {
                                             content: "''",
                                             position: 'absolute',

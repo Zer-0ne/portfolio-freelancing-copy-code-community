@@ -17,6 +17,9 @@ export const styles = {
         justifyContent: 'space-between',
         ...styles.glassphorism(),
         margin: '15px 20px',
+        marginRight: { md: '15px', xl: 'auto' },
+        marginLeft: { md: '15px', xl: 'auto' },
+        maxWidth:'1200px'
         // overflow:'hidden'
     }),
     loginSignUpBtn: (mode: string, item: {
