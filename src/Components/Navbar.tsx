@@ -1,5 +1,5 @@
 'use client'
-import { Avatar, Box, NoSsr, Typography } from '@mui/material'
+import { Avatar, Box, NoSsr, Tooltip, Typography } from '@mui/material'
 import React, { useRef } from 'react'
 import { styles } from '@/utils/styles'
 import { Login, navbarContent, sessionAction } from '@/utils/constant'
@@ -80,7 +80,16 @@ const Navbar = () => {
                             fontWeight: 800,
                             fontSize: '1.3rem',
                             textAlign: { xs: 'center', md: 'start' },
-                            ...rubikGlitchFont.style
+                            ...rubikGlitchFont.style,
+                            position: 'relative',
+                            '::after': {
+                                content: "'Copy code community'",
+                                color: 'green',
+                                position: 'absolute',
+                                inset: '-5px',
+                                filter: 'blur(20px)', // Blur effect for ambient shadow
+                                zIndex: -1,
+                            }
                         }}
                         className={rubikGlitchFont.className}
                     >Copy code community</Typography></Link>
@@ -88,8 +97,9 @@ const Navbar = () => {
                     {
                         navbarContent.map((item, index) => (
                             <Box key={index} sx={{
+                                position: 'relative',
                                 display: {
-                                    xs: 'none', md: (item.name === 'home') ? 'none' : ['contacts'].includes(item.name) ?
+                                    xs: 'none', md: (item.name === 'home') ? 'none' : ['contacts', 'controls'].includes(item.name) ?
                                         ['admin', 'moderator'].includes(session[0]?.role) ?
                                             'block' :
                                             'none' :
@@ -99,11 +109,45 @@ const Navbar = () => {
                                                 'none' :
                                             'block'
                                 },
-                                color: ['users', 'contacts'].includes(item.name) ? 'red !important' : 'white'
+                                color: (item.path).includes('admin') ? 'red !important' : 'white',
+                                "::after": {
+                                    content: `'${item.name}'`, // Use single quotes instead of double quotes
+                                    position: 'absolute',
+                                    bottom: '-50px',
+                                    transform: 'translateX(-70%) scale(0)',
+                                    ...styles.glassphorism(),
+                                    color: 'white',
+                                    padding: '6px 10px',
+                                    borderRadius: '4px',
+                                    fontSize: '12px',
+                                    textTransform: 'capitalize',
+                                    opacity: 0,
+                                    pointerEvents: 'none',
+                                    whiteSpace: 'nowrap',
+                                    marginTop: '8px',
+                                    transition: 'all 0.3s ease',
+                                    zIndex: 1,
+                                },
+                                '::before': {
+                                    content: "''",
+                                    position: 'absolute',
+                                    inset: '-1px',
+                                    borderRadius: '50%',
+                                    zIndex: -1,
+                                    background: pathName.includes(item.path.replace('/', '')) ? (item.path).includes('admin') ? 'red' : 'white' : 'transparent',
+                                    filter: 'blur(20px)'
+                                },
+                                ":hover": {
+                                    "::after": {
+                                        opacity: { md: 1, xs: 0 },
+                                        transform: { md: 'translateX(-70%) scale(1)', xs: 'translateX(-70%) scale(0)' },
+
+                                    }
+                                }
                             }}>
 
                                 <Link href={`${item.path}`} >
-                                    {item.icon(pathName as string, item.path)}
+                                    {item.icon(pathName as string, item.path.replace('/', ''))}
                                 </Link>
                             </Box>
 
@@ -121,22 +165,31 @@ const Navbar = () => {
                                 navbarContent.map((item, index) => (
                                     <Box key={index} sx={{
                                         display: { xs: 'flex', md: 'none' },
-                                        flex: 1, alignSelf: 'center'
+                                        flex: 1, alignSelf: 'center', position: 'relative', width:'100%', textAlign:'center',justifyContent:'center',
+                                        '::before': {
+                                            content: "''",
+                                            position: 'absolute',
+                                            inset: '-5px',
+                                            borderRadius: '50%',
+                                            zIndex: -1,
+                                            background: (pathName.includes(item.path.replace('/', '')) && item.path.length > 1) ? (item.path).includes('admin') ? 'red' : 'white' : 'transparent',
+                                            filter: 'blur(80px)'
+                                        },
                                     }}>
 
                                         <Link href={`${item.path}`} style={{
-                                            display: ['users', 'contacts'].includes(item.name) ?
+                                            display: ['users', 'contacts', 'controls'].includes(item.name) ?
                                                 ['admin', 'moderator'].includes(session[0]?.role) ?
                                                     'flex' :
                                                     'none' :
                                                 'flex',
                                             gap: 2, alignItems: 'center',
-                                            color: ['users', 'contacts'].includes(item.name) ? 'red' : 'white'
+                                            color: ['users', 'contacts', 'controls'].includes(item.name) ? 'red' : 'white'
                                         }}>
-                                            {item.icon(pathName as string, item.path)}
+                                            {item.icon(pathName as string, item.path.replace('/', ''))}
                                             <Typography variant='caption' sx={{
                                                 fontSize: 20,
-                                                ...styles.iconStyle(pathName as string, item.path)
+                                                ...styles.iconStyle(pathName as string, item.path.replace('/', ''))
                                             }}>{item.name}</Typography>
                                         </Link>
                                     </Box>
@@ -152,13 +205,41 @@ const Navbar = () => {
                                     justifyContent: 'center'
                                 }}
                             >
-                                <Avatar
+                                <Box
+                                    sx={{
+                                        position: 'relative',
+                                        '::after': {
+                                            content: "''",
+                                            position: 'absolute',
+                                            inset: '-2px',
+                                            borderRadius: '10px',
+                                            filter: 'blur(10px)', // Blur effect for ambient shadow
+                                            zIndex: -1,
+                                            backgroundImage: `url('${session[0]?.image}')`, // Shadow color
+                                            transition: 'opacity 0.2s',
+                                            objectFit: { md: 'cover', xs: 'contain' },
+                                            backgroundSize: { md: 'cover', xs: 'contain' }, /* Ensures the image covers the entire area */
+                                            backgroundPosition: 'center' /* Centers the image */
+                                        }
+                                    }}
+                                >
+                                    <Avatar
+                                        src={session[0]?.image}
+                                        sizes='20px'
+                                        sx={{
+                                            width: 30,
+                                            height: 30,
+
+                                        }}
+                                    />
+                                </Box>
+                                {/* <Avatar
                                     src={session[0]?.image || ''}
                                     sx={{
                                         width: 20,
                                         height: 20
                                     }}
-                                />
+                                /> */}
                                 <Typography>{session[0]?.name}</Typography>
                             </Box>
                             {
@@ -213,7 +294,7 @@ const Navbar = () => {
                                             sx={{
                                                 display: 'flex',
                                                 gap: 5,
-                                                paddingX:1,
+                                                paddingX: 1,
                                                 mt: 4,
                                                 mb: 1,
                                                 flex: 1,

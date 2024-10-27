@@ -75,13 +75,33 @@ const UserCard = (
                         alignItems: 'center'
                     }}
                 >
-                    <Avatar
+                    <Box
                         sx={{
-                            height: 35,
-                            width: 35
+                            position: 'relative',
+                            '::after': {
+                                content: "''",
+                                position: 'absolute',
+                                inset: '-0px',
+                                borderRadius: '10px',
+                                filter: 'blur(10px)', // Blur effect for ambient shadow
+                                zIndex: -1,
+                                backgroundImage: `url('${item.image}')`, // Shadow color
+                                transition: 'opacity 0.2s',
+                                objectFit: { md: 'cover', xs: 'contain' },
+                                backgroundSize: { md: 'cover', xs: 'contain' }, /* Ensures the image covers the entire area */
+                                backgroundPosition: 'center' /* Centers the image */
+                            }
                         }}
-                        src={item.image as string}
-                    />
+                    >
+
+                        <Avatar
+                            sx={{
+                                height: 35,
+                                width: 35
+                            }}
+                            src={item.image as string}
+                        />
+                    </Box>
                     <Typography
                         variant='body1'
                     >
@@ -101,7 +121,7 @@ const UserCard = (
                         style={styles}
                         values={roles as string[]}
                         valuesStyles={{
-                            p:'3px'
+                            p: '3px'
                         }}
                     />
                     <NotInterested

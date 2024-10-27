@@ -3,7 +3,9 @@ import React, { useRef, useState } from 'react';
 import { styles } from '@/utils/styles';
 import { Rubik_Glitch, IBM_Plex_Mono, Satisfy } from 'next/font/google';
 import Link from 'next/link';
-import Typewriter from '@/Components/TypeWriter';
+import dynamic from 'next/dynamic';
+
+const Typewriter = dynamic(() => import('@/Components/TypeWriter'))
 
 // Load the font using the font loader
 const rubikGlitchFont = Rubik_Glitch({
@@ -65,6 +67,16 @@ const HomePage = () => {
                         fontSize: { xs: '2rem', md: '4rem', xl: '6rem' },
                         textAlign: 'center',
                         ...rubikGlitchFont.style,
+                        position: 'relative',
+                        '::after': {
+                            content: "'Copy code community'",
+                            color: 'green',
+                            position: 'absolute',
+                            inset: '-0px',
+                            filter: 'blur(90px)', // Blur effect for ambient shadow
+                            zIndex: -1,
+                        },
+                        cursor:'default'
                         // fontFamily: `${rubikGlitchFont.style.fontFamily} !important`, // Override MUI font family
                     }}
                 >

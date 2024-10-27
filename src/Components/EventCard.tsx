@@ -1,17 +1,17 @@
 import { Box, Typography } from '@mui/material'
 import React, { useEffect, useRef } from 'react'
 import { styles } from '@/utils/styles'
-import Image from 'next/image'
 import { AssistantPhotoRounded, CalendarToday, DeleteRounded, EditRounded, LanguageOutlined, LocalOfferRounded } from '@mui/icons-material'
 import { colors } from '@/utils/colors'
 import { EventsInterface, } from '@/utils/Interfaces'
-import { deletePost } from '@/utils/FetchFromApi'
 import Link from 'next/link'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from '@/store/store'
 import { useRouter } from 'next/navigation'
 import dp from '@/app/favicon.ico'
 import { updateEvent } from '@/slices/eventsSlice'
+import dynamic from 'next/dynamic';
+const EmbientImage = dynamic(() => import('./Embient-image'))
 
 const EventCard = ({
     item,
@@ -76,6 +76,7 @@ const EventCard = ({
     }
 
     const deleteEvent = async () => {
+        const { deletePost } = await import('@/utils/FetchFromApi');
         await deletePost(item?._id, 'event', item)
         dispatch(updateEvent({ id: item?._id, updatedEvent: null }));
         await fetchData()
@@ -103,24 +104,17 @@ const EventCard = ({
                 >
 
                     {/* image box */}
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            flex: { xs: 10, md: 1, xl: 1 },
-                            minWidth: 200
+                    <EmbientImage
+                        alt='img'
+                        src={item.image || dp}
+                        customImageStyles={{
+                            // width:'100%'
                         }}
-                    >
-                        <Image
-                            src={item.image || dp}
-                            alt='img'
-                            width={200}
-                            height={200}
-                            fill={false}
-                            style={{
-                                flex: 1
-                            }}
-                        />
-                    </Box>
+                        customBoxStyles={{
+                            // width:'1000px',
+                        }}
+                        key={item._id}
+                    />
 
                     {/* Heading and description */}
                     <Box
@@ -296,7 +290,7 @@ const EventCard = ({
                         </Box>
                     </Box>
                 </Box>
-            </Link>
+            </Link >
             <Box
                 sx={{
                     display: ['admin', 'moderator'].includes(session[0]?.role) ? 'flex' : 'none',
@@ -335,7 +329,7 @@ const EventCard = ({
                     }}
                 />
             </Box>
-        </Box>
+        </Box >
     )
 }
 

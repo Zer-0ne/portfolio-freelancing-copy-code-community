@@ -44,11 +44,11 @@ const DropDownSkelenton = (
                         cursor: 'pointer',
                         transition: 'all .5s ease-in-out',
                         flex: 1,
-                        padding:0,
+                        padding: 0,
                         gap: 1,
                         fontSize: { xs: 12, md: 18, xl: 25 },
                         textAlign: 'center',
-                        border:'0px'
+                        border: '0px'
                     }, 0)
 
                 }}
@@ -57,7 +57,7 @@ const DropDownSkelenton = (
                     className='capitalize'
                     sx={{
                         ...styles?.customInput('', {
-                            position:'static',
+                            position: 'static',
                             display: isTrue ? 'flex' : 'none',
                             opacity: isTrue ? 1 : 0,
                             flexDirection: 'column',
@@ -66,7 +66,7 @@ const DropDownSkelenton = (
                             ...styles.glassphorism(),
                             flex: 1,
                             gap: 1,
-                            zIndex:10,
+                            zIndex: 10,
                             fontSize: { xs: 12, md: 18, xl: 25 },
                             textAlign: 'center',
                         }, 1),
@@ -85,20 +85,41 @@ const DropDownSkelenton = (
                     alignItems: 'center',
                     ...customStyle,
                     zIndex: 10,
-                    opacity:.8,
+                    opacity: .8,
                     fontSize: { xs: 12, md: 14, xl: 14 }
                 }, 1)}
                 onClick={() => setIsTrue(prev => !prev)}
             >
                 {(value) ? value : (status === 'unauthenticated') ? (matches) ? '' : 'Login' : (matches) ? '' : <>
-                    <Avatar
-                        src={session[0]?.image}
-                        sizes='20px'
+                    <Box
                         sx={{
-                            width: 30,
-                            height: 30,
+                            position: 'relative',
+                            '::after': {
+                                content: "''",
+                                position: 'absolute',
+                                inset: '-2px',
+                                borderRadius: '10px',
+                                filter: 'blur(10px)', // Blur effect for ambient shadow
+                                zIndex: -1,
+                                backgroundImage: `url('${session[0]?.image}')`, // Shadow color
+                                transition: 'opacity 0.2s',
+                                objectFit: { md: 'cover', xs: 'contain' },
+                                backgroundSize: { md: 'cover', xs: 'contain' }, /* Ensures the image covers the entire area */
+                                backgroundPosition: 'center' /* Centers the image */
+                            }
                         }}
-                    />
+                    >
+                        <Avatar
+                            src={session[0]?.image}
+                            sizes='20px'
+                            sx={{
+                                width: 30,
+                                height: 30,
+
+                            }}
+                        />
+                    </Box>
+
                 </>}
                 <KeyboardArrowDown
                     sx={{

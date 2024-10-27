@@ -19,7 +19,8 @@ import {
     LinkRounded,
     MailLock,
     Person,
-    School
+    School,
+    Tune as TuneIcon
 } from '@mui/icons-material';
 import { styles } from "./styles";
 import { Typography } from "@mui/material";
@@ -147,6 +148,13 @@ export const navbarContent = [
             sx={styles.iconStyle(currentPath as string, iconPath as string)}
         />),
         path: `/admin/contacts`
+    },
+    {
+        name: 'controls',
+        icon: (currentPath: string, iconPath: string) => (<TuneIcon
+            sx={styles.iconStyle(currentPath as string, iconPath as string)}
+        />),
+        path: `/admin/controls`
     },
 ]
 
@@ -505,36 +513,36 @@ const materials = [
     {
         name: 'DBMS',
         sha: '',
-        type:'',
+        type: '',
         tree: [
             {
-                name:'SQL Tutorial',
-                sha:'',
-                type:'',
+                name: 'SQL Tutorial',
+                sha: '',
+                type: '',
                 tree: [
                     {
-                        name:'',
-                        sha:'',
-                        content:'',
-                        type:''
+                        name: '',
+                        sha: '',
+                        content: '',
+                        type: ''
                     }
                 ]
-            },{
-                name:'SQL Database',
-                type:'',
-                sha:'',
-                tree:[
+            }, {
+                name: 'SQL Database',
+                type: '',
+                sha: '',
+                tree: [
                     {
-                        name:'',
-                        sha:'',
-                        content:'',
-                        type:''
+                        name: '',
+                        sha: '',
+                        content: '',
+                        type: ''
                     },
                     {
-                        name:'',
-                        sha:'',
-                        content:'',
-                        type:''
+                        name: '',
+                        sha: '',
+                        content: '',
+                        type: ''
                     },
                 ]
             }

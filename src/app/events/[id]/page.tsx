@@ -8,6 +8,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from '@/store/store'
 import { fetchEvents } from '@/slices/eventsSlice'
+import EmbientImage from '@/Components/Embient-image'
 
 const Loading = dynamic(() => import('@/Components/Loading'))
 const ContentStructure = dynamic(() => import('@/Components/ContentStructure'))
@@ -15,9 +16,9 @@ const Markdown = dynamic(() => import('@/Components/Markdown'))
 
 
 const page = () => {
-    const { events,loading } = useSelector((state: RootState) => state.events)
+    const { events, loading } = useSelector((state: RootState) => state.events)
     const dispatch = useDispatch<AppDispatch>()
-    const { id }:any = useParams()
+    const { id }: any = useParams()
 
     // event
     let event = events?.find((item: EventsInterface) => item._id === id);
@@ -58,7 +59,7 @@ const Header = ({
                     flexWrap: 'wrap'
                 }}
             >
-                <Image
+                {/* <Image
                     className='headerImage'
                     src={`${data?.image}`}
                     width={1200}
@@ -71,7 +72,7 @@ const Header = ({
                         height: '17rem !important',
                         borderRadius: '7px'
                     }}
-                />
+                /> */}
                 <Box
                     sx={{
                         pl: 1,

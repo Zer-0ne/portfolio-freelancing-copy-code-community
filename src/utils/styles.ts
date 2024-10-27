@@ -16,7 +16,8 @@ export const styles = {
         alignItems: 'center',
         justifyContent: 'space-between',
         ...styles.glassphorism(),
-        margin: '15px 20px'
+        margin: '15px 20px',
+        // overflow:'hidden'
     }),
     loginSignUpBtn: (mode: string, item: {
         name: string;
@@ -52,21 +53,13 @@ export const styles = {
         ...customStyle
     }),
     iconStyle: (currentPath: string, iconPath: string) => ({
-        color: 'white',
-        opacity: [currentPath].includes(iconPath) ? 1 : 0.5,
+        color: 'inherit',
+        opacity: (currentPath.includes(iconPath) && iconPath.length > 1) ? 1 : 0.5,
         position: 'relative',
         transition: 'all .5s ease-in-out',
-        // '::after': {
-        //     content: '""',
-        //     position: 'absolute',
-        //     bottom: -6,
-        //     left: 0, right: 0,
-        //     height: 2,
-        //     background: 'white'
-        // }
         ":hover": {
-            opacity: 1
-        }
+            opacity: 1,
+        },
     }),
     heading1: (font = 30) => ({
         fontSize: font,
