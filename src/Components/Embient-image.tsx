@@ -1,4 +1,4 @@
-import { Box, SxProps, Theme } from '@mui/material'
+import { Box, SxProps, Theme, useMediaQuery } from '@mui/material'
 import { StaticImport } from 'next/dist/shared/lib/get-img-props'
 import Image from 'next/image'
 import React from 'react'
@@ -16,6 +16,7 @@ const EmbientImage = ({
     alt: string
     imageProps?: React.ComponentProps<typeof Image>;
 }) => {
+    const mobileView = useMediaQuery('(max-width:900px)'); // Check if the view is mobile
     return (
         <>
             <Box
@@ -32,10 +33,11 @@ const EmbientImage = ({
                         backgroundImage: `url('${src}')`, // Shadow color
                         borderRadius: '10px',
                         filter: 'blur(10px)', // Blur effect for ambient shadow
-                        transition: 'opacity 0.2s',
+                        transition: 'all 0.2s',
                         objectFit: { md: 'cover', xs: 'contain' },
                         backgroundSize: { md: 'cover', xs: 'contain' }, /* Ensures the image covers the entire area */
-                        backgroundPosition: 'center' /* Centers the image */
+                        backgroundPosition: 'center', /* Centers the image */
+                        backgroundRepeat: 'no-repeat'
                     },
                     ...customBoxStyles
                 }}
@@ -48,7 +50,8 @@ const EmbientImage = ({
                     fill={false}
                     style={{
                         flex: 1,
-                        ...customImageStyles
+                        ...customImageStyles,
+                        objectFit: mobileView ? 'contain' : 'cover'
                     }}
                     {...imageProps}
                 />
