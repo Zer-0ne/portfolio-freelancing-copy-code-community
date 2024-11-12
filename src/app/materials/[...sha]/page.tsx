@@ -315,8 +315,8 @@ const Sidebar = ({
 const ContentPage = ({ data, isLoading }: { data: string; isLoading: boolean }) => {
     return (
         <>
-            {isLoading && <Loading />} {/* Show loading component while loading */}
-            {(!data && !isLoading) ? <>No post yet!</> : <Markdown data={{ content: data }} />} {/* Render markdown content */}
+            {isLoading ? <Loading /> /* Show loading component while loading */ :
+                (!data) ? <>No post yet!</> : <Markdown data={{ content: data }} />} {/* Render markdown content */}
         </>
     );
 };

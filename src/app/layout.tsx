@@ -55,7 +55,11 @@ export default function RootLayout({
     <html lang="en" style={{ position: 'relative' }}>
       <head>
       </head>
-      <body className={` ${inter.className} min-h-[90vh]`}  >
+      <body
+        style={{
+          overscrollBehavior: 'none'
+        }}
+        className={` ${inter.className} min-h-[90vh]`}  >
         <NextAuthProvider>
           <ReduxProdiver>
             <Navbar />
