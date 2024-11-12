@@ -1,9 +1,13 @@
 'use client'
 import { RootState } from '@/store/store'
-import { Data, FormStructure } from '@/utils/Interfaces'
+import { FormStructure } from '@/utils/Interfaces'
+import { update } from '@/utils/ToastConfig'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
+import { toast } from 'react-toastify'
+import DrawIcon from '@mui/icons-material/Draw';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const page = () => {
     const { session } = useSelector((state: RootState) => state.session)
@@ -25,7 +29,7 @@ const page = () => {
             {/* <h2 className='text-2xl font-bold text-[green]'>Create a forms</h2> */}
             <div className='flex flex-wrap gap-2 justify-center'>
 
-                <Link href={`/forms/create/${Date.now()}`} className={`${['admin', 'moderator'].includes(session[0]?.role) ? 'flex' : 'hidden'} flex-1 rounded-lg border-dotted p-[1rem] justify-center items-center m-[5px] border-[2px] text-[green] cursor-pointer border-[green] opacity-80 basis-[250px] grow-0 shrink-0  hover:opacity-100 transition-all ease-in-out delay-150`}>Create a new forms</Link>
+                <Link href={`/forms/create/${Date.now()}`} className={`${['admin', 'moderator'].includes(session[0]?.role) ? 'flex' : 'hidden'} flex-1 rounded-lg border-dotted p-[1rem] justify-center items-center m-[5px] border-[2px] max-h-fit text-[green] cursor-pointer border-[green] opacity-80 basis-[250px] grow-0 shrink-0  hover:opacity-100 transition-all ease-in-out delay-150`}>Create a new forms</Link>
                 {
                     data?.map((item, index) => (
                         <FormCard key={index} item={item as FormStructure} session={session} />
@@ -58,9 +62,57 @@ const FormCard = ({ item, session }: { item: FormStructure, session: any }) => {
         write()
     }, [isAccepting])
 
+    /**
+     * 1. check the current user has authority?
+     * 2. delete the google sheet
+     * 3. check the response from api
+     * 4. import some functions
+     * 5. remove the form from realtime database
+     * 6. response to the user
+     * @returns response
+     */
+    const deleteForm = async () => {
+        const Toast = toast.loading('Please wait')
+        try {
+            if (!['admin', 'moderator'].includes(session[0]?.role)) return 'Your are not authorized'
+            const response = await fetch(`/api/sheet/${item?.sheetId}`, {
+                method: 'DELETE'
+            })
+            if (!response.ok) {
+                const errorMessage = await response.text(); // Get the error message from the response
+                throw new Error(`Failed to delete sheet: ${errorMessage}`);
+            }
+            const { realTimeDatabase } = await import("@/utils/Firebase");
+            const { ref, remove } = await import('firebase/database');
+            const formsRef = ref(realTimeDatabase, `forms/${item._id}`);
+            await remove(formsRef);
+            return toast.update(Toast, update('Deleted successfully!', 'success'))
+        } catch (error) {
+            console.log(error)
+            return toast.update(Toast, update('Something went wrong!', 'error'))
+        }
+    }
+
 
     return (
-        <div className='flex flex-1 gap-2 flex-col rounded-lg border-dotted p-[1rem] justify-start opacity-75 hover:opacity-100 transition-all ease-in-out delay-150 items-center m-[5px] border-[2px] basis-[250px] grow-0 shrink-0 border-[white]'>
+        <div className='flex max-h-fit relative flex-1 gap-2 flex-col rounded-lg border-dotted p-[1rem] justify-start opacity-75 hover:opacity-100 transition-all ease-in-out delay-150 items-center m-[5px] border-[2px] basis-[250px] grow-0 shrink-0 border-[white]'>
+
+            <div
+                className='absolute top-8 left-4 flex flex-1 justify-between items-center gap-2'
+            >
+                <button
+                    onClick={deleteForm}
+                >
+                    <DeleteIcon
+                        className=' opacity-75 cursor-pointer '
+                    />
+                </button>
+                <Link href={`/forms/create/${item._id}`}>
+                    <DrawIcon
+                        className='opacity-75 cursor-pointer '
+                    />
+                </Link>
+            </div>
             {/* toggle btn */}
             <div className={`flex gap-1 self-end ${['admin', 'moderator'].includes(session[0]?.role) ? 'block' : 'hidden'}`}>
                 <div onClick={handleClick} className='cursor-pointer flex gap-3 items-center'>

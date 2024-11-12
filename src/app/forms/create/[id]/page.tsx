@@ -1,11 +1,11 @@
 'use client'
-import { AppDispatch, RootState } from '@/store/store'
+import { RootState } from '@/store/store'
 import { Data } from '@/utils/Interfaces'
 import { colors } from '@/utils/colors'
 import { child, get, ref, set } from 'firebase/database'
 import { notFound, useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 
 const page = () => {
     /**
@@ -14,7 +14,6 @@ const page = () => {
     const [array, setArray] = useState<Data[]>([])
     const { session } = useSelector((state: RootState) => state.session)
     const [data, setdata] = useState<Data>()
-    const dispatch = useDispatch<AppDispatch>()
     const [isDisabled, setIsDisabled] = useState<boolean>(false)
     const { id }: any = useParams()
 
@@ -35,7 +34,8 @@ const page = () => {
             const { createNew } = await import('@/utils/FetchFromApi')
             const { realTimeDatabase } = await import('@/utils/Firebase')
             const nameArray = await array.map((obj: Data) => obj?.name);
-            if (data && data['sheetId'] === '') setdata({ ...data, sheetId: await createNew({ functionality: 'create', fields: [...nameArray], title: data?.title }, 'form', setIsDisabled).then((resp) => resp.data.spreadsheetId) })
+            console.log(data)
+            if (data && data['title'] && !data['sheetId']) setdata({ ...data, sheetId: await createNew({ functionality: 'create', fields: [...nameArray], title: data?.title }, 'form', setIsDisabled).then((resp) => resp.data.spreadsheetId) })
             data && await set(ref(realTimeDatabase, `forms/${id}`), {
                 _id: id,
                 'Accepting Response': true,
@@ -61,7 +61,6 @@ const page = () => {
         }
         fetch()
     }, [])
-    console.log()
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
         const { name, value } = e.target

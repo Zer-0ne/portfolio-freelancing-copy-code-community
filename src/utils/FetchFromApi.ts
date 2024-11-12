@@ -349,6 +349,55 @@ export const deleteComment = async (id: string, authorId: string) => {
     }
 }
 
+
+/**
+ * 1. check the user has authority or not
+ * 2. requesting for download the sheet
+ * 3. if the response is ok then the downloading process is excuted
+ * 4. then show an error to the user
+ * @param spreadsheetId id of the google sheets
+ * @param title title of the form
+ */
+export const downloadSheet = async (spreadsheetId: string, title: string) => {
+    const Toast = toast.loading('Please wait')
+    try {
+        const session = await currentSession() as Session;
+        if (!session) return toast.update(Toast, update('Please Login!', 'error'))
+
+        // check the user is admin or not 
+        const user = await userInfo(session?.user?.username)
+        if (['user'].includes(user.role)) return toast.update(Toast, update('Your are not Authorized!', 'error'))
+        const response = await fetch(`/api/sheet/${spreadsheetId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        // const data = await response.json()
+        // console.log(data.data)
+        if (response.ok) {
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            console.log(url)
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${title ?? 'spreadsheet'}.xlsx`; // Set the default file name
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(url); // Clean up the URL object
+            return toast.update(Toast, update('Downloading', 'success'))
+        } else {
+            const data = await response.json();
+            console.error(data.error);
+            return toast.update(Toast, update('Something went wrong!', 'error'))
+        }
+    } catch (error) {
+        console.error('Error downloading sheet:', error);
+        return toast.update(Toast, update('Something went wrong!', 'error'))
+    }
+}
+
 // fetch the list of the material from the github api 
 export interface Node {
     path: string;

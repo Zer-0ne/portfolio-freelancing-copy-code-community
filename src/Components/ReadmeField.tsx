@@ -25,6 +25,7 @@ const ReadmeField = ({
     const [isTrue, setIsTrue] = useState(false);
     const [isEnter, setIsEnter] = useState(false);
     const inputRef = React.useRef<HTMLDivElement>(null)
+    const [cursorPosition, setCursorPosition] = useState(0);
     const [counter, setCounter] = useState(2)
     const [progress, setProgress] = useState(0)
     const [data, setData] = useState<{
@@ -80,13 +81,14 @@ const ReadmeField = ({
 
             // You can implement logic to add bold markdown syntax
             setMarkdownContent((prevContent: string) => {
-                return prevContent + code();
+                return prevContent.substring(0, cursorPosition) + code() + prevContent.substring(cursorPosition, prevContent.length);
             });
 
             // Move cursor after setting the content
             setMarkdownContent((prevContent) => {
+                console.log('ssjssjsj'+prevContent.substring(0, cursorPosition).length);
                 (toMoveCursor) ?
-                    moveCursor(prevContent.length + toMoveCursor) : moveCursor()
+                    moveCursor(prevContent.substring(0, cursorPosition).length-toMoveCursor) : moveCursor()
                 return prevContent;
             });
         }
@@ -123,7 +125,6 @@ const ReadmeField = ({
 
             // Move cursor after setting the content
             setMarkdownContent((prevContent) => {
-                moveCursor();
                 return prevContent;
             });
 
@@ -139,6 +140,11 @@ const ReadmeField = ({
         }
 
     }
+
+    const handleSelect = () => {
+        const { selectionStart }:any = editorRef?.current;
+        setCursorPosition(selectionStart);
+    };
 
 
     return (
@@ -258,6 +264,8 @@ const ReadmeField = ({
                                         setIsEnter(false)
                                     }
                                 }}
+                                onMouseUp={handleSelect} // Track cursor position on mouse up
+                                onKeyUp={handleSelect} // Track cursor position on key up
                                 onChange={handleChange}
                                 style={{
                                     flex: 100,

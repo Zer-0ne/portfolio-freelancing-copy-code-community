@@ -1,5 +1,5 @@
 'use client'
-import { Avatar, Box, Container, NoSsr, Tooltip, Typography } from '@mui/material'
+import { Avatar, Box, NoSsr, Typography } from '@mui/material'
 import React, { useRef } from 'react'
 import { styles } from '@/utils/styles'
 import { Login, navbarContent, sessionAction } from '@/utils/constant'

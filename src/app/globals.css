@@ -25,6 +25,7 @@ body {
   transition: all 2s ease-in-out !important;
   background-color: black;
   color: white;
+  /* overscroll-behavior: none!important; */
   /* padding: 10px; */
   /* overflow: hidden; */
 }
@@ -36,6 +37,7 @@ body {
   scrollbar-width: none !important;
   /* Firefox */
   box-sizing: border-box;
+  /* overscroll-behavior: none!important; */
 
 }
 
