@@ -97,22 +97,25 @@ const FormCard = ({ item, session }: { item: FormStructure, session: any }) => {
     return (
         <div className='flex max-h-fit relative flex-1 gap-2 flex-col rounded-lg border-dotted p-[1rem] justify-start opacity-75 hover:opacity-100 transition-all ease-in-out delay-150 items-center m-[5px] border-[2px] basis-[250px] grow-0 shrink-0 border-[white]'>
 
-            <div
-                className='absolute top-8 left-4 flex flex-1 justify-between items-center gap-2'
-            >
-                <button
-                    onClick={deleteForm}
+            {
+                (session[0] && ['admin', 'moderator'].includes(session[0]?.role)) &&
+                <div
+                    className='absolute top-8 left-4 flex flex-1 justify-between items-center gap-2'
                 >
-                    <DeleteIcon
-                        className=' opacity-75 cursor-pointer '
-                    />
-                </button>
-                <Link href={`/forms/create/${item._id}`}>
-                    <DrawIcon
-                        className='opacity-75 cursor-pointer '
-                    />
-                </Link>
-            </div>
+                    <button
+                        onClick={deleteForm}
+                    >
+                        <DeleteIcon
+                            className=' opacity-75 cursor-pointer '
+                        />
+                    </button>
+                    <Link href={`/forms/create/${item._id}`}>
+                        <DrawIcon
+                            className='opacity-75 cursor-pointer '
+                        />
+                    </Link>
+                </div>
+            }
             {/* toggle btn */}
             <div className={`flex gap-1 self-end ${['admin', 'moderator'].includes(session[0]?.role) ? 'block' : 'hidden'}`}>
                 <div onClick={handleClick} className='cursor-pointer flex gap-3 items-center'>
