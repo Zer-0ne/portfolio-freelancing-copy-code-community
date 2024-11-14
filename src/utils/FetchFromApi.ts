@@ -182,7 +182,7 @@ export const createNew = async (data: Data, route: string, setIsDisabled?: React
         if (!['comment', 'form'].includes(route)) {
             if (['user'].includes(user.role)) return toast.update(Toast, update('Your are not Authorized!', 'error'))
         }
-        console.log(data)
+        // console.log(data)
 
         setIsDisabled && setIsDisabled(true)
         const response = await fetch(`/api/${route}/`, {
@@ -235,7 +235,7 @@ export const createNewContact = async (data: Data, setIsDisabled: React.Dispatch
         const data_from_server = await response.json();
         if (response.ok) {
             setIsDisabled(false)
-            return toast.update(Toast, update(data_from_server.message, data_from_server.status))
+            return toast.update(Toast, update(data_from_server.message ?? data_from_server.error, data_from_server.status))
         }
         setIsDisabled(false)
         return toast.update(Toast, update(data_from_server.message || 'Please Enter Required field', data_from_server.status || 'error'))
@@ -283,9 +283,9 @@ export const deletePost = async (id: string, route: string, item: BlogsInterface
         const res = await fetch(`/api/${route}/${id}`, { method: 'DELETE' });
         const data_from_server = await res.json();
         if (res.ok) {
-            return toast.update(Toast, update(data_from_server.message, data_from_server.status));
+            return toast.update(Toast, update(data_from_server.message ?? data_from_server.error, data_from_server.status));
         }
-        return toast.update(Toast, update(data_from_server.message, data_from_server.status));
+        return toast.update(Toast, update(data_from_server.message ?? data_from_server.error, data_from_server.status));
     } catch (error) {
         console.log(error)
         return toast.update(Toast, update('Something Went Wrong!', 'error'))
@@ -311,15 +311,46 @@ export const editPost = async (id: string, data: Data, route: string) => {
         });
         const data_from_server = await res.json();
         if (res.ok) {
-            return toast.update(Toast, update(data_from_server.message, data_from_server.status));
+            return toast.update(Toast, update(data_from_server.message ?? data_from_server.error, data_from_server.status));
         }
-        return toast.update(Toast, update(data_from_server.message, data_from_server.status));
+        return toast.update(Toast, update(data_from_server.message ?? data_from_server.error, data_from_server.status));
     } catch (error) {
         console.log(error)
         return toast.update(Toast, update('Something Went Wrong!', 'error'));
     }
 }
 
+
+/**
+ * 1. check the session user is authorized or not
+ * 2. post request to the server with the data
+ * @param data data is the object which contains fileId, role, emailAddress
+ * @returns The toast message
+ */
+export const sharePermission = async (data: Data) => {
+    const Toast = toast.loading('Please wait')
+    try {
+        const session = await currentSession() as Session;
+        if (!session) return toast.update(Toast, update('Please Login!', 'error'))
+
+        // check the user is admin or not 
+        const user = await userInfo(session?.user?.username)
+        if (['user'].includes(user.role)) return toast.update(Toast, update('Your are not Authorized!', 'error'))
+
+        const response = await fetch('/api/drive/permissions', {
+            method: 'POST',
+            body: JSON.stringify(data)
+        })
+        const data_from_server = await response.json();
+        if (response.ok) {
+            return toast.update(Toast, update(data_from_server.message ?? data_from_server.error, data_from_server.status));
+        }
+        return toast.update(Toast, update(data_from_server.message ?? data_from_server.error, data_from_server.status));
+    } catch (error) {
+        console.log(error)
+        return toast.update(Toast, update('Something Went Wrong!', 'error'));
+    }
+}
 
 export const deleteComment = async (id: string, authorId: string) => {
     const Toast = toast.loading('Please wait')
@@ -378,7 +409,7 @@ export const downloadSheet = async (spreadsheetId: string, title: string) => {
         if (response.ok) {
             const blob = await response.blob();
             const url = window.URL.createObjectURL(blob);
-            console.log(url)
+            // console.log(url)
             const a = document.createElement('a');
             a.href = url;
             a.download = `${title ?? 'spreadsheet'}.xlsx`; // Set the default file name
@@ -510,7 +541,7 @@ export const getSpecificContentGithub = async (url: string) => {
 
 export const getFileURLRecursively = async (url: string): Promise<string> => {
     try {
-        console.log(process.env.GITHUB_KEY);
+        // console.log(process.env.GITHUB_KEY);
         const response = await fetch(`${url}`, {
             method: 'GET',
             headers: {

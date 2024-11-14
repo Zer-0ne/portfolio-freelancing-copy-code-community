@@ -134,3 +134,5 @@ export interface FormStructure {
     ],
     sheetId: string;
 }
+
+export type DrivePermissionRole = 'reader' | 'commenter' | 'writer' | 'fileOrganizer' | 'organizer' | 'owner';

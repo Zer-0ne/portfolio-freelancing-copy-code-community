@@ -30,7 +30,7 @@ const ContentStructure = ({
                     gap: 2,
                     flexDirection: 'column',
                     // background: colors.commentConatinerBg,
-                    p: 2,
+                    p: 'inherit',
                     borderRadius: '10px',
                     // boxShadow: 'inset #00ff003d 0px 0px 10px'
                     // boxShadow: 'inset #5d5d5d8f 0px 0px 10px',

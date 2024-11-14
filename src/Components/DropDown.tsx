@@ -1,5 +1,5 @@
 
-import { Data } from '@/utils/Interfaces';
+import { Data, DrivePermissionRole } from '@/utils/Interfaces';
 import { KeyboardArrowDown } from '@mui/icons-material';
 import { Box, SxProps, Theme, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react'
@@ -25,8 +25,8 @@ const DropDown = (
                 padding: string;
             }
         },
-        valuesStyles?:SxProps<Theme> | undefined
-        values: string[],
+        valuesStyles?: SxProps<Theme> | undefined
+        values: string[] | DrivePermissionRole[],
         onChange: React.Dispatch<React.SetStateAction<Data | undefined>>,
         name: string;
         placeholder?: string;
@@ -58,7 +58,8 @@ const DropDown = (
                             },
                             padding: 1,
                             borderRadius: 1,
-                            ...valuesStyles
+                            ...valuesStyles,
+                            overflow:'scroll'
                         }}
                         onClick={() => { setValue(item) }}
                     >

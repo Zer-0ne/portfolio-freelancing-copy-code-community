@@ -17,7 +17,7 @@ export const GET = async (request: NextRequest, { params }: any) => {
             const totalPages = Math.ceil(totalPosts / postLimit);
             const currentPage = Math.min(Math.max(id || 1, 1), totalPages)
             if (id === totalPages) return NextResponse.json({ message: 'all done' })
-            console.log(currentPage, totalPages, totalPosts)
+            // console.log(currentPage, totalPages, totalPosts)
             const blogs = await Blog.find({})
                 .skip((currentPage - 1) * postLimit)
                 .limit(postLimit)

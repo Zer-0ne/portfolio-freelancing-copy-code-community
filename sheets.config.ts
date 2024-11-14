@@ -2,7 +2,7 @@ import { BaseExternalAccountClient, GoogleAuth, OAuth2Client } from "google-auth
 import { JSONClient } from "google-auth-library/build/src/auth/googleauth";
 import { google } from "googleapis";
 
-export const auth = async (): Promise<string | BaseExternalAccountClient | GoogleAuth<JSONClient> | OAuth2Client | undefined> => {
+export const auth = async (Scopes: string[] = []): Promise<string | BaseExternalAccountClient | GoogleAuth<JSONClient> | OAuth2Client | undefined> => {
     try {
         const client = await google.auth.getClient({
             credentials: {
@@ -13,7 +13,7 @@ export const auth = async (): Promise<string | BaseExternalAccountClient | Googl
                 token_url: "https://oauth2.googleapis.com/token",
                 universe_domain: "googleapis.com",
             },
-            scopes: ['https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive'],
+            scopes: ['https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive', ...Scopes],
         });
         return client;
     } catch (error) {

@@ -15,18 +15,21 @@ const CustomModal = (
 ) => {
     return (
         <Modal
-            keepMounted
             aria-labelledby="transition-modal-title"
             aria-describedby="transition-modal-description"
             open={open}
-            onClose={() => setOpen(false)}
+            onClose={() => setOpen(prev => !prev)}
             closeAfterTransition
             slots={{ backdrop: Backdrop }}
             sx={{
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center'
+                justifyContent: 'center',
+                zIndex: 0,
+                transform: open ? 'scale(1)' : 'scale(0)',
+
             }}
+            className='transition-all delay-300 ease-in-out'
             slotProps={{
                 backdrop: {
                     timeout: 500,
@@ -34,10 +37,12 @@ const CustomModal = (
             }}
         >
             <Box
+                className='transition-all delay-300 ease-in-out'
                 sx={{
                     ...styles.glassphorism(),
                     padding: 2,
                     display: 'flex',
+                    transform: open ? 'scale(1)' : 'scale(0)',
                     flexDirection: 'column',
                     gap: 2,
                     minWidth: { xs: '40%', md: '30%' },

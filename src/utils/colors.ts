@@ -3,5 +3,6 @@ export const colors = {
     transparentGrey: '#8080802e',
     darkRedTransparent: '#c9050594',
     colorBoxBgColor: '#090a0a',
-    commentConatinerBg: '#0e0e0e'
+    commentConatinerBg: '#0e0e0e',
+    btnbg: '#44454536'//#3d373736
 }

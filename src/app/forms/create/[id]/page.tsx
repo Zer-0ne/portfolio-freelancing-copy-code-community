@@ -7,6 +7,7 @@ import { notFound, useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import DeleteIcon from '@mui/icons-material/Delete';
+import ReadmeField from '@/Components/ReadmeField'
 
 const page = () => {
     /**
@@ -69,6 +70,7 @@ const page = () => {
         const { name, value } = e.target
         setdata((prev?: Data) => ({ ...prev, [name]: value }))
     }
+    // console.log(data)
 
     /**
      * Here the jsx
