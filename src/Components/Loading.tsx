@@ -15,7 +15,7 @@ const Loading = () => {
                 paddingY:'auto',
                 float:'unset',
                 overflow:'hidden',
-                overscrollBehavior:'none',
+                // overscrollBehavior:'none',
                 minHeight:'85vh'
                 // No height or minHeight set
             }}

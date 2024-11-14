@@ -57,7 +57,7 @@ export default function RootLayout({
       </head>
       <body
         style={{
-          overscrollBehavior: 'none'
+          // overscrollBehavior: 'none'
         }}
         className={` ${inter.className} min-h-[90vh]`}  >
         <NextAuthProvider>

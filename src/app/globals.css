@@ -21,6 +21,10 @@ input:focus {
   }
 }
 
+focus:focus{
+  opacity: 1!important;
+}
+
 body {
   transition: all 2s ease-in-out !important;
   background-color: black;

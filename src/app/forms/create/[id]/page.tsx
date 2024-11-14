@@ -6,6 +6,7 @@ import { child, get, ref, set } from 'firebase/database'
 import { notFound, useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const page = () => {
     /**
@@ -15,6 +16,7 @@ const page = () => {
     const { session } = useSelector((state: RootState) => state.session)
     const [data, setdata] = useState<Data>()
     const [isDisabled, setIsDisabled] = useState<boolean>(false)
+    const [currentSelectedFeild, setCurrentSelectedFeild] = useState<number>();
     const { id }: any = useParams()
 
     /**
@@ -31,6 +33,7 @@ const page = () => {
     useEffect(() => {
         const write = async () => {
             if (!array.length || !data) return
+            setCurrentSelectedFeild(array.length - 1)
             const { createNew } = await import('@/utils/FetchFromApi')
             const { realTimeDatabase } = await import('@/utils/Firebase')
             const nameArray = await array.map((obj: Data) => obj?.name);
@@ -80,7 +83,7 @@ const page = () => {
             </Container>
             {
                 array?.map((item: Data, index: number) => (<>
-                    <FieldContainer item={item as Data} setArray={setArray} index={index} key={index}>
+                    <FieldContainer setCurrentSelectedFeild={setCurrentSelectedFeild} currentSelectedFeild={currentSelectedFeild} item={item as Data} setArray={setArray} index={index} key={index}>
                         <></>
                     </FieldContainer>
                 </>))
@@ -110,7 +113,15 @@ const Container = ({ children, }: { children: React.ReactNode }) => {
  * Here the another component
  */
 
-const FieldContainer = ({ children, item, setArray, index }: { children?: React.ReactNode, item: Data, setArray: React.Dispatch<React.SetStateAction<Data[]>>, index: number }) => {
+const FieldContainer = (
+    { children, item, setArray, index,
+        setCurrentSelectedFeild,
+        currentSelectedFeild
+    }: {
+        children?: React.ReactNode, item: Data, setArray: React.Dispatch<React.SetStateAction<Data[]>>, index: number,
+        setCurrentSelectedFeild: React.Dispatch<React.SetStateAction<number | undefined>>,
+        currentSelectedFeild?: number
+    }) => {
     const [types, setTypes] = useState(item.type || 'text'); // Initialize with item type
     // console.log(item)
 
@@ -127,6 +138,18 @@ const FieldContainer = ({ children, item, setArray, index }: { children?: React.
             newArray[index] = updatedItem;
             return newArray;
         });
+    }
+
+    /**
+     * Delete current feild
+     * @param index 
+     */
+    const deleteField = (index: number) => {
+        setArray((array) => array.filter((_, i) => i !== index));
+    }
+
+    const handleClick = () => {
+        setCurrentSelectedFeild(index); // Set the selected field index
     }
 
     const handleTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -153,22 +176,30 @@ const FieldContainer = ({ children, item, setArray, index }: { children?: React.
     }
 
     return (
-        <div className={`p-[2rem] rounded-lg shadow-md py-[1rem] flex-1 w-[100%]`} style={{ background: colors.commentConatinerBg }}>
-            <div className='flex gap-2 justify-between'>
-                <input id='heading' name='name' value={item.name as string || ''} placeholder='Enter Heading here' onChange={handleChange} className='border-none outline-none bg-transparent text-[1.5rem] flex gap-2 p-[.5rem]' />
-                <select onChange={handleTypeChange} value={types as string} name="fieldType" className='bg-transparent rounded-md'>
-                    <option className='bg-black rounded-sm' value="text">Short answer</option>
-                    <option className='bg-black rounded-sm' value="email">Email</option>
-                    <option className='bg-black rounded-sm' value="paragraph">Paragraph</option>
-                    <option className='bg-black rounded-sm' value="radio">Multiple Choice</option>
-                    <option className='bg-black rounded-sm' value="file">File upload</option>
-                    <option className='bg-black rounded-sm' value="date">Date</option>
-                    <option className='bg-black rounded-sm' value="time">Time</option>
-                </select>
+        <div className={`p-[2rem] transition-all delay-300 ease-in-out ${currentSelectedFeild === index ? 'border-2 border-[green] border-opacity-1' : 'border-0 border-[green] border-opacity-0'} cursor-pointer relative rounded-lg shadow-md py-[1rem] flex-1 w-[100%]`} onClick={() => handleClick()} style={{ background: colors.commentConatinerBg }}>
+            <div className='flex gap-2 justify-between flex-row flex-wrap-reverse'>
+                <input id='heading' name='name' value={item.name as string || ''} placeholder='Enter Heading here' onChange={handleChange} className='border-none flex-1 outline-none bg-transparent text-[1.5rem] flex gap-2 p-[.5rem]' />
+                <div>
+                    <select onChange={handleTypeChange} value={types as string} name="fieldType" className='bg-transparent rounded-md'>
+                        <option className='bg-black rounded-sm' value="text">Short answer</option>
+                        <option className='bg-black rounded-sm' value="email">Email</option>
+                        <option className='bg-black rounded-sm' value="paragraph">Paragraph</option>
+                        <option className='bg-black rounded-sm' value="radio">Multiple Choice</option>
+                        <option className='bg-black rounded-sm' value="file">File upload</option>
+                        <option className='bg-black rounded-sm' value="date">Date</option>
+                        <option className='bg-black rounded-sm' value="time">Time</option>
+                    </select>
+                    {(currentSelectedFeild === index) && <button
+                        className=''
+                        onClick={() => deleteField(currentSelectedFeild ?? index)}>
+                        <DeleteIcon />
+                    </button>}
+                </div>
+
             </div>
             {typesOfFields[types as string]}
             {children}
-            <input type="checkbox" name="required" checked={item.required as boolean || false} onChange={handleChange} />
+            <input type="checkbox" id='required' name="required" checked={item.required as boolean || false} onChange={handleChange} />
             <label htmlFor="required">Required field?</label><br />
         </div>
     )
