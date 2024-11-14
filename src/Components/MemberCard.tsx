@@ -39,6 +39,8 @@ const MemberCard = ({ item }: {
                                 borderRadius: '50%',
                                 filter: 'blur(10px)', // Blur effect for ambient shadow
                                 transition: 'opacity 0.2s',
+                                backgroundSize:'contain',
+                                objectFit:'contain'
                             }
                         }}
                     >
