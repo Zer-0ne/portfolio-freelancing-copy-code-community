@@ -6,7 +6,7 @@ import { Google, GitHub, LinkedIn } from '@mui/icons-material';
 import { Box } from '@mui/material';
 import { RootState } from '@/store/store';
 import { styles } from '@/utils/styles';
-import CustomModal from '@/Components/CustomModal';
+import CustomModal from '@/components/CustomModal';
 
 const AuthModal = () => {
     const { session } = useSelector((state: RootState) => state.session);

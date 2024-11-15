@@ -9,7 +9,7 @@ import { coreMember } from '@/utils/Interfaces';
 import dynamic from 'next/dynamic';
 import { Node } from '@/utils/FetchFromApi';
 
-const MemberCard = dynamic(() => import('@/Components/MemberCard'))
+const MemberCard = dynamic(() => import('@/components/MemberCard'))
 
 
 const kalam = Kalam({

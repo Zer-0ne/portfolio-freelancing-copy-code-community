@@ -8,10 +8,10 @@ import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-const Loading = dynamic(() => import('@/Components/Loading'))
-const Markdown = dynamic(() => import('@/Components/Markdown'))
-const MarkdownHeader = dynamic(() => import('@/Components/MarkdownHeader'))
-const CommentContainer = dynamic(() => import('@/Components/CommentContainer'))
+const Loading = dynamic(() => import('@/components/Loading'))
+const Markdown = dynamic(() => import('@/components/Markdown'))
+const MarkdownHeader = dynamic(() => import('@/components/MarkdownHeader'))
+const CommentContainer = dynamic(() => import('@/components/CommentContainer'))
 
 
 const page = () => {

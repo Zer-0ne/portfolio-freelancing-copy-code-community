@@ -19,7 +19,7 @@ export const styles = {
         margin: '15px 20px',
         marginRight: { md: '15px', xl: 'auto' },
         marginLeft: { md: '15px', xl: 'auto' },
-        maxWidth:'1200px'
+        maxWidth: '1200px'
         // overflow:'hidden'
     }),
     loginSignUpBtn: (mode: string, item: {
@@ -57,7 +57,7 @@ export const styles = {
     }),
     iconStyle: (currentPath: string, iconPath: string) => ({
         color: 'inherit',
-        opacity: (currentPath.includes(iconPath) && iconPath.length > 1) ? 1 : 0.5,
+        opacity: ((currentPath ?? '')?.includes(iconPath) && iconPath.length > 1) ? 1 : 0.5,
         position: 'relative',
         transition: 'all .5s ease-in-out',
         ":hover": {

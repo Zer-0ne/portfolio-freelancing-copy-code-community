@@ -7,7 +7,6 @@ import { notFound, useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import DeleteIcon from '@mui/icons-material/Delete';
-import ReadmeField from '@/Components/ReadmeField'
 
 const page = () => {
     /**

@@ -1,6 +1,5 @@
 
 import { Data, DrivePermissionRole } from '@/utils/Interfaces';
-import { KeyboardArrowDown } from '@mui/icons-material';
 import { Box, SxProps, Theme, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react'
 import dynamic from 'next/dynamic';
@@ -17,7 +16,7 @@ const DropDown = (
         placeholder
     }: {
         style?: {
-            customInput: (flex?: string | number, customStyles?: object | undefined, radius?: number) => {
+            customInput?: (flex?: string | number, customStyles?: object | undefined, radius?: number) => {
                 flex: string | number;
                 background: string;
                 border: string;
@@ -42,6 +41,7 @@ const DropDown = (
         <DropDownSkelenton
             value={value}
             customStyle={{
+                // ...style,
                 opacity: (placeholder ? .7 : 1),
                 fontSize: (placeholder) ? { sx: 12, md: 15, xl: 16 } : { xs: 12, md: 18, xl: 20 }
             }}
@@ -59,7 +59,7 @@ const DropDown = (
                             padding: 1,
                             borderRadius: 1,
                             ...valuesStyles,
-                            overflow:'scroll'
+                            overflow: 'scroll'
                         }}
                         onClick={() => { setValue(item) }}
                     >

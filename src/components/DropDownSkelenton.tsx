@@ -28,7 +28,7 @@ const DropDownSkelenton = (
         <Box
             sx={{
                 position: 'relative',
-                zIndex: isTrue ? 100 : 'auto'
+                zIndex: isTrue ? 5 : 'auto'
             }}
         >
             <Box
@@ -46,13 +46,16 @@ const DropDownSkelenton = (
                         flex: 1,
                         padding: 0,
                         gap: 1,
+                        zIndex: 5,
+                        // overflow: 'scroll',
+                        // maxHeight: '150px',
                         fontSize: { xs: 12, md: 18, xl: 25 },
                         textAlign: 'center',
                         border: '0px'
                     }, 0)
-
+                    
                 }}
-            >
+                >
                 <Box
                     className='capitalize'
                     sx={{
@@ -61,12 +64,12 @@ const DropDownSkelenton = (
                             display: isTrue ? 'flex' : 'none',
                             opacity: isTrue ? 1 : 0,
                             flexDirection: 'column',
+                            ...styles.glassphorism(),
                             cursor: 'pointer',
                             transition: 'all .5s ease-in-out',
-                            ...styles.glassphorism(),
                             flex: 1,
                             gap: 1,
-                            zIndex: 10,
+                            zIndex: 5,
                             fontSize: { xs: 12, md: 18, xl: 25 },
                             textAlign: 'center',
                         }, 1),
@@ -84,7 +87,7 @@ const DropDownSkelenton = (
                     justifyContent: 'space-between',
                     alignItems: 'center',
                     ...customStyle,
-                    zIndex: 10,
+                    zIndex: 5,
                     opacity: .8,
                     fontSize: { xs: 12, md: 14, xl: 14 }
                 }, 1)}

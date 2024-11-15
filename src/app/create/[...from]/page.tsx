@@ -12,9 +12,9 @@ import { AppDispatch } from '@/store/store'
 import { useDispatch } from 'react-redux'
 
 
-const Loading = dynamic(() => import('@/Components/Loading'))
-const DropDown = dynamic(() => import('@/Components/DropDown'))
-const ReadmeField = dynamic(() => import('@/Components/ReadmeField'))
+const Loading = dynamic(() => import('@/components/Loading'))
+const DropDown = dynamic(() => import('@/components/DropDown'))
+const ReadmeField = dynamic(() => import('@/components/ReadmeField'))
 const Image = dynamic(() => import('next/image'))
 
 const modes = ['offline', 'online', 'hybrid']

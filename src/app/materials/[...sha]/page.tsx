@@ -9,8 +9,8 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { TreeNode } from '@/utils/FetchFromApi';
 
 // Dynamically import components for loading and markdown rendering
-const Loading = dynamic(() => import('@/Components/Loading'));
-const Markdown = dynamic(() => import('@/Components/Markdown'));
+const Loading = dynamic(() => import('@/components/Loading'));
+const Markdown = dynamic(() => import('@/components/Markdown'));
 
 const Page = () => {
     const { sha }: any = useParams(); // Get the SHA parameters from the URL

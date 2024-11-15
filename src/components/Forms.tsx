@@ -2,16 +2,17 @@ import { Data, DrivePermissionRole, EventsInterface, FormStructure } from '@/uti
 import { colors } from '@/utils/colors'
 import { styles } from '@/utils/styles'
 import dynamic from 'next/dynamic'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { RootState } from '@/store/store'
 import { useSelector } from 'react-redux'
 import { Box } from '@mui/material'
-import { downloadSheet, sharePermission } from '@/utils/FetchFromApi'
-import Markdown from './Markdown'
-import CustomModal from './CustomModal'
+import { downloadSheet, getData, sharePermission } from '@/utils/FetchFromApi'
+import DoDisturbIcon from '@mui/icons-material/DoDisturb';
 
-const DropDown = dynamic(() => import('@/Components/DropDown'))
-const Loading = dynamic(() => import('@/Components/Loading'))
+const Markdown = dynamic(() => import('@/components/Markdown'))
+const CustomModal = dynamic(() => import('@/components/CustomModal'))
+const DropDown = dynamic(() => import('@/components/DropDown'))
+const Loading = dynamic(() => import('@/components/Loading'))
 
 const Forms = ({
     forms,
@@ -61,29 +62,37 @@ const Forms = ({
 
     return (
         <form onSubmit={handleSubmit}>
-            <div className='flex flex-col justify-center items-center'>
-                <div className='flex relative gap-[1rem] flex-1 flex-col px-[2rem] justify-center items-center py-[1rem] max-w-[1200px]'>
+            <div className='flex  flex-col justify-center px-[2rem] items-center'>
+                <div style={{
+                    maxWidth: '700px'
+                }} className='flex gap-[1rem] flex-col  justify-center items-center py-[1rem] max-w-[500px]'>
                     {
                         ['admin', 'moderator'].includes(session[0]?.role) &&
                         <div style={{
                             position: 'sticky',
                             top: 70,
-                            zIndex: 1
-                        }} className='flex sticky top-40 gap-3 w-full justify-center items-stretch flex-1'>
+                            zIndex: 1,
+                            display: 'flex',
+                            flexWrap: 'wrap',
+                        }} className='flex !mx-2 sticky top-40 gap-3 w-full justify-center items-stretch flex-1'>
                             <ShareDocModal open={openShareModal} setOpen={setOpenShareModal} forms={forms} />
                             <button type='button' style={{
-                                padding: '15px 20px',
+                                padding: '10px 20px',
+                                flexBasis: '100px',
+                                fontSize: '1rem',
                                 ...styles.glassphorism('10px') as React.CSSProperties
                             }} onClick={() => downloadSheet(forms?.sheetId, forms?.title)} className='mx-2 cursor-pointer flex-1 self-stretch !bg-transparent' >{isDisabled ? "Downloading.." : 'Download Sheets'}</button>
                             <button type='button' style={{
-                                padding: '15px 20px',
+                                padding: '10px 20px',
+                                flexBasis: '100px',
+                                fontSize: '1rem',
                                 ...styles.glassphorism('10px') as React.CSSProperties
-                            }} onClick={() => setOpenShareModal(prev => !prev)} className={`mx-2 after:flex after:content-[''] relative after:absolute after:inset-4 after:bg-white cursor-pointer self-stretch flex-1 !bg-transparent`} >Share Sheet</button>
+                            }} onClick={() => setOpenShareModal(prev => !prev)} className={`mx-2 after:flex after:content-[''] relative after:absolute after:bg-[#44ff001d] after:-z-[1] after:inset-[4px] after:rounded-[12px] after:blur-[11px] cursor-pointer self-stretch flex-1 !bg-transparent`} >Share Sheet</button>
                         </div>
                     }
                     <Container>
                         <h2 className='font-bold text-[2rem] text-[green]'>{forms?.title}</h2>
-                        <Markdown data={{ content: forms?.subtitle } as Data} border={false} customStyles={{ minWidth: '100% !important', paddingLeft: '0px !important', margin: '0px !important', paddingRight: '0px !important', opacity: 0.7 }} />
+                        <Markdown data={{ content: forms?.subtitle } as Data} border={false} customStyles={{ minWidth: '100% !important', paddingLeft: '0px !important', margin: '0px !important', paddingRight: '0px !important', opacity: 0.7, }} />
                     </Container>
                     {
                         forms?.fields?.map((field, index) => {
@@ -94,8 +103,8 @@ const Forms = ({
                                         <p
                                             className='text-[1.2rem] font-semibold mb-2 mx-[3px]  capitalize'
                                         >{`${field.name} `}{(field.required) && <span style={{
-                                            color:'#e65555',
-                                            fontWeight:'normal',
+                                            color: '#e65555',
+                                            fontWeight: 'normal',
                                         }} className='!text-[red] font-normal'>*</span>}</p>
                                         <div
                                         >
@@ -186,29 +195,88 @@ const ShareDocModal = ({
     forms: FormStructure;
 }) => {
     const [data, setData] = useState<Data>()
+    const [accessPeople, setAccessPeople] = useState<{
+        id: string;
+        role: string;
+        emailAddress: string;
+    }[]>()
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setData((prev) => ({ ...prev, [name]: value }));
     }
+    const fetch = async () => {
+        setAccessPeople(await getData('/api/drive/permissions/list', {
+            fileId: forms.sheetId
+        }))
+    }
+    useEffect(() => {
+        fetch()
+    }, [])
+    console.log(accessPeople)
+
     return <>
         <CustomModal
             open={open}
             setOpen={setOpen}
         >
             <div
-                className='flex flex-1 flex-wrap text-[30px] flex-col gap-3'
+                className='flex flex-1 flex-wrap flex-col gap-3'
             >
                 <h2
                     style={{
                         fontSize: 24
                     }}
-                    className='font-bold !text-[50px]'
+                    className='font-bold !text-[24px]'
                 >Share "{forms?.title}"</h2>
                 <input type="text" name='emailAddress'
+                    className='!w-[100%]'
                     onChange={handleChange}
                     placeholder='Enter the email...' style={{ ...styles.customInput() }} />
+                {/* people with access the google sheet container */}
+                <div
+                    className='flex flex-1 w-[100%] z-10 flex-col px-1 gap-2'
+                >
+                    <h3
+                        className='capitalize text-[1rem] font-semibold mt-3'
+                    >people with access</h3>
+                    {
+                        accessPeople?.map((people, index) => (
+                            <div
+                                className={`relative ${(people?.role === 'owner') ? 'hidden' : 'flex'} flex-1 justify-between overflow-visible gap-1 opacity-70 items-center`}
+                                key={index}
+                            >
+                                <p
+                                    className='truncate flex-1'
+                                >{people.emailAddress}</p>
+                                <div
+                                    onClick={() => setData(data => ({ ...data, ['emailAddress']: people.emailAddress }))}
+                                >
+                                    <DropDown
+                                        values={['reader', 'commenter', 'writer', 'fileOrganizer', 'organizer'] as DrivePermissionRole[]}
+                                        name='role'
+                                        placeholder={people?.role as string}
+                                        onChange={setData}
+                                    />
+                                </div>
+                                <button
+                                    onClick={async () => {
+                                        const { createNew } = await import('@/utils/FetchFromApi');
+                                        await createNew({
+                                            permissionId: people.id,
+                                            fileId: forms.sheetId
+                                        }, 'drive/permissions/delete')
+                                        await fetch()
+                                    }}
+                                    className={`hover:text-[red] transition-all delay-300 ease-in-out after:content-['Remove_Access'] relative after:absolute after:-bottom-[40px] after:-translate-x-[70%] after:scale-0 after:backdrop-blur-sm after:bg-[rgb(0, 0, 0)] after:rounded-[5px] after:text-white after:px-[6px] after:py-[6px] after:text-[10px] after:capitalize after:opacity-0 hover:after:-translate-x-[80%] after:transition-all after:delay-300 after:ease-in-out hover:after:scale-100 hover:after:opacity-100 after:border-[1px] after:border-[rgba(255, 255, 255, 0.125)]`}
+                                >
+                                    <DoDisturbIcon />
+                                </button>
+                            </div>
+                        ))
+                    }
+                </div>
                 <DropDown
-                    values={['reader', 'commenter', 'writer', 'fileOrganizer', 'organizer', 'owner'] as DrivePermissionRole[]}
+                    values={['reader', 'commenter', 'writer', 'fileOrganizer', 'organizer'] as DrivePermissionRole[]}
                     name='role'
                     placeholder='Enter the permission'
                     onChange={setData}

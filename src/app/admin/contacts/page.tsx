@@ -7,7 +7,7 @@ import { Container, Typography } from '@mui/material'
 import dynamic from 'next/dynamic'
 import React, { useEffect, } from 'react'
 
-const Loading = dynamic(() => import('@/Components/Loading'))
+const Loading = dynamic(() => import('@/components/Loading'))
 
 const page = () => {
     const { isAdmin, error } = useSession()

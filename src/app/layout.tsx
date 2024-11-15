@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { Analytics } from '@vercel/analytics/react';
 import { Inter } from 'next/font/google'
 import './globals.css'
-import Navbar from '@/Components/Navbar'
+import Navbar from '@/components/Navbar'
 import NextAuthProvider from '@/provider/SessionProvider'
 import ReduxProdiver from '@/provider/ReduxProdiver'
 import 'react-toastify/dist/ReactToastify.css';

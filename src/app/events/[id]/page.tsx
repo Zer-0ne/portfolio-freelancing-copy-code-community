@@ -8,11 +8,11 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from '@/store/store'
 import { fetchEvents } from '@/slices/eventsSlice'
-import EmbientImage from '@/Components/Embient-image'
+import EmbientImage from '@/components/Embient-image'
 
-const Loading = dynamic(() => import('@/Components/Loading'))
-const ContentStructure = dynamic(() => import('@/Components/ContentStructure'))
-const Markdown = dynamic(() => import('@/Components/Markdown'))
+const Loading = dynamic(() => import('@/components/Loading'))
+const ContentStructure = dynamic(() => import('@/components/ContentStructure'))
+const Markdown = dynamic(() => import('@/components/Markdown'))
 
 
 const page = () => {

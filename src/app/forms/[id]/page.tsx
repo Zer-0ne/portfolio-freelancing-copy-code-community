@@ -7,10 +7,10 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 
 
-const Forms = dynamic(() => import('@/Components/Forms'))
-const NotAcceptingForm = dynamic(() => import('@/Components/NotAcceptingForm'))
-const Loading = dynamic(() => import('@/Components/Loading'))
-const AuthModal = dynamic(() => import('@/Components/AuthModal'))
+const Forms = dynamic(() => import('@/components/Forms'))
+const NotAcceptingForm = dynamic(() => import('@/components/NotAcceptingForm'))
+const Loading = dynamic(() => import('@/components/Loading'))
+const AuthModal = dynamic(() => import('@/components/AuthModal'))
 
 
 const page = () => {

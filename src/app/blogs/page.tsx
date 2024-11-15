@@ -6,9 +6,9 @@ import dynamic from 'next/dynamic';
 import { AppDispatch, RootState } from '@/store/store';
 import { useDispatch, useSelector } from 'react-redux';
 
-const Loading = dynamic(() => import('@/Components/Loading'))
-const BlogEventsStructure = dynamic(() => import('@/Components/BlogEventsStructure'))
-const BlogCard = dynamic(() => import('@/Components/BlogCard'), { ssr: false })
+const Loading = dynamic(() => import('@/components/Loading'))
+const BlogEventsStructure = dynamic(() => import('@/components/BlogEventsStructure'))
+const BlogCard = dynamic(() => import('@/components/BlogCard'), { ssr: false })
 
 
 const page = () => {

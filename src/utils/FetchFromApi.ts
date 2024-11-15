@@ -46,10 +46,10 @@ export const LoginUser = async (data: Data) => {
 }
 
 // get all the posts
-export const allPost = async (route: string,) => {
+export const allPost = async (route: string, method: string = 'GET') => {
     try {
         const response = await fetch(`/api/${route}/`, {
-            method: 'GET',
+            method,
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -185,7 +185,7 @@ export const createNew = async (data: Data, route: string, setIsDisabled?: React
         // console.log(data)
 
         setIsDisabled && setIsDisabled(true)
-        const response = await fetch(`/api/${route}/`, {
+        const response = await fetch(`/api/${route}`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
@@ -349,6 +349,26 @@ export const sharePermission = async (data: Data) => {
     } catch (error) {
         console.log(error)
         return toast.update(Toast, update('Something Went Wrong!', 'error'));
+    }
+}
+
+export const getData = async (route: string, data: Data) => {
+    try {
+        const session = await currentSession() as Session;
+
+        // check the user is admin or not 
+        const user = await userInfo(session?.user?.username)
+        if (['user'].includes(user.role)) return;
+
+        const response = await fetch(route, {
+            method: 'POST',
+            body: JSON.stringify(data)
+        })
+        const data_from_server = await response.json();
+        return data_from_server.data
+    } catch (error) {
+        console.log(error)
+        return;
     }
 }
 

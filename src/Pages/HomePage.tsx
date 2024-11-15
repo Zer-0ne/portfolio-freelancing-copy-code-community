@@ -5,7 +5,7 @@ import { Rubik_Glitch, IBM_Plex_Mono, Satisfy } from 'next/font/google';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 
-const Typewriter = dynamic(() => import('@/Components/TypeWriter'))
+const Typewriter = dynamic(() => import('@/components/TypeWriter'))
 
 // Load the font using the font loader
 const rubikGlitchFont = Rubik_Glitch({

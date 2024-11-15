@@ -8,9 +8,9 @@ import { notFound } from 'next/navigation'
 import { styles } from '@/utils/styles'
 import React, { useEffect } from 'react'
 
-const Loading = dynamic(() => import('@/Components/Loading'))
-const CustomModal = dynamic(() => import('@/Components/CustomModal'))
-const UserCard = dynamic(() => import('@/Components/UserCard'))
+const Loading = dynamic(() => import('@/components/Loading'))
+const CustomModal = dynamic(() => import('@/components/CustomModal'))
+const UserCard = dynamic(() => import('@/components/UserCard'))
 // const { fetchSession } = dynamic(() => import('@/slices/sessionSlice'))
 
 const page = () => {

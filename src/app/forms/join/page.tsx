@@ -6,8 +6,8 @@ import { styles } from '@/utils/styles'
 import dynamic from 'next/dynamic';
 import React, { useState } from 'react'
 
-const DropDown = dynamic(() => import('@/Components/DropDown'))
-const AuthModal = dynamic(() => import('@/Components/AuthModal'))
+const DropDown = dynamic(() => import('@/components/DropDown'))
+const AuthModal = dynamic(() => import('@/components/AuthModal'))
 
 
 const page = () => {
