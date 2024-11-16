@@ -118,7 +118,7 @@ const UserCard = (
                     <DropDown
                         name='role'
                         onChange={setData}
-                        style={styles}
+                        // style={styles as }
                         values={roles as string[]}
                         valuesStyles={{
                             p: '3px'
