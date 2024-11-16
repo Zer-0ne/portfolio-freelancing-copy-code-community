@@ -5,7 +5,7 @@ const DisableInspect = ({ children }: { children: React.ReactNode }) => {
         // Handle right-click
         const handleContextMenu = (e: MouseEvent) => {
             e.preventDefault();
-            alert("Right-click is disabled on this page.");
+            // alert("Right-click is disabled on this page.");
         };
 
         // Disable developer tools shortcuts
@@ -16,35 +16,43 @@ const DisableInspect = ({ children }: { children: React.ReactNode }) => {
                 (e.ctrlKey && e.key === "U")
             ) {
                 e.preventDefault();
-                alert("Developer tools are disabled.");
+                // alert("Developer tools are disabled.");
             }
         };
 
-        // Detect if DevTools is open
-        const detectDevTools = () => {
-            const devToolsOpen = /./;
-            devToolsOpen.toString = () => {
-                console.log("DevTools detected!");
-                setTimeout(() => {
-                    alert("Developer tools detected! Closing the tab...");
-                    window.close(); // Attempt to close the tab
-                }, 1000);
-                return "DevTools detected!";
-            };
-            console.log(devToolsOpen);
-        };
+        // Detect if DevTools is open using timing (no debugger)
+        // const detectDevTools = () => {
+        //   const start = performance.now();
+        //   // Use a timeout to simulate delay and check for developer tools
+        //   setTimeout(() => {
+        //     const end = performance.now();
+        //     if (end - start > 100) {
+        //       alert("Developer tools detected!");
+        //       // You can include any logic here, like redirecting or disabling page actions
+        //     }
+        //   }, 100);
+        // };
 
-        // Add event listeners
+        // Check DevTools when window gains focus
+        // const handleFocus = () => {
+        //   detectDevTools();
+        // };
+
+        // Add event listeners for detecting right-click and keypresses
         document.addEventListener("contextmenu", handleContextMenu);
         document.addEventListener("keydown", handleKeyDown);
+        // window.addEventListener("focus", handleFocus);
 
         // Detect inspect tools periodically
-        const devToolsInterval = setInterval(detectDevTools, 1000);
+        const devToolsInterval = setInterval(() => {
+            //   detectDevTools();
+        }, 500); // Check every 500ms
 
-        // Cleanup event listeners on unmount
+        // Cleanup event listeners and interval on unmount
         return () => {
             document.removeEventListener("contextmenu", handleContextMenu);
             document.removeEventListener("keydown", handleKeyDown);
+            //   window.removeEventListener("focus", handleFocus);
             clearInterval(devToolsInterval);
         };
     }, []);

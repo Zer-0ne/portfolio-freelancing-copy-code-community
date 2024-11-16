@@ -43,7 +43,6 @@ const page = () => {
         <>
 
             <Container
-
             >
                 <DisableInspect>
                     <Box
@@ -104,7 +103,6 @@ const page = () => {
                                 </Box>
                             ))
                         }
-
                         {/* our Team members */}
                         <Box
                             sx={{
