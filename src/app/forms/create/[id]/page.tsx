@@ -7,6 +7,8 @@ import { notFound, useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import DeleteIcon from '@mui/icons-material/Delete';
+import ToggleBtn from '@/components/toggle-btn'
+import DropDown from '@/components/DropDown'
 
 const page = () => {
     /**
@@ -25,7 +27,7 @@ const page = () => {
      * @param e - event object which is passed by react onchange event
      */
     const addFeild = () => {
-        setArray([...array, { key: '', value: '' }])
+        setArray([...array, { }])
     }
 
     if (!['admin', 'moderator'].includes(session[0]?.role) && session[0]) return notFound()
@@ -37,7 +39,7 @@ const page = () => {
             const { createNew } = await import('@/utils/FetchFromApi')
             const { realTimeDatabase } = await import('@/utils/Firebase')
             const nameArray = await array.map((obj: Data) => obj?.name);
-            console.log(data)
+            // console.log(data)
             if (data && data['title'] && !data['sheetId']) setdata({ ...data, sheetId: await createNew({ functionality: 'create', fields: [...nameArray], title: data?.title }, 'form', setIsDisabled).then((resp) => resp.data.spreadsheetId) })
             data && await set(ref(realTimeDatabase, `forms/${id}`), {
                 _id: id,
@@ -124,6 +126,7 @@ const FieldContainer = (
         currentSelectedFeild?: number
     }) => {
     const [types, setTypes] = useState(item.type || 'text'); // Initialize with item type
+    const [data, setData] = useState<Data>();
     // console.log(item)
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -140,6 +143,16 @@ const FieldContainer = (
             return newArray;
         });
     }
+
+    useEffect(() => {
+        data && setArray((prevArray: Data[]) => {
+            const newArray: Data[] = [...prevArray];
+            const updatedItem: Data = { ...item, type: types, ...data };
+            newArray[index] = updatedItem;
+            return newArray;
+        });
+    }, [data])
+
 
     /**
      * Delete current feild
@@ -164,6 +177,17 @@ const FieldContainer = (
         });
     }
 
+    const fileTypes = {
+        image: 'image/*',
+        document: '.doc,.docx',
+        pdf: 'application/pdf',
+        spreadsheet: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel'
+        , video: 'video/*',
+        audio: 'audio/*',
+        zip: 'application/zip'
+    }
+    // <input type='file' onChange={handleChange} name='file' className='border-none flex-1 resize-none w-[100%] outline-none bg-transparent flex gap-2 p-[1rem] text-[1rem]' />
+
     const typesOfFields: {
         [key in string]: React.JSX.Element
     } = {
@@ -171,9 +195,74 @@ const FieldContainer = (
         email: <input onChange={handleChange} value={item.placeholder as string || ''} name='placeholder' className='border-none flex-1 resize-none w-[100%] outline-none bg-transparent flex gap-2 p-[1rem] text-[1rem]' placeholder='Enter a placeholder here' />,
         paragraph: <textarea onChange={handleChange} value={item.placeholder as string || ''} rows={4} name='placeholder' className='border-none flex-1 resize-none w-[100%] outline-none bg-transparent flex gap-2 p-[1rem] text-[1rem]' placeholder='Enter a placeholder here'></textarea>,
         radio: <input onChange={handleChange} value={(item.options as string[])?.join(', ') || ''} name='options' className='border-none flex-1 resize-none w-[100%] outline-none bg-transparent flex gap-2 p-[1rem] text-[1rem]' placeholder='Enter choices separated by commas' />,
-        file: <input type='file' onChange={handleChange} name='file' className='border-none flex-1 resize-none w-[100%] outline-none bg-transparent flex gap-2 p-[1rem] text-[1rem]' />,
-        date: <input type='date' onChange={handleChange} name='date' className='border-none flex-1 resize-none w-[100%] outline-none bg-transparent flex gap-2 p-[1rem] text-[1rem]' />,
-        time: <input type='time' onChange={handleChange} name='time' className='border-none flex-1 resize-none w-[100%] outline-none bg-transparent flex gap-2 p-[1rem] text-[1rem]' />,
+        file: <div className='max-w-[300px] flex flex-col gap-3'>
+            <div
+                className='flex flex-1 opacity-70 justify-between items-center gap-1'
+            >
+                <p>Allow only specific file types</p>
+                <ToggleBtn
+                    isClicked={(item && item['specificFile']) as boolean}
+                    className='!w-[40px] !h-[20px]'
+                    onClick={() => {
+                        setData(data => ({ ...data, ['specificFile']: (data && !data['specificFile']) }))
+                    }}
+                />
+            </div>
+            <div className='max-w-[80%] opacity-70'>
+                <table className='w-full'>
+                    <tbody>
+                        {item && item['specificFile'] && (
+                            <>
+                                {Object.entries(fileTypes).reduce((rows: string[] | any[], [key, value], index) => {
+                                    if (index % 2 === 0) {
+                                        rows.push([] as any); // New row
+                                    }
+                                    (rows[rows.length - 1] as any).push(
+                                        <td key={key} className='flex max-w-[100px] min-w-[100px] items-center'>
+                                            <input
+                                                className='checked:border-[green]'
+                                                type="radio"
+                                                id={key}
+                                                name="fileType"
+                                                value={value}
+                                                checked={(item && item['fileType']) === value}
+                                                onChange={(event) => {
+                                                    const { name, value } = event.target;
+                                                    setData(data => ({ ...data, [name]: value }));
+                                                }}
+                                            />
+                                            <label className='truncate cursor-pointer max-w-[100px] block ml-2' htmlFor={key}>{key}</label>
+                                        </td>
+                                    );
+                                    return rows;
+                                }, []).map((row, rowIndex) => (
+                                    <tr className='flex max-w-[200px] justify-between items-center' key={rowIndex}>
+                                        {row}
+                                    </tr>
+                                ))}
+                            </>
+                        )}
+                    </tbody>
+                </table>
+            </div>
+            <div
+                className='flex flex-1 justify-between items-center gap-2'
+            >
+                <p className='text-[1rem] opacity-70'>Maximum number of files</p>
+                <DropDown
+                    name='maxFiles'
+                    style={{
+                        width: '60px!important',
+                        zIndex:20
+                    }}
+                    onChange={setData}
+                    placeholder='1'
+                    values={['1','5','10']}
+                />
+            </div>
+        </div>,
+        date: <input type='date' disabled onChange={handleChange} name='date' className='border-none flex-1 resize-none w-[100%] outline-none bg-transparent flex gap-2 p-[1rem] text-[1rem]' />,
+        time: <input type='time' disabled onChange={handleChange} name='time' className='border-none flex-1 resize-none w-[100%] outline-none bg-transparent flex gap-2 p-[1rem] text-[1rem]' />,
     }
 
     return (
@@ -200,8 +289,8 @@ const FieldContainer = (
             </div>
             {typesOfFields[types as string]}
             {children}
-            <input type="checkbox" id='required' name="required" checked={item.required as boolean || false} onChange={handleChange} />
-            <label htmlFor="required">Required field?</label><br />
+            <input type="checkbox" id={item?.name as string} name="required" checked={item.required as boolean || false} onChange={handleChange} />
+            <label htmlFor={item?.name as string}>Required field?</label><br />
         </div>
     )
 }

@@ -16,10 +16,10 @@ const Loading = () => {
                 float:'unset',
                 overflow:'hidden',
                 // overscrollBehavior:'none',
-                minHeight:'85vh'
+                // minHeight:'85vh'
                 // No height or minHeight set
             }}
-            className='!max-h-[85vh] !my-auto'
+            className='h-auto !my-auto'
         >
             <Box
                 width={600}

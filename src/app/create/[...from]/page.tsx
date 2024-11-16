@@ -164,7 +164,7 @@ const page = () => {
                                     onChange={setData}
                                     name={item.name}
                                     key={index}
-                                    style={styles}
+                                    // style={styles}
                                     // yha pr abhi hmm dekh the hai ki dropdown kiske lie hai mode ke lie or label ke lie 
                                     // ab hmm mode me ek or condition check krnge jisme hmm agr edit kr rhe hai data ko toh uss data ke hisab se woh mode front me ho
                                     // or baki sab baad me ho 

@@ -52,14 +52,14 @@ export default function RootLayout({
 
 }) {
   return (
-    <html lang="en" style={{ position: 'relative' }}>
+    <html lang="en" className='h-screen'>
       <head>
       </head>
       <body
         style={{
           // overscrollBehavior: 'none'
         }}
-        className={` ${inter.className} min-h-[90vh]`}  >
+        className={`${inter.className} !m-0`}  >
         <NextAuthProvider>
           <ReduxProdiver>
             <Navbar />

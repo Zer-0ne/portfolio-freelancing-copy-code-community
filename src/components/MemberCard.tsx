@@ -19,6 +19,8 @@ const MemberCard = ({ item }: {
                     <Box
                         sx={{
                             borderRadius: '50%',
+                            userSelect:'none',
+                            pointerEvents:'none',
                             border: '1px solid #ffffff57',
                             background: 'transparent',
                             width: 120,
@@ -50,8 +52,9 @@ const MemberCard = ({ item }: {
                                 width: 100,
                                 height: 100,
                                 boxShadow: '0 0 10px black',
-
+                                pointerEvents: "none", // Optional: Prevent drag
                             }}
+                            onContextMenu={(e) => e.preventDefault()} // Disable right-click
                             src={item.image}
                         />
                     </Box>

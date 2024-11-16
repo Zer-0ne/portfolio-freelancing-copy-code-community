@@ -1,4 +1,4 @@
-import { Data, DrivePermissionRole, EventsInterface, FormStructure } from '@/utils/Interfaces'
+import { Data, DrivePermissionRole, EventsInterface, FormField, FormStructure } from '@/utils/Interfaces'
 import { colors } from '@/utils/colors'
 import { styles } from '@/utils/styles'
 import dynamic from 'next/dynamic'
@@ -6,7 +6,6 @@ import React, { useEffect, useState } from 'react'
 import { RootState } from '@/store/store'
 import { useSelector } from 'react-redux'
 import { Box } from '@mui/material'
-import { downloadSheet, getData, sharePermission } from '@/utils/FetchFromApi'
 import DoDisturbIcon from '@mui/icons-material/DoDisturb';
 
 const Markdown = dynamic(() => import('@/components/Markdown'))
@@ -44,6 +43,67 @@ const Forms = ({
             console.log(error)
         }
     }
+    const fieldTypes = (field: FormField, index: number, radioRef?: React.RefObject<HTMLInputElement>): {
+        [key: string]: React.ReactNode;
+    } => ({
+        email: <>
+            <input onChange={handleChange} name={field.name} value={data?.[field.name] as string || ''} required={field.required} placeholder={field.placeholder} style={{ ...styles.customInput() }} type={field.type} key={`${field.name}-${index}`} className='w-[100%]' />
+        </>,
+        text: <>
+            <input onChange={handleChange} name={field.name} value={data?.[field.name] as string || ''} required={field.required} placeholder={field.placeholder} style={{ ...styles.customInput() }} type={field.type} key={`${field.name}-${index}`} className='w-[100%]' /></>,
+        select: <>
+            <DropDown
+                placeholder={field.placeholder}
+                values={field.options as string[]}
+                onChange={setData}
+                name={field.name}
+            />
+        </>,
+        radio: <>
+            <div className='flex flex-col flex-wrap gap-2'>
+                {
+                    field.options?.map((option, index) => (
+                        <div key={index} className='gap-[10px] flex items-center pl-2 text-[1rem] flex-row' >
+                            <input ref={radioRef} onChange={handleChange} className='text-[2rem] bg-transparent cursor-pointer' required={field.required} id={option} type={field.type} name={field.name} value={option || ''} />
+                            {option.toLowerCase() === 'other' ? (
+                                <input
+                                    type="text"
+                                    className='border-none !focus:opacity-10 my-1 !w-[40%] !max-w-[40%] resize-none outline-none bg-transparent flex gap-2 p-[1rem] text-[1rem]'
+                                    style={{ ...styles.customInput() }}
+                                    placeholder="Please specify"
+                                    onClick={() => { radioRef?.current?.click(); setData((prevFormData) => ({ ...prevFormData, [field.name]: '' })) }}
+                                    onChange={(e) => {
+                                        const { value } = e.target;
+                                        setData((prevFormData) => ({ ...prevFormData, [field.name]: value }));
+                                    }} // Handle change for the "Other" input
+                                />
+                            ) : (
+                                <>
+                                    <label className='cursor-pointer capitalize hover:text-[green]' htmlFor={option}>
+                                        {option}
+                                    </label>
+                                </>
+                            )}
+                        </div>
+                    ))
+                }
+            </div>
+        </>,
+        file: <>
+            <input type='file' ref={radioRef} onChange={handleChange} name='file' className='border-none hidden flex-1 resize-none w-[100%] outline-none bg-transparent gap-2 p-[1rem] text-[1rem]' />
+            <div
+                className='my-1 opacity-60 mb-3 text-[.8rem]'
+            >Upload {field.maxFiles} {field.specificFile && `supported file: ${field?.fileType?.split('/')[0]}`}.</div>
+            <div
+                className='flex flex-1 justify-center p-3 cursor-pointer text-[#969da9] font-normal items-center border-[2px] border-dotted border-white rounded-xl'
+                style={{
+                    ...styles.customInput(),
+                }}
+                onClick={() => radioRef?.current?.click()}
+            >Add file for {field.name}</div>
+        </>
+    })
+
     if (!forms) return <Loading />
 
     const today = new Date(); // This will get the current date
@@ -81,13 +141,16 @@ const Forms = ({
                                 flexBasis: '100px',
                                 fontSize: '1rem',
                                 ...styles.glassphorism('10px') as React.CSSProperties
-                            }} onClick={() => downloadSheet(forms?.sheetId, forms?.title)} className='mx-2 cursor-pointer flex-1 self-stretch !bg-transparent' >{isDisabled ? "Downloading.." : 'Download Sheets'}</button>
+                            }} onClick={async () => {
+                                const { downloadSheet } = await import('@/utils/FetchFromApi');
+                                await downloadSheet(forms?.sheetId, forms?.title)
+                            }} className='mx-2 cursor-pointer flex-1 self-stretch !bg-transparent' >{isDisabled ? "Downloading.." : 'Download Sheet'}</button>
                             <button type='button' style={{
                                 padding: '10px 20px',
                                 flexBasis: '100px',
                                 fontSize: '1rem',
                                 ...styles.glassphorism('10px') as React.CSSProperties
-                            }} onClick={() => setOpenShareModal(prev => !prev)} className={`mx-2 after:flex after:content-[''] relative after:absolute after:bg-[#44ff001d] after:-z-[1] after:inset-[4px] after:rounded-[12px] after:blur-[11px] cursor-pointer self-stretch flex-1 !bg-transparent`} >Share Sheet</button>
+                            }} onClick={() => setOpenShareModal(prev => !prev)} className={`mx-2 after:flex after:content-[''] relative after:absolute after:bg-[#44ff001d] after:-z-[1] after:inset-[4px] after:transition-all after:delay-700 after:ease-in-out after:scale-0 hover:after:scale-100 after:rounded-[12px] after:blur-[11px] cursor-pointer self-stretch flex-1 !bg-transparent`} >Share Sheet</button>
                         </div>
                     }
                     <Container>
@@ -109,41 +172,7 @@ const Forms = ({
                                         <div
                                         >
                                             {
-                                                ["text", 'email'].includes(field.type) ?
-                                                    <input onChange={handleChange} name={field.name} value={data?.[field.name] as string || ''} required={field.required} placeholder={field.placeholder} style={{ ...styles.customInput() }} type={field.type} key={`${field.name}-${index}`} className='w-[100%]' /> : ['select'].includes(field.type) ? <DropDown
-                                                        placeholder={field.placeholder}
-                                                        values={field.options as string[]}
-                                                        onChange={setData}
-                                                        name={field.name}
-                                                    /> :
-                                                        <div className='flex flex-col flex-wrap gap-2'>
-                                                            {
-                                                                field.options?.map((option, index) => (
-                                                                    <div key={index} className='gap-[10px] flex items-center pl-2 text-[1rem] flex-row' >
-                                                                        <input ref={radioRef} onChange={handleChange} className='text-[2rem] bg-transparent cursor-pointer' required={field.required} id={option} type={field.type} name={field.name} value={option || ''} />
-                                                                        {option.toLowerCase() === 'other' ? (
-                                                                            <input
-                                                                                type="text"
-                                                                                className='border-none !focus:opacity-10 my-1 !w-[40%] !max-w-[40%] resize-none outline-none bg-transparent flex gap-2 p-[1rem] text-[1rem]'
-                                                                                style={{ ...styles.customInput() }}
-                                                                                placeholder="Please specify"
-                                                                                onClick={() => { radioRef?.current?.click(); setData((prevFormData) => ({ ...prevFormData, [field.name]: '' })) }}
-                                                                                onChange={(e) => {
-                                                                                    const { value } = e.target;
-                                                                                    setData((prevFormData) => ({ ...prevFormData, [field.name]: value }));
-                                                                                }} // Handle change for the "Other" input
-                                                                            />
-                                                                        ) : (
-                                                                            <>
-                                                                                <label className='cursor-pointer capitalize hover:text-[green]' htmlFor={option}>
-                                                                                    {option}
-                                                                                </label>
-                                                                            </>
-                                                                        )}
-                                                                    </div>
-                                                                ))
-                                                            }
-                                                        </div>
+                                                fieldTypes(field, index, radioRef)[field.type as string]
                                             }
                                         </div>
                                     </Container>
@@ -205,6 +234,7 @@ const ShareDocModal = ({
         setData((prev) => ({ ...prev, [name]: value }));
     }
     const fetch = async () => {
+        const { getData } = await import('@/utils/FetchFromApi')
         setAccessPeople(await getData('/api/drive/permissions/list', {
             fileId: forms.sheetId
         }))
@@ -212,7 +242,7 @@ const ShareDocModal = ({
     useEffect(() => {
         fetch()
     }, [])
-    console.log(accessPeople)
+    // console.log(accessPeople)
 
     return <>
         <CustomModal
@@ -233,7 +263,7 @@ const ShareDocModal = ({
                     onChange={handleChange}
                     placeholder='Enter the email...' style={{ ...styles.customInput() }} />
                 {/* people with access the google sheet container */}
-                <div
+                {accessPeople && <div
                     className='flex flex-1 w-[100%] z-10 flex-col px-1 gap-2'
                 >
                     <h3
@@ -274,7 +304,7 @@ const ShareDocModal = ({
                             </div>
                         ))
                     }
-                </div>
+                </div>}
                 <DropDown
                     values={['reader', 'commenter', 'writer', 'fileOrganizer', 'organizer'] as DrivePermissionRole[]}
                     name='role'
@@ -300,6 +330,7 @@ const ShareDocModal = ({
 
                         }}
                         onClick={async () => {
+                            const { sharePermission } = await import('@/utils/FetchFromApi')
                             await sharePermission({
                                 fileId: forms?.sheetId,
                                 emailAddress: data?.emailAddress,

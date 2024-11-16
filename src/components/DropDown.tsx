@@ -15,15 +15,7 @@ const DropDown = (
         name,
         placeholder
     }: {
-        style?: {
-            customInput?: (flex?: string | number, customStyles?: object | undefined, radius?: number) => {
-                flex: string | number;
-                background: string;
-                border: string;
-                borderRadius: number;
-                padding: string;
-            }
-        },
+        style?: SxProps<Theme> | undefined,
         valuesStyles?: SxProps<Theme> | undefined
         values: string[] | DrivePermissionRole[],
         onChange: React.Dispatch<React.SetStateAction<Data | undefined>>,
@@ -41,9 +33,9 @@ const DropDown = (
         <DropDownSkelenton
             value={value}
             customStyle={{
-                // ...style,
-                opacity: (placeholder ? .7 : 1),
-                fontSize: (placeholder) ? { sx: 12, md: 15, xl: 16 } : { xs: 12, md: 18, xl: 20 }
+                ...style,
+                // opacity: (placeholder ? .7 : 1),
+                // fontSize: (placeholder) ? { sx: 12, md: 15, xl: 16 } : { xs: 12, md: 18, xl: 20 }
             }}
         >
             {

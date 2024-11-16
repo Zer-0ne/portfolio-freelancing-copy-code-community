@@ -18,6 +18,7 @@ const page = () => {
     const { id }: any | null = useParams()
     const dispatch = useDispatch<AppDispatch>()
     const { events } = useSelector((state: RootState) => state.events)
+    const { session } = useSelector((state: RootState) => state.session)
 
     // fetch form 
     useEffect(() => {
@@ -36,7 +37,7 @@ const page = () => {
 
     if (forms === undefined) return <Loading />
 
-    if (!forms?.['Accepting Response']) return <NotAcceptingForm title={forms?.title as string} />
+    if ((!forms?.['Accepting Response'] && ['user'].includes(session[0]?.role))) return <NotAcceptingForm title={forms?.title as string} />
 
     return (
         <>

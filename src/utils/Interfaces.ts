@@ -121,18 +121,21 @@ export interface FormStructure {
     title: string
     subtitle: string;
     'Accepting Response': boolean;
-    fields: [
-        {
-            key: string;
-            value: string;
-            type: string;
-            placeholder: string;
-            name: string
-            options: string[];
-            required: boolean;
-        }
-    ],
+    fields: FormField[],
     sheetId: string;
+}
+
+export interface FormField {
+    key: string;
+    value: string;
+    type: string;
+    placeholder: string;
+    name: string;
+    options: string[];
+    required: boolean;
+    maxFiles?: string | number
+    fileType?: string
+    specificFile?: boolean
 }
 
 export type DrivePermissionRole = 'reader' | 'commenter' | 'writer' | 'fileOrganizer' | 'organizer' | 'owner';

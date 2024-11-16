@@ -2,7 +2,7 @@
 import { RootState } from '@/store/store';
 import { styles } from '@/utils/styles'
 import { KeyboardArrowDown, } from '@mui/icons-material';
-import { Avatar, Box, useMediaQuery } from '@mui/material'
+import { Avatar, Box, SxProps, Theme, useMediaQuery } from '@mui/material'
 import React from 'react'
 import { useSelector } from 'react-redux';
 
@@ -16,7 +16,7 @@ const DropDownSkelenton = (
         value?: string;
         children: React.ReactNode;
         status?: string
-        customStyle?: React.CSSProperties | object
+        customStyle?: React.CSSProperties | object | SxProps<Theme> | undefined
     }
 ) => {
     const { session } = useSelector((state: RootState) => state.session)
@@ -28,7 +28,7 @@ const DropDownSkelenton = (
         <Box
             sx={{
                 position: 'relative',
-                zIndex: isTrue ? 5 : 'auto'
+                zIndex: isTrue ? 5 : 'auto',
             }}
         >
             <Box
@@ -53,9 +53,8 @@ const DropDownSkelenton = (
                         textAlign: 'center',
                         border: '0px'
                     }, 0)
-                    
                 }}
-                >
+            >
                 <Box
                     className='capitalize'
                     sx={{

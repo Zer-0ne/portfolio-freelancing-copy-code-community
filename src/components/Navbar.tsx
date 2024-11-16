@@ -161,7 +161,8 @@ const Navbar = () => {
                     <form onSubmit={handleSubmit}>
                         <DropDownSkelenton
                             customStyle={{
-                                border: 'none',
+                                border: 'none!important',
+                                opacity:1
                             }}
                             status={status}
                         >
