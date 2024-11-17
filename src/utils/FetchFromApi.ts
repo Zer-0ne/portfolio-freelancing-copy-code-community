@@ -182,7 +182,20 @@ export const createNew = async (data: Data, route: string, setIsDisabled?: React
         if (!['comment', 'form'].includes(route)) {
             if (['user'].includes(user.role)) return toast.update(Toast, update('Your are not Authorized!', 'error'))
         }
-        // console.log(data)
+
+
+        // Convert file to Base64
+        if (data.file) {
+            const file = data.file as File;
+            const base64File = await new Promise<string>((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result as string);
+                reader.onerror = reject;
+                reader.readAsDataURL(file); // Convert to Base64
+            });
+
+            data.file = { name: file.name, type: file.type, content: base64File }; // Include metadata
+        }
 
         setIsDisabled && setIsDisabled(true)
         const response = await fetch(`/api/${route}`, {
@@ -202,7 +215,7 @@ export const createNew = async (data: Data, route: string, setIsDisabled?: React
             return res
         }
         setIsDisabled && setIsDisabled(false)
-        return toast.update(Toast, update(res.message, res.status))
+        return toast.update(Toast, update(res.message ?? res.error, res.status))
     } catch (error) {
         setIsDisabled && setIsDisabled(false)
         console.log('error')
@@ -247,7 +260,7 @@ export const createNewContact = async (data: Data, setIsDisabled: React.Dispatch
 }
 
 // delete the post
-export const deletePost = async (id: string, route: string, item: BlogsInterface | EventsInterface) => {
+export const deletePost = async (id: string, route: string, item?: BlogsInterface | EventsInterface) => {
     const Toast = toast.loading('Please wait')
     try {
         // check the session
@@ -258,14 +271,14 @@ export const deletePost = async (id: string, route: string, item: BlogsInterface
         const user = await userInfo(session?.user?.username)
         if (['user'].includes(user.role)) return toast.update(Toast, update('Your are not Authorized!', 'error'))
 
-        if ((item as EventsInterface).image) {
-            const storageRef = ref(storage, `/Thumbnails/${item.title}`);
+        if (item && (item as EventsInterface).image) {
+            const storageRef = ref(storage, `/Thumbnails/${item?.title}`);
             await deleteObject(storageRef);
         }
 
-        if (item.contentImage.length) {
+        if (item && item?.contentImage.length) {
 
-            const storageRef = ref(storage, `/content/${item.title}`);
+            const storageRef = ref(storage, `/content/${item?.title}`);
             const result = await listAll(storageRef);
 
             // Iterate through each item in the folder

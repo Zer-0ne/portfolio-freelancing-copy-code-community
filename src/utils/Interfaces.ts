@@ -69,9 +69,15 @@ export interface UserDocument {
     certificate: string[]
     saved?: mongoose.SchemaDefinitionProperty<string[]>
 }
-
+export interface FormFile {
+    id: string;
+    name: string;
+    webViewLink: string;
+    webContentLink: string;
+}
 export interface Data {
-    [key: string]: string | string[] | boolean | React.ReactNode | object;
+    // file?: FormFile ;
+    [key: string]: string | string[] | boolean | React.ReactNode | object | File | Data;
 }
 
 export interface InputToMoveCursor {

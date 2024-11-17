@@ -37,7 +37,7 @@ const page = () => {
 
     if (forms === undefined) return <Loading />
 
-    if ((!forms?.['Accepting Response'] && ['user'].includes(session[0]?.role))) return <NotAcceptingForm title={forms?.title as string} />
+    if ((!forms?.['Accepting Response'] && (['user'].includes(session[0]?.role) || !session.length))) return <NotAcceptingForm title={forms?.title as string} />
 
     return (
         <>

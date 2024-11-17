@@ -1,4 +1,4 @@
-import { Data, DrivePermissionRole, EventsInterface, FormField, FormStructure } from '@/utils/Interfaces'
+import { Data, DrivePermissionRole, EventsInterface, FormField, FormFile, FormStructure } from '@/utils/Interfaces'
 import { colors } from '@/utils/colors'
 import { styles } from '@/utils/styles'
 import dynamic from 'next/dynamic'
@@ -7,6 +7,8 @@ import { RootState } from '@/store/store'
 import { useSelector } from 'react-redux'
 import { Box } from '@mui/material'
 import DoDisturbIcon from '@mui/icons-material/DoDisturb';
+import Image from 'next/image'
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const Markdown = dynamic(() => import('@/components/Markdown'))
 const CustomModal = dynamic(() => import('@/components/CustomModal'))
@@ -21,15 +23,92 @@ const Forms = ({
     const { events } = useSelector((state: RootState) => state.events)
     const [isDisabled, setIsDisabled] = useState(false)
     const [data, setData] = useState<Data>()
+    const [remainingUploadFile, setRemainingUploadFile] = useState(0)
     const [openShareModal, setOpenShareModal] = useState<boolean>(false);
     const { session } = useSelector((state: RootState) => state.session)
 
     // handle Chnage of input fields
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
+        const { name, value, files } = e.target;
+        if (name === 'file' && files) {
+            handleUpload(files[0], name)
+        }
         setData((prevFormData) => ({ ...prevFormData, [name]: value }));
     }
-    // console.log(forms)
+
+    const handleUpload = async (file: File, name: string) => {
+        try {
+            const { createNew } = await import('@/utils/FetchFromApi');
+            const { data } = await createNew(
+                {
+                    folderName: forms.title,
+                    file,
+                    remainingUploads: remainingUploadFile
+                },
+                'drive/files/upload',
+                setIsDisabled
+            );
+
+            if (data && data.id) {
+                // Retrieve existing drive data from local storage
+                const existingDriveData = JSON.parse(localStorage.getItem('drive') || '{}');
+
+                // Add new entry to the existing drive data
+                existingDriveData[data.id] = data;
+
+                // Save updated drive data back to local storage
+                localStorage.setItem('drive', JSON.stringify(existingDriveData));
+            }
+            const updatedFiles = Object.keys(JSON.parse(localStorage.getItem('drive') || '{}')).map(key => {
+                return `https://drive.google.com/uc?export=view&id=${key}`;
+            })
+            // Optionally, update the state to reflect the deletion
+            setData(prevData => ({
+                ...prevData,
+                file: updatedFiles.length > 0 ? updatedFiles : null // Set to null if no files left
+            }));
+        } catch (error) {
+            console.log((error as Data).message);
+        }
+    };
+
+
+    const handleDeleteUploadedImage = async (fileId: string) => {
+
+        try {
+            const { deletePost } = await import('@/utils/FetchFromApi');
+
+            // Call the delete API
+            await deletePost(fileId, 'drive/files/get/'); // Ensure the endpoint is correct
+
+            // Remove the file entry from local storage
+            const existingDriveData = JSON.parse(localStorage.getItem('drive') || '{}');
+            delete existingDriveData[fileId]; // Remove the file entry by ID
+            localStorage.setItem('drive', JSON.stringify(existingDriveData)); // Save updated data
+
+            const updatedFiles = Object.keys(JSON.parse(localStorage.getItem('drive') || '{}')).map(key => {
+                return `https://drive.google.com/uc?export=view&id=${key}`;
+            });
+            // Optionally, update the state to reflect the deletion
+            setData(prevData => ({
+                ...prevData,
+                file: updatedFiles.length > 0 ? updatedFiles : null // Set to null if no files left
+            }));
+        } catch (error) {
+            console.log((error as Data).message);
+        }
+    };
+
+    useEffect(() => {
+        const updatedFiles = Object.keys(JSON.parse(localStorage.getItem('drive') || '{}')).map(key => {
+            return `https://drive.google.com/uc?export=view&id=${key}`;
+        })
+        // Optionally, update the state to reflect the deletion
+        setData(prevData => ({
+            ...prevData,
+            file: updatedFiles.length > 0 ? updatedFiles : null // Set to null if no files left
+        }));
+    }, [])
 
     // handle submit 
     const handleSubmit = async (e: any) => {
@@ -47,10 +126,10 @@ const Forms = ({
         [key: string]: React.ReactNode;
     } => ({
         email: <>
-            <input onChange={handleChange} name={field.name} value={data?.[field.name] as string || ''} required={field.required} placeholder={field.placeholder} style={{ ...styles.customInput() }} type={field.type} key={`${field.name}-${index}`} className='w-[100%]' />
+            <input onChange={handleChange} disabled={isDisabled} name={field.name} value={data?.[field.name] as string || ''} required={field.required} placeholder={field.placeholder} style={{ ...styles.customInput() }} type={field.type} key={`${field.name}-${index}`} className='w-[100%]' />
         </>,
         text: <>
-            <input onChange={handleChange} name={field.name} value={data?.[field.name] as string || ''} required={field.required} placeholder={field.placeholder} style={{ ...styles.customInput() }} type={field.type} key={`${field.name}-${index}`} className='w-[100%]' /></>,
+            <input onChange={handleChange} disabled={isDisabled} name={field.name} value={data?.[field.name] as string || ''} required={field.required} placeholder={field.placeholder} style={{ ...styles.customInput() }} type={field.type} key={`${field.name}-${index}`} className='w-[100%]' /></>,
         select: <>
             <DropDown
                 placeholder={field.placeholder}
@@ -90,17 +169,42 @@ const Forms = ({
             </div>
         </>,
         file: <>
-            <input type='file' ref={radioRef} onChange={handleChange} name='file' className='border-none hidden flex-1 resize-none w-[100%] outline-none bg-transparent gap-2 p-[1rem] text-[1rem]' />
+            <input type='file' disabled={isDisabled} accept={field.fileType as string} ref={radioRef} onChange={handleChange} name='file' className='border-none hidden flex-1 resize-none w-[100%] outline-none bg-transparent gap-2 p-[1rem] text-[1rem]' />
             <div
                 className='my-1 opacity-60 mb-3 text-[.8rem]'
             >Upload {field.maxFiles} {field.specificFile && `supported file: ${field?.fileType?.split('/')[0]}`}.</div>
             <div
-                className='flex flex-1 justify-center p-3 cursor-pointer text-[#969da9] font-normal items-center border-[2px] border-dotted border-white rounded-xl'
+                className='flex flex-2 justify-center p-3 cursor-pointer text-[#969da9] font-normal items-center border-[2px] border-dotted border-white rounded-xl'
                 style={{
                     ...styles.customInput(),
                 }}
-                onClick={() => radioRef?.current?.click()}
+                onClick={() => {
+                    setRemainingUploadFile((field?.maxFiles as number) - Object.keys(JSON.parse(localStorage.getItem('drive') as string)).length)
+                    radioRef?.current?.click()
+                }}
             >Add file for {field.name}</div>
+            {
+                Object.keys(JSON.parse(localStorage.getItem('drive') as string || '{}')).map((key,index) => <div key={key} className='flex flex-1 mt-2 justify-between items-center gap-2'>
+                    <p
+                        className='opacity-70'
+                    >{`${index+1} `}</p>
+                    <div className='flex gap-2 items-center'>
+                        <Image
+                            width={50}
+                            height={50}
+                            src={`https://drive.google.com/uc?export=view&id=${key}`}
+                            alt={JSON.parse(localStorage.getItem('drive') as string)[key]?.name as string}
+                        />
+                        <p>{JSON.parse(localStorage.getItem('drive') as string)[key]?.name}</p>
+                    </div>
+                    <button
+                        type='button'
+                        onClick={() => handleDeleteUploadedImage(key)}
+                    >
+                        <DeleteIcon />
+                    </button>
+                </div>)
+            }
         </>
     })
 
