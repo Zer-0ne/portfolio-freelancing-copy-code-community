@@ -179,7 +179,7 @@ const Forms = ({
                     ...styles.customInput(),
                 }}
                 onClick={() => {
-                    setRemainingUploadFile((field?.maxFiles as number) - Object.keys(JSON.parse(localStorage.getItem('drive') as string)).length)
+                    setRemainingUploadFile((field?.maxFiles as number) - Object.keys(JSON.parse(localStorage.getItem('drive') as string || '{}')).length)
                     radioRef?.current?.click()
                 }}
             >Add file for {field.name}</div>

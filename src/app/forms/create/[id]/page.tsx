@@ -27,7 +27,7 @@ const page = () => {
      * @param e - event object which is passed by react onchange event
      */
     const addFeild = () => {
-        setArray([...array, { }])
+        setArray([...array, {}])
     }
 
     if (!['admin', 'moderator'].includes(session[0]?.role) && session[0]) return notFound()
@@ -253,11 +253,11 @@ const FieldContainer = (
                     name='maxFiles'
                     style={{
                         width: '60px!important',
-                        zIndex:20
+                        zIndex: 20
                     }}
                     onChange={setData}
-                    placeholder='1'
-                    values={['1','5','10']}
+                    placeholder={item['maxFiles'] as string || '1'}
+                    values={['1', '5', '10']}
                 />
             </div>
         </div>,
