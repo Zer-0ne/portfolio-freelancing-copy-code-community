@@ -170,9 +170,9 @@ const Forms = ({
         radio: <>
             <div className='flex flex-col flex-wrap gap-2'>
                 {
-                    field.options?.map((option, index) => (
+                    field?.options?.map((option, index) => (
                         <div key={index} className='gap-[10px] flex items-center pl-2 text-[1rem] flex-row' >
-                            <input ref={radioRef} onChange={handleChange} className='text-[2rem] bg-transparent cursor-pointer' required={field.required} id={option} type={field.type} checked={data && data[field.name] === option} name={field.name} value={option || ''} />
+                            <input ref={radioRef} onChange={handleChange} className='text-[2rem] bg-transparent cursor-pointer' required={field.required} id={option} type={field.type} checked={data && data[field.name] === option || false} name={field.name} value={option || ''} />
                             {option.toLowerCase() === 'other' ? (
                                 <input
                                     type="text"
@@ -198,7 +198,7 @@ const Forms = ({
             </div>
         </>,
         file: <>
-            <input type='file' disabled={isDisabled} accept={field.fileType as string} ref={radioRef} onChange={handleChange} name={field.name} className='border-none hidden flex-1 resize-none w-[100%] outline-none bg-transparent gap-2 p-[1rem] text-[1rem]' />
+            <input type='file' required={field.required} disabled={isDisabled} accept={field.fileType as string} ref={radioRef} onChange={handleChange} name={field.name} className='border-none hidden flex-1 resize-none w-[100%] outline-none bg-transparent gap-2 p-[1rem] text-[1rem]' />
             <div
                 className='my-1 opacity-60 mb-3 text-[.8rem]'
             >Upload {field.maxFiles} {field.specificFile && `supported file: ${field?.fileType?.split('/')[0]}`}.</div>
@@ -221,12 +221,14 @@ const Forms = ({
                             Object.keys(
                                 (JSON.parse(localStorage.getItem('drive') as string || '{}')[field.name] || {})
                             )?.length || 0
-                        ))
+                        )
+                    )
+
                     radioRef?.current?.click()
                 }}
             >Add file for {field.name}</div>
             {
-                JSON.parse(localStorage.getItem('drive') as string)[field?.name] && Object.keys(JSON.parse(localStorage.getItem('drive') as string)[field?.name]).map((key, index) => <div key={key} className='flex flex-1 mt-2 justify-between items-center gap-2'>
+                JSON.parse(localStorage.getItem('drive') as string) && Object.keys(JSON.parse(localStorage.getItem('drive') as string||'{}')[field?.name]||{}).map((key, index) => <div key={key} className='flex flex-1 mt-2 justify-between items-center gap-2'>
                     <div className='flex gap-2 items-center'>
                         <p
                             className='opacity-70'
