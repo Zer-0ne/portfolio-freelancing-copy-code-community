@@ -5,6 +5,7 @@ import { google, sheets_v4 } from 'googleapis'
 import { GaxiosResponse } from "gaxios";
 import Event from "@/Models/Event";
 import { monthName } from "@/utils/constant";
+import { file } from "googleapis/build/src/apis/file";
 
 // create certificate and send to the image of user
 class HandleCertificate {
@@ -71,12 +72,28 @@ export const POST = async (request: NextRequest) => {
 
         // Create a new object based on the desired order
         const orderedData: Data = {};
+        // Function to check required fields
+        async function checkRequiredFields(sequence:Data[], fields:Data) {
+            for (const field of sequence) {
+                if (field.required && !fields[field.name as string]) {
+                    console.log(`${field.name} field is required.`);
+                    return field.name
+                }
+            }
+        }
+
+        // Call the function
+        const data = await checkRequiredFields(sequence,fields);
+        if(data){
+            return NextResponse.json({ message: `The field "${data}" is required. Please provide a value for it.`, status: 'error' }, { status: 401 })
+        }
 
         // Reorder the data object based on the desired order
-        sequence?.forEach((field: string) => {
-            if (fields[field] !== undefined) {
-                orderedData[field] = fields[field];
-            }
+        sequence?.forEach((field: Data) => {
+            // console.log(!fields[field?.name as string] && field.required)
+            // console.log(sequence, fields)
+            orderedData[field?.name as string] = fields[field.name as string];
+            // }
         });
 
         // Now, update the original data object

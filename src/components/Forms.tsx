@@ -26,7 +26,7 @@ const Forms = ({
     const [remainingUploadFile, setRemainingUploadFile] = useState(0)
     const [openShareModal, setOpenShareModal] = useState<boolean>(false);
     const { session } = useSelector((state: RootState) => state.session)
-    const [desiredSequences, setDesiredSequences] = useState<string[]>([])
+    const [desiredSequences, setDesiredSequences] = useState<Data[]>([])
 
     // handle Chnage of input fields
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -80,7 +80,10 @@ const Forms = ({
     useEffect(() => {
         // Directly set the desired sequences based on field names
         if (forms?.fields) {
-            setDesiredSequences(forms.fields.map(field => field.name));
+            setDesiredSequences(forms?.fields.map(field => ({
+                name: field.name,
+                required: field.required
+            })));
         }
     }, [forms, data]);
     // console.log(desiredSequences)
@@ -198,7 +201,7 @@ const Forms = ({
             </div>
         </>,
         file: <>
-            <input type='file' required={field.required} disabled={isDisabled} accept={field.fileType as string} ref={radioRef} onChange={handleChange} name={field.name} className='border-none hidden flex-1 resize-none w-[100%] outline-none bg-transparent gap-2 p-[1rem] text-[1rem]' />
+            <input type='file' disabled={isDisabled} accept={field.fileType as string} ref={radioRef} onChange={handleChange} name={field.name} className='border-none hidden flex-1 resize-none w-[100%] outline-none bg-transparent gap-2 p-[1rem] text-[1rem]' />
             <div
                 className='my-1 opacity-60 mb-3 text-[.8rem]'
             >Upload {field.maxFiles} {field.specificFile && `supported file: ${field?.fileType?.split('/')[0]}`}.</div>
@@ -228,7 +231,7 @@ const Forms = ({
                 }}
             >Add file for {field.name}</div>
             {
-                JSON.parse(localStorage.getItem('drive') as string) && Object.keys(JSON.parse(localStorage.getItem('drive') as string||'{}')[field?.name]||{}).map((key, index) => <div key={key} className='flex flex-1 mt-2 justify-between items-center gap-2'>
+                JSON.parse(localStorage.getItem('drive') as string) && Object.keys(JSON.parse(localStorage.getItem('drive') as string || '{}')[field?.name] || {}).map((key, index) => <div key={key} className='flex flex-1 mt-2 justify-between items-center gap-2'>
                     <div className='flex gap-2 items-center'>
                         <p
                             className='opacity-70'
@@ -270,7 +273,7 @@ const Forms = ({
 
     return (
         <form onSubmit={handleSubmit}>
-            <div className='flex  flex-col justify-center px-[2rem] items-center'>
+            <div className='flex  flex-col justify-center px-[.8rem] items-center'>
                 <div style={{
                     maxWidth: '700px'
                 }} className='flex gap-[1rem] flex-col  justify-center items-center py-[1rem] max-w-[500px]'>
