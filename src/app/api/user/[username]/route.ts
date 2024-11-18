@@ -9,7 +9,7 @@ import { NextRequest, NextResponse } from "next/server";
 export const GET = async (request: NextRequest, { params }: any) => {
     try {
         await connect()
-        const { username } = params
+        const { username } = await params
 
         let user;
 

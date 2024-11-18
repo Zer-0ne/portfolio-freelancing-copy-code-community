@@ -26,12 +26,13 @@ const Forms = ({
     const [remainingUploadFile, setRemainingUploadFile] = useState(0)
     const [openShareModal, setOpenShareModal] = useState<boolean>(false);
     const { session } = useSelector((state: RootState) => state.session)
+    const [desiredSequences, setDesiredSequences] = useState<string[]>([])
 
     // handle Chnage of input fields
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value, files } = e.target;
-        if (name === 'file' && files) {
-            handleUpload(files[0], name)
+        if (files) {
+            handleUpload(files && files[0], name)
         }
         setData((prevFormData) => ({ ...prevFormData, [name]: value }));
     }
@@ -52,9 +53,13 @@ const Forms = ({
             if (data && data.id) {
                 // Retrieve existing drive data from local storage
                 const existingDriveData = JSON.parse(localStorage.getItem('drive') || '{}');
+                // Ensure the category (e.g., "resum") exists
+                if (!existingDriveData[name]) {
+                    existingDriveData[name] = {};
+                }
 
                 // Add new entry to the existing drive data
-                existingDriveData[data.id] = data;
+                existingDriveData[name][data.id] = data;
 
                 // Save updated drive data back to local storage
                 localStorage.setItem('drive', JSON.stringify(existingDriveData));
@@ -65,15 +70,22 @@ const Forms = ({
             // Optionally, update the state to reflect the deletion
             setData(prevData => ({
                 ...prevData,
-                file: updatedFiles.length > 0 ? updatedFiles : null // Set to null if no files left
+                [name]: updatedFiles.length > 0 ? updatedFiles : null // Set to null if no files left
             }));
         } catch (error) {
             console.log((error as Data).message);
         }
     };
 
+    useEffect(() => {
+        // Directly set the desired sequences based on field names
+        if (forms?.fields) {
+            setDesiredSequences(forms.fields.map(field => field.name));
+        }
+    }, [forms, data]);
+    // console.log(desiredSequences)
 
-    const handleDeleteUploadedImage = async (fileId: string) => {
+    const handleDeleteUploadedImage = async (fileId: string, name: string) => {
 
         try {
             const { deletePost } = await import('@/utils/FetchFromApi');
@@ -83,7 +95,10 @@ const Forms = ({
 
             // Remove the file entry from local storage
             const existingDriveData = JSON.parse(localStorage.getItem('drive') || '{}');
-            delete existingDriveData[fileId]; // Remove the file entry by ID
+            // Navigate to the specific category (e.g., "resum") and delete the file ID
+            if (existingDriveData[name] && existingDriveData[name][fileId]) {
+                delete existingDriveData[name][fileId];
+            }
             localStorage.setItem('drive', JSON.stringify(existingDriveData)); // Save updated data
 
             const updatedFiles = Object.keys(JSON.parse(localStorage.getItem('drive') || '{}')).map(key => {
@@ -92,23 +107,34 @@ const Forms = ({
             // Optionally, update the state to reflect the deletion
             setData(prevData => ({
                 ...prevData,
-                file: updatedFiles.length > 0 ? updatedFiles : null // Set to null if no files left
+                [name]: updatedFiles.length > 0 ? updatedFiles : null // Set to null if no files left
             }));
         } catch (error) {
             console.log((error as Data).message);
         }
     };
 
+
     useEffect(() => {
-        const updatedFiles = Object.keys(JSON.parse(localStorage.getItem('drive') || '{}')).map(key => {
-            return `https://drive.google.com/uc?export=view&id=${key}`;
+
+        // Retrieve 'drive' object from localStorage
+        const driveData = JSON.parse(localStorage.getItem('drive') || '{}');
+
+        // console.log(driveData)
+        Object.keys(driveData).map((key) => {
+            // console.log(key)
+            const filesKey = driveData[key];
+            Object.keys(filesKey).map(fileKey => {
+                setData(prevData => ({
+                    ...prevData,
+                    [key as string]: `https://drive.google.com/uc?export=view&id=${fileKey}` // Set null if no files found
+                }));
+            })
+            // console.log(filesKey)
         })
-        // Optionally, update the state to reflect the deletion
-        setData(prevData => ({
-            ...prevData,
-            file: updatedFiles.length > 0 ? updatedFiles : null // Set to null if no files left
-        }));
-    }, [])
+    }, [data]);
+    // console.log(data)
+
 
     // handle submit 
     const handleSubmit = async (e: any) => {
@@ -116,10 +142,13 @@ const Forms = ({
         try {
             if (data && !data['certificate'] && forms['title'] === 'Certificate') return alert("There is no active events")
             const { createNew } = await import('@/utils/FetchFromApi');
-            await createNew({ functionality: 'update', fields: { ...data as Data }, sheetId: forms?.sheetId }, 'form', setIsDisabled);
+            await createNew({ functionality: 'update', fields: { ...data as Data }, sheetId: forms?.sheetId, sequence: desiredSequences && desiredSequences }, 'form', setIsDisabled);
             return setData(undefined)
         } catch (error) {
             console.log(error)
+        } finally {
+            // Clear the 'drive' object in localStorage
+            localStorage.setItem('drive', JSON.stringify({}));
         }
     }
     const fieldTypes = (field: FormField, index: number, radioRef?: React.RefObject<HTMLInputElement>): {
@@ -143,7 +172,7 @@ const Forms = ({
                 {
                     field.options?.map((option, index) => (
                         <div key={index} className='gap-[10px] flex items-center pl-2 text-[1rem] flex-row' >
-                            <input ref={radioRef} onChange={handleChange} className='text-[2rem] bg-transparent cursor-pointer' required={field.required} id={option} type={field.type} name={field.name} value={option || ''} />
+                            <input ref={radioRef} onChange={handleChange} className='text-[2rem] bg-transparent cursor-pointer' required={field.required} id={option} type={field.type} checked={data && data[field.name] === option} name={field.name} value={option || ''} />
                             {option.toLowerCase() === 'other' ? (
                                 <input
                                     type="text"
@@ -169,7 +198,7 @@ const Forms = ({
             </div>
         </>,
         file: <>
-            <input type='file' disabled={isDisabled} accept={field.fileType as string} ref={radioRef} onChange={handleChange} name='file' className='border-none hidden flex-1 resize-none w-[100%] outline-none bg-transparent gap-2 p-[1rem] text-[1rem]' />
+            <input type='file' disabled={isDisabled} accept={field.fileType as string} ref={radioRef} onChange={handleChange} name={field.name} className='border-none hidden flex-1 resize-none w-[100%] outline-none bg-transparent gap-2 p-[1rem] text-[1rem]' />
             <div
                 className='my-1 opacity-60 mb-3 text-[.8rem]'
             >Upload {field.maxFiles} {field.specificFile && `supported file: ${field?.fileType?.split('/')[0]}`}.</div>
@@ -179,27 +208,40 @@ const Forms = ({
                     ...styles.customInput(),
                 }}
                 onClick={() => {
-                    setRemainingUploadFile((field?.maxFiles as number) - Object.keys(JSON.parse(localStorage.getItem('drive') as string || '{}')).length)
+                    // console.log(
+                    //     (field?.maxFiles as number) -
+                    //     (
+                    //         Object.keys(
+                    //             (JSON.parse(localStorage.getItem('drive') as string || '{}')[field.name] || {})
+                    //         )?.length || 0
+                    //     )
+                    // );
+                    setRemainingUploadFile((field?.maxFiles as number) -
+                        (
+                            Object.keys(
+                                (JSON.parse(localStorage.getItem('drive') as string || '{}')[field.name] || {})
+                            )?.length || 0
+                        ))
                     radioRef?.current?.click()
                 }}
             >Add file for {field.name}</div>
             {
-                Object.keys(JSON.parse(localStorage.getItem('drive') as string || '{}')).map((key,index) => <div key={key} className='flex flex-1 mt-2 justify-between items-center gap-2'>
-                    <p
-                        className='opacity-70'
-                    >{`${index+1} `}</p>
+                JSON.parse(localStorage.getItem('drive') as string)[field?.name] && Object.keys(JSON.parse(localStorage.getItem('drive') as string)[field?.name]).map((key, index) => <div key={key} className='flex flex-1 mt-2 justify-between items-center gap-2'>
                     <div className='flex gap-2 items-center'>
+                        <p
+                            className='opacity-70'
+                        >{`${index + 1}. `}</p>
                         <Image
                             width={50}
                             height={50}
                             src={`https://drive.google.com/uc?export=view&id=${key}`}
                             alt={JSON.parse(localStorage.getItem('drive') as string)[key]?.name as string}
                         />
-                        <p>{JSON.parse(localStorage.getItem('drive') as string)[key]?.name}</p>
+                        <p>{JSON.parse(localStorage.getItem('drive') as string)[field.name][key]?.name}</p>
                     </div>
                     <button
                         type='button'
-                        onClick={() => handleDeleteUploadedImage(key)}
+                        onClick={() => handleDeleteUploadedImage(key, field.name)}
                     >
                         <DeleteIcon />
                     </button>

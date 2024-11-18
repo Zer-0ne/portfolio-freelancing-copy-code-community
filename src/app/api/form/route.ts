@@ -18,7 +18,7 @@ class HandleCertificate {
     }
     generate = async (id: number) => {
         try {
-            const data = { name: this.name, id: `${id}`, title: this.title, email: this.email, password: process.env.EMAIL_PASS,date: `${monthName[new Date().getMonth()]} ${new Date().getDate()},${new Date().getFullYear()}` }
+            const data = { name: this.name, id: `${id}`, title: this.title, email: this.email, password: process.env.EMAIL_PASS, date: `${monthName[new Date().getMonth()]} ${new Date().getDate()},${new Date().getFullYear()}` }
 
             const response = await fetch(`${process.env.FLASK_URL}`, {
                 method: "POST",
@@ -48,9 +48,44 @@ export const POST = async (request: NextRequest) => {
         const {
             functionality,
             fields,
+            sequence,
             title, // this is only for create a new sheet for name the title  of the sheet
             sheetId, // this is for update specific sheet
         } = await request.json();
+        // console.log(fields)
+
+        function joinArrays(data: Data) {
+            const result: Data = {};
+
+            for (const key in data) {
+                if (Array.isArray(data[key])) {
+                    // Join the array into a string, you can specify a separator if needed
+                    result[key] = data[key].join(' '); // Joining with a comma and space
+                } else {
+                    result[key] = data[key]; // Keep non-array values as they are
+                }
+            }
+
+            return result;
+        }
+
+        // Create a new object based on the desired order
+        const orderedData: Data = {};
+
+        // Reorder the data object based on the desired order
+        sequence?.forEach((field: string) => {
+            if (fields[field] !== undefined) {
+                orderedData[field] = fields[field];
+            }
+        });
+
+        // Now, update the original data object
+        Object.keys(fields).forEach(key => {
+            delete fields[key]; // Clear the original data object
+        });
+
+        // Assign the ordered data back to the original data object
+        Object.assign(fields, orderedData);
 
         const auth = await google.auth.getClient({
             credentials: {
@@ -67,7 +102,7 @@ export const POST = async (request: NextRequest) => {
         const sheets = google.sheets({ version: "v4", auth });
         let values = [
             [
-                session.user.email, ...Object.values(fields) as string[]
+                session.user.email, ...Object.values(joinArrays(fields)) as string[]
             ],
             // Additional rows ...
         ];
