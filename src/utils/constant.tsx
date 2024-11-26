@@ -549,3 +549,26 @@ const materials = [
         ]
     }
 ]
+
+export const formatBytes = (bytes: string) => {
+    const units = ['bytes', 'KB', 'MB', 'GB', 'TB'];
+    let index = 0;
+
+    // Convert the string to a number
+    let byteValue = parseInt(bytes, 10);
+    console.log(byteValue)
+
+    // Check if the conversion was successful
+    if (isNaN(byteValue)) {
+        return 'Invalid input';
+    }
+
+    // Convert bytes to a larger unit
+    while (byteValue >= 1024 && index < units.length - 1) {
+        byteValue /= 1024;
+        index++;
+    }
+
+    // Round to two decimal places
+    return `${byteValue.toFixed(2)} ${units[index]}`;
+}

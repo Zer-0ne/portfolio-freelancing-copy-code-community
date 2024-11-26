@@ -33,7 +33,7 @@ export const POST = async (request: NextRequest) => {
         }
 
         // Parse request data
-        const { folderName, file, remainingUploads } = await request.json();
+        const { folderName, folderId, file, remainingUploads } = await request.json();
         // console.log(folderName, file)
         if (remainingUploads < 1) {
             return NextResponse.json(
@@ -41,12 +41,7 @@ export const POST = async (request: NextRequest) => {
                 { status: 400 }
             );
         }
-        if (!folderName || !file) {
-            return NextResponse.json(
-                { message: "Folder name and file are required", status: "error" },
-                { status: 400 }
-            );
-        }
+
 
         const drive = google.drive({
             version: "v3",
@@ -57,20 +52,38 @@ export const POST = async (request: NextRequest) => {
             ]),
         });
 
-        // Step 1: Create the folder
-        const folder = await drive.files.create({
-            requestBody: {
-                name: folderName,
-                mimeType: "application/vnd.google-apps.folder",
-            } as FileResource,
-            fields: "id", // Only return the ID
-        });
-
-        const folderId = folder.data.id; // Extract the folder ID
-        if (!folderId) {
-            throw new Error("Failed to create folder");
+        if (!folderId && !file) {
+            if (!folderName) {
+                return NextResponse.json(
+                    { message: "Folder name is required", status: "error" },
+                    { status: 400 }
+                );
+            }
+            // Step 1: Create the folder
+            const folder = await drive.files.create({
+                requestBody: {
+                    name: folderName,
+                    mimeType: "application/vnd.google-apps.folder",
+                } as FileResource,
+                fields: "id", // Only return the ID
+            });
+            const folderId = folder.data.id; // Extract the folder ID
+            if (!folderId) {
+                throw new Error("Failed to create folder");
+            }
+            return NextResponse.json({
+                folderId,
+                message: "File Create successfully",
+                status: "success",
+            });
         }
 
+        if (!file || !folderId) {
+            return NextResponse.json(
+                { message: "file are required", status: "error" },
+                { status: 400 }
+            );
+        }
         // Step 2: Decode the Base64 file content
         const fileBuffer = Buffer.from(file?.content?.split(",")[1], "base64");
 
@@ -108,6 +121,7 @@ export const POST = async (request: NextRequest) => {
         return NextResponse.json({
             data: {
                 ...data,
+                parentFolder: folderId,
                 webViewLink: fileDetails.data.webViewLink, // Viewable link
                 webContentLink: fileDetails.data.webContentLink, // Downloadable link
             },

@@ -1,11 +1,11 @@
-import { BaseExternalAccountClient, GoogleAuth, OAuth2Client } from "google-auth-library";
+import { BaseExternalAccountClient, ExternalAccountClientOptions, GoogleAuth, JWTInput, OAuth2Client } from "google-auth-library";
 import { JSONClient } from "google-auth-library/build/src/auth/googleauth";
 import { google } from "googleapis";
 
-export const auth = async (Scopes: string[] = []): Promise<string | BaseExternalAccountClient | GoogleAuth<JSONClient> | OAuth2Client | undefined> => {
+export const auth = async (Scopes: string[] = [], customCredentials?: JWTInput | ExternalAccountClientOptions | undefined): Promise<string | BaseExternalAccountClient | GoogleAuth<JSONClient> | OAuth2Client | undefined> => {
     try {
         const client = await google.auth.getClient({
-            credentials: {
+            credentials: customCredentials ?? {
                 type: "service_account",
                 private_key: process.env.GOOGLE_PRIVATE_KEY?.split(String.raw`\n`).join('\n'),
                 client_email: process.env.GOOGLE_CLIENT_EMAIL,

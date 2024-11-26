@@ -2,13 +2,11 @@
 import { EventsInterface } from '@/utils/Interfaces'
 import { Box, Container, Typography } from '@mui/material'
 import dynamic from 'next/dynamic'
-import Image from 'next/image'
 import { useParams } from 'next/navigation'
 import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from '@/store/store'
 import { fetchEvents } from '@/slices/eventsSlice'
-import EmbientImage from '@/components/Embient-image'
 
 const Loading = dynamic(() => import('@/components/Loading'))
 const ContentStructure = dynamic(() => import('@/components/ContentStructure'))

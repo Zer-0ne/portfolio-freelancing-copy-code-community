@@ -4,11 +4,13 @@ import { Data } from '@/utils/Interfaces'
 import { colors } from '@/utils/colors'
 import { child, get, ref, set } from 'firebase/database'
 import { notFound, useParams } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import DeleteIcon from '@mui/icons-material/Delete';
 import ToggleBtn from '@/components/toggle-btn'
 import DropDown from '@/components/DropDown'
+import Image from 'next/image'
+import GoogleDrive from '@/assests/svg/drive.svg'
 
 const page = () => {
     /**
@@ -20,6 +22,7 @@ const page = () => {
     const [isDisabled, setIsDisabled] = useState<boolean>(false)
     const [currentSelectedFeild, setCurrentSelectedFeild] = useState<number>();
     const { id }: any = useParams()
+    const [isCreating, setIsCreating] = useState(false)
 
     /**
      * declaration and defination of addFeild function
@@ -36,11 +39,12 @@ const page = () => {
         const write = async () => {
             if (!array.length || !data) return
             setCurrentSelectedFeild(array.length - 1)
+            setIsCreating(isCreating => !isCreating)
             const { createNew } = await import('@/utils/FetchFromApi')
             const { realTimeDatabase } = await import('@/utils/Firebase')
             const nameArray = await array.map((obj: Data) => obj?.name);
             // console.log(data)
-            if (data && data['title'] && !data['sheetId']) setdata({ ...data, sheetId: await createNew({ functionality: 'create', fields: [...nameArray], title: data?.title }, 'form', setIsDisabled).then((resp) => resp.data.spreadsheetId) })
+            if (data && data['title'] && !data['sheetId'] && isCreating) setdata({ ...data, sheetId: await createNew({ functionality: 'create', fields: [...nameArray], title: data?.title }, 'form', setIsDisabled).then((resp) => resp.data.spreadsheetId) })
             data && await set(ref(realTimeDatabase, `forms/${id}`), {
                 _id: id,
                 'Accepting Response': true,
@@ -48,7 +52,7 @@ const page = () => {
                 fields: array,
             });
         }
-        write()
+        data && write()
     }, [array, data, session])
 
     useEffect(() => {
@@ -71,6 +75,19 @@ const page = () => {
         const { name, value } = e.target
         setdata((prev?: Data) => ({ ...prev, [name]: value }))
     }
+
+    const handleCreateFolder = async () => {
+        if (data && !data['folderId']) {
+            const { createNew } = await import('@/utils/FetchFromApi');
+            const { folderId } = await createNew({
+                folderName: data?.title
+            }, 'drive/files/upload')
+            setdata(data => ({ ...data, folderId }))
+        } else {
+            // TODO: redirect to folder page in our app
+        }
+    }
+
     // console.log(data)
 
     /**
@@ -86,7 +103,7 @@ const page = () => {
             </Container>
             {
                 array?.map((item: Data, index: number) => (<>
-                    <FieldContainer setCurrentSelectedFeild={setCurrentSelectedFeild} currentSelectedFeild={currentSelectedFeild} item={item as Data} setArray={setArray} index={index} key={index}>
+                    <FieldContainer handleCreateFolder={handleCreateFolder} setCurrentSelectedFeild={setCurrentSelectedFeild} currentSelectedFeild={currentSelectedFeild} item={item as Data} setArray={setArray} index={index} key={index}>
                         <></>
                     </FieldContainer>
                 </>))
@@ -119,11 +136,11 @@ const Container = ({ children, }: { children: React.ReactNode }) => {
 const FieldContainer = (
     { children, item, setArray, index,
         setCurrentSelectedFeild,
-        currentSelectedFeild
+        currentSelectedFeild, handleCreateFolder
     }: {
         children?: React.ReactNode, item: Data, setArray: React.Dispatch<React.SetStateAction<Data[]>>, index: number,
         setCurrentSelectedFeild: React.Dispatch<React.SetStateAction<number | undefined>>,
-        currentSelectedFeild?: number
+        currentSelectedFeild?: number; handleCreateFolder: () => Promise<void>
     }) => {
     const [types, setTypes] = useState(item.type || 'text'); // Initialize with item type
     const [data, setData] = useState<Data>();
@@ -258,6 +275,14 @@ const FieldContainer = (
                     onChange={setData}
                     placeholder={item['maxFiles'] as string || '1'}
                     values={['1', '5', '10']}
+                />
+                <Image
+                    onClick={handleCreateFolder}
+                    width={20}
+                    height={20}
+                    src={GoogleDrive}
+                    className={`flex-1 after:left-[100%] after:top-0 after:-translate-y-[50%] after:content-['Create_folder'] after:absolute relative after:text-white`}
+                    alt='Google drive'
                 />
             </div>
         </div>,

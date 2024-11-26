@@ -73,18 +73,20 @@ export const POST = async (request: NextRequest) => {
         // Create a new object based on the desired order
         const orderedData: Data = {};
         // Function to check required fields
-        async function checkRequiredFields(sequence:Data[], fields:Data) {
-            for (const field of sequence) {
-                if (field.required && !fields[field.name as string]) {
-                    console.log(`${field.name} field is required.`);
-                    return field.name
+        async function checkRequiredFields(sequence: Data[], fields: Data) {
+            if (sequence) {
+                for (const field of sequence) {
+                    if (field.required && !fields[field.name as string]) {
+                        // console.log(`${field.name} field is required.`);
+                        return field.name
+                    }
                 }
             }
         }
 
         // Call the function
-        const data = await checkRequiredFields(sequence,fields);
-        if(data){
+        const data = await checkRequiredFields(sequence, fields);
+        if (data) {
             return NextResponse.json({ message: `The field "${data}" is required. Please provide a value for it.`, status: 'error' }, { status: 401 })
         }
 

@@ -42,7 +42,7 @@ const Forms = ({
             const { createNew } = await import('@/utils/FetchFromApi');
             const { data } = await createNew(
                 {
-                    folderName: forms.title,
+                    folderId: forms.folderId,
                     file,
                     remainingUploads: remainingUploadFile
                 },
@@ -365,7 +365,7 @@ export const Container = ({ children, customStyle }: { children: React.ReactNode
     )
 }
 
-const ShareDocModal = ({
+export const ShareDocModal = ({
     open,
     setOpen,
     forms

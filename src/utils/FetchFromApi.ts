@@ -365,13 +365,13 @@ export const sharePermission = async (data: Data) => {
     }
 }
 
-export const getData = async (route: string, data: Data) => {
+export const getData = async (route: string, data?: Data) => {
     try {
         const session = await currentSession() as Session;
 
         // check the user is admin or not 
         const user = await userInfo(session?.user?.username)
-        if (['user'].includes(user.role)) return;
+        if (['user'].includes(user?.role)) return;
 
         const response = await fetch(route, {
             method: 'POST',

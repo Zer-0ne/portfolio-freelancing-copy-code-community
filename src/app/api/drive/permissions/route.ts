@@ -1,5 +1,5 @@
 import Users from "@/Models/Users";
-import { Session } from "@/utils/Interfaces";
+import { Data, Session } from "@/utils/Interfaces";
 import { currentSession } from "@/utils/Session";
 import { auth } from "@root/sheets.config";
 import { google } from "googleapis";
@@ -29,7 +29,7 @@ export const POST = async (request: NextRequest) => {
         })
         return NextResponse.json({ message: 'Access Granted!',status:'success' })
     } catch (error: any) {
-        // console.log(error)
+        console.log((error as Data).message)
         return NextResponse.json({ error: 'Access Denied!',status:'error' }, { status: 500 })
 
     }

@@ -129,6 +129,7 @@ export interface FormStructure {
     'Accepting Response': boolean;
     fields: FormField[],
     sheetId: string;
+    folderId: string
 }
 
 export interface FormField {
@@ -144,4 +145,42 @@ export interface FormField {
     specificFile?: boolean
 }
 
+
+export interface ListFiles {
+    query?: {
+        filter?: string;        // Alternative for params
+        fileType?: 'files' | 'folder';     // Alternative for type
+    }
+}
+
+
 export type DrivePermissionRole = 'reader' | 'commenter' | 'writer' | 'fileOrganizer' | 'organizer' | 'owner';
+
+export interface GoogleDriveFile {
+    id: string; // Unique identifier for the file
+    name: string; // Name of the file
+    mimeType: string; // MIME type of the file
+    thumbnailLink?: string; // Link to a thumbnail image of the file
+    webViewLink?: string; // Link to view the file in a web browser
+    parents?: string[]; // List of parent folder IDs
+    createdTime?: string; // Date and time the file was created
+    modifiedTime?: string; // Date and time the file was last modified
+    size?: number; // Size of the file in bytes
+    iconLink?: string; // Link to an icon representing the file type
+    shared?: boolean; // Whether the file is shared
+    sharedWithMeTime?: string; // Date and time the file was shared with the user
+    owners?: { // Information about the file's owners
+        kind: string; // Type of resource
+        id: string; // Owner's ID
+        displayName: string; // Owner's display name
+        emailAddress: string; // Owner's email address
+    }[];
+    webContentLink?: string; // Link to download the file
+    trashed?: boolean; // Whether the file is in the trash
+    version?: string; // The version of the file
+    // Add more fields as needed based on your requirements
+}
+
+interface GoogleDriveResponse {
+    files: GoogleDriveFile[];
+}
