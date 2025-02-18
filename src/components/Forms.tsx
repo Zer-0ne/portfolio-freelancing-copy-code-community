@@ -175,18 +175,52 @@ const Forms = ({
                 {
                     field?.options?.map((option, index) => (
                         <div key={index} className='gap-[10px] flex items-center pl-2 text-[1rem] flex-row' >
-                            <input ref={radioRef} onChange={handleChange} className='text-[2rem] bg-transparent cursor-pointer' required={field.required} id={option} type={field.type} checked={data && data[field.name] === option || false} name={field.name} value={option || ''} />
+                            <input
+                                ref={radioRef}
+                                onChange={(e) => {
+                                    if (option.toLowerCase() === 'other') {
+                                        // Don't update the value yet for 'other' option
+                                        setData(prevData => ({
+                                            ...prevData,
+                                            [field.name]: '' // Clear the field when switching to "Other"
+                                        }));
+                                    } else {
+                                        setData(prevData => ({
+                                            ...prevData,
+                                            [field.name]: e.target.value
+                                        }));
+                                    }
+                                }}
+                                className='text-[2rem] bg-transparent cursor-pointer'
+                                required={field.required}
+                                id={option}
+                                type={field.type}
+                                checked={
+                                    option.toLowerCase() === 'other'
+                                        ? typeof data?.[field.name] === 'string' &&
+                                        !field.options?.includes(data[field.name] as string)
+                                        : (data?.[field.name] as string) === option
+                                }
+                                name={field.name}
+                                value={option}
+                            />
                             {option.toLowerCase() === 'other' ? (
                                 <input
                                     type="text"
                                     className='border-none !focus:opacity-10 my-1 !w-[40%] !max-w-[40%] resize-none outline-none bg-transparent flex gap-2 p-[1rem] text-[1rem]'
                                     style={{ ...styles.customInput() }}
                                     placeholder="Please specify"
-                                    onClick={() => { radioRef?.current?.click(); setData((prevFormData) => ({ ...prevFormData, [field.name]: '' })) }}
+                                    value={!field.options?.includes(data?.[field.name] as string || '') ? (data?.[field.name] as string || '') : ''}
+                                    onClick={() => {
+                                        radioRef?.current?.click();
+                                    }}
                                     onChange={(e) => {
                                         const { value } = e.target;
-                                        setData((prevFormData) => ({ ...prevFormData, [field.name]: value }));
-                                    }} // Handle change for the "Other" input
+                                        setData(prevData => ({
+                                            ...prevData,
+                                            [field.name]: value // Store the custom value directly
+                                        }));
+                                    }}
                                 />
                             ) : (
                                 <>
