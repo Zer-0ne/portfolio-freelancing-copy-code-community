@@ -3,12 +3,13 @@ import { colors } from '@/utils/colors'
 import { styles } from '@/utils/styles'
 import dynamic from 'next/dynamic'
 import React, { useEffect, useState } from 'react'
-import { RootState } from '@/store/store'
-import { useSelector } from 'react-redux'
+import { AppDispatch, RootState } from '@/store/store'
+import { useDispatch, useSelector } from 'react-redux'
 import { Box } from '@mui/material'
 import DoDisturbIcon from '@mui/icons-material/DoDisturb';
 import Image from 'next/image'
 import DeleteIcon from '@mui/icons-material/Delete';
+import { fetchEvents } from '@/slices/eventsSlice'
 
 const Markdown = dynamic(() => import('@/components/Markdown'))
 const CustomModal = dynamic(() => import('@/components/CustomModal'))
@@ -27,13 +28,17 @@ const Forms = ({
     const [openShareModal, setOpenShareModal] = useState<boolean>(false);
     const { session } = useSelector((state: RootState) => state.session)
     const [desiredSequences, setDesiredSequences] = useState<Data[]>([])
+    const dispatch = useDispatch<AppDispatch>()
 
     // handle Chnage of input fields
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value, files } = e.target;
-        if (files) {
-            handleUpload(files && files[0], name)
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const { name, value } = e.target;
+
+        // Type guard to check if this is an input element with files
+        if ('files' in e.target && e.target.files) {
+            handleUpload(e.target.files[0], name);
         }
+
         setData((prevFormData) => ({ ...prevFormData, [name]: value }));
     }
 
@@ -78,14 +83,33 @@ const Forms = ({
     };
 
     useEffect(() => {
-        // Directly set the desired sequences based on field names
         if (forms?.fields) {
-            setDesiredSequences(forms?.fields.map(field => ({
+            let updatedSequences = forms.fields.map(field => ({
                 name: field.name,
                 required: field.required
-            })));
+            }));
+
+            // Check if the title includes 'Certificate', then add a 'certificate' field
+            if (['Certificate'].includes(forms?.title)) {
+                updatedSequences.push({ name: 'certificate', required: true });
+            }
+
+            setDesiredSequences(updatedSequences);
         }
     }, [forms, data]);
+
+    useEffect(() => {
+        const fetchedData = async () => {
+            try {
+                !events.length && dispatch(fetchEvents())
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        fetchedData()
+    }, [events])
+
+
     // console.log(desiredSequences)
 
     const handleDeleteUploadedImage = async (fileId: string, name: string) => {
@@ -168,6 +192,19 @@ const Forms = ({
                 values={field.options as string[]}
                 onChange={setData}
                 name={field.name}
+            />
+        </>,
+        paragraph: <>
+            <textarea
+                onChange={handleChange}
+                name={field.name}
+                value={data?.[field.name!]?.toString() || ''}
+                required={field.required}
+                placeholder={field.placeholder}
+                style={styles.customInput()}
+                rows={4}
+                key={`${field.name}-${index}`}
+                className="w-full resize-none"
             />
         </>,
         radio: <>

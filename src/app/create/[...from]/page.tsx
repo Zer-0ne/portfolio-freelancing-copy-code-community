@@ -108,6 +108,8 @@ const page = () => {
         })
     }
 
+    console.log(data)
+
     // handle submit to the api
     const handleSubmit = async (e: any) => {
         e.preventDefault();
@@ -123,9 +125,11 @@ const page = () => {
                         obj[key] = value;
                         return obj;
                     }, {} as Data);
+                    
+
                 await editPost(from[1] as string, changedValues, from[0]);
                 const PostData = await Post(from[0], from[1]);
-                (from[0] === 'blog') ? dispatch(updateBlog({ id: from[1], updatedEvent: PostData })) : dispatch(updateEvent({ id: from[1], updatedEvent: PostData }));
+                (from[0] === 'blog') ? dispatch(updateBlog({ id: from[1], updatedEvent: PostData })) : dispatch(updateEvent({ id: from[1], updatedEvent: data }));
             } if (!from[1]) {
                 await createNew(data as Data, from as string, setIsDisabled);
                 (from[0] === 'blog') ? dispatch(fetchBlogs) : dispatch(fetchEvents);

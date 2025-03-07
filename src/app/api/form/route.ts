@@ -20,7 +20,6 @@ class HandleCertificate {
     generate = async (id: number) => {
         try {
             const data = { name: this.name, id: `${id}`, title: this.title, email: this.email, password: process.env.EMAIL_PASS, date: `${monthName[new Date().getMonth()]} ${new Date().getDate()},${new Date().getFullYear()}` }
-
             const response = await fetch(`${process.env.FLASK_URL}`, {
                 method: "POST",
                 headers: {
@@ -33,6 +32,7 @@ class HandleCertificate {
             const res = await response.json()
             return res.status
         } catch (error: any) {
+            console.log(error)
             return NextResponse.json({ message: error.message, status: 500 }, { status: 500 })
         }
     }
@@ -168,7 +168,7 @@ export const POST = async (request: NextRequest) => {
 
 
         const result = (functionality in option) && await option[functionality as keyof typeof option].data
-        return NextResponse.json({ message: 'created secussfully', data: result, status: 'success' })
+        return NextResponse.json({ message: 'Created successfully', data: result, status: 'success' })
     } catch (err: {
         message: string
     } | any) {

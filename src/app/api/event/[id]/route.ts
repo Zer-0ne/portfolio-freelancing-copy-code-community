@@ -1,6 +1,6 @@
 import Event from "@/Models/Event";
 import Users from "@/Models/Users";
-import { Session } from "@/utils/Interfaces";
+import { Data, Session } from "@/utils/Interfaces";
 import { currentSession } from "@/utils/Session";
 import connect from "@/utils/database";
 import { NextRequest, NextResponse } from "next/server";
@@ -48,49 +48,50 @@ export const DELETE = async (request: NextRequest, { params }: any) => {
 export const PUT = async (request: NextRequest, { params }: any) => {
     try {
         const session = await currentSession() as Session;
-        if (!session) return NextResponse.json({ message: 'Please login', status: 'error' }, { status: 401 })
+        if (!session) return NextResponse.json({ message: 'Please login', status: 'error' }, { status: 401 });
 
-        // check the user is admin and moderator or not 
-        const user = await Users.findOne({ username: session?.user?.username })
+        // Check if user is authorized
+        const user = await Users.findOne({ username: session?.user?.username });
 
-        if (['user'].includes(user.role)) return NextResponse.json({ message: 'Your are not Authorized!', status: 'error' }, { status: 401 })
+        if (['user'].includes(user.role)) return NextResponse.json({ message: 'You are not Authorized!', status: 'error' }, { status: 401 });
 
-
-        // connect to Database
+        // Connect to Database
         await connect();
-        const {
-            title,
-            description,
-            tag,
-            content,
-            mode,
-            participants,
-            status,
-            image,
-            label
-        } = await request.json();
-        const updatedBlog = {
-            title,
-            description,
-            tag,
-            content,
-            mode,
-            participants,
-            status,
-            image,
-            label
+
+        const body = await request.json();
+        const { id } = params;
+
+        console.log("Updating event ID:", id);
+        console.log("Received data:", body);
+
+        // Fetch existing event
+        const existingEvent = await Event.findById(id);
+        if (!existingEvent) return NextResponse.json({ message: 'Post not found!', status: 'error' });
+
+        // Extract only changed fields
+        const updatedFields = {} as Data;
+        for (const key in body) {
+            if (body[key] !== undefined && body[key] !== existingEvent[key]) {
+                updatedFields[key] = body[key];
+            }
         }
-        const { id } = params
+
+        console.log("Updated fields:", updatedFields);
+
+        if (Object.keys(updatedFields).length === 0) {
+            return NextResponse.json({ message: 'No changes detected.', status: 'warning' });
+        }
+
+        // Update event
         const event = await Event.findByIdAndUpdate(
             id,
-            { $set: updatedBlog },
+            { $set: updatedFields },
             { new: true }
         );
-        if (!event) return NextResponse.json({ message: 'Post not found!', status: 'error' })
-        return NextResponse.json({ message: 'Post updated!', status: 'success' })
-    } catch (err: {
-        message: string
-    } | any) {
-        return NextResponse.json({ error: err.message }, { status: 500 })
+
+        return NextResponse.json({ message: 'Post updated!', status: 'success', event });
+    } catch (err: any) {
+        console.error("Update Error:", err);
+        return NextResponse.json({ error: err.message }, { status: 500 });
     }
-}
+};
