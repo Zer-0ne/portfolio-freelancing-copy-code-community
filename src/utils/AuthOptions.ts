@@ -84,19 +84,12 @@ export const AuthOptions: NextAuthOptions = {
                     
 
                     if (isExist) return user
-                    // await createUser({
-                    //     username: user?.id as string,
-                    //     name: user?.name as string,
-                    //     image: user?.image as string,
-                    //     email: user?.email as string,
-                    // } as Data)
-                    await Users.create({
+                    await createUser({
                         username: user?.id as string,
                         name: user?.name as string,
                         image: user?.image as string,
                         email: user?.email as string,
-                    })
-                    await user.save();
+                    } as Data)
                     return user
                 }
                 return user
