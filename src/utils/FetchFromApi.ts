@@ -11,7 +11,7 @@ export const createUser = async (data: Data) => {
     try {
         const os = await import('os')
         const hostname = os.hostname();
-        const response = await fetch(`/api/auth/signup`, {
+        const response = await fetch(`${process.env.NEXTAUTH_URL}/api/auth/signup`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

@@ -143,7 +143,7 @@ export const POST = async (request: NextRequest) => {
             const res = await certificates.generate(id)
             values[0] = [`${id}`].concat(values[0])
             if (res !== '200') {
-                return NextResponse.json({ message: 'Something went wrong', status: 'error' }, { status: 500 })
+                return NextResponse.json({ message: 'Something went wrong', error: res.error, status: 'error' }, { status: 500 })
             }
         }
         const option: {
