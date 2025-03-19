@@ -123,7 +123,7 @@ export const userInfo = async (id: string, method: string = 'GET') => {
         }
         const baseUrl = process.env.BASE_URL;
         // const url = new URL(`/api/user/${encodeURIComponent(id)}`, baseUrl);
-        const res = await fetch(`${baseUrl}/api/user/${encodeURIComponent(id)}`, {
+        const res = await fetch(`${baseUrl}/api/user/${id}`, {
             method: `${method}`,
             cache: 'no-store'
         })
