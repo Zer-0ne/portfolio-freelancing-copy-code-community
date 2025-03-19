@@ -122,8 +122,8 @@ export const userInfo = async (id: string, method: string = 'GET') => {
             if (session?.user?.username === id) return 'Cant do this action!'
         }
         const baseUrl = process.env.BASE_URL;
-        const url = new URL(`/api/user/${encodeURIComponent(id)}`, baseUrl);
-        const res = await fetch(`${url}`, {
+        // const url = new URL(`/api/user/${encodeURIComponent(id)}`, baseUrl);
+        const res = await fetch(`${baseUrl}/api/user/${encodeURIComponent(id)}`, {
             method: `${method}`,
             cache: 'no-store'
         })
