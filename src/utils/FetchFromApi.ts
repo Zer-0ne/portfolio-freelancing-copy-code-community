@@ -121,7 +121,7 @@ export const userInfo = async (id: string, method: string = 'GET') => {
 
             if (session?.user?.username === id) return 'Cant do this action!'
         }
-        const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
+        const baseUrl = process.env.BASE_URL;
         const url = new URL(`/api/user/${encodeURIComponent(id)}`, baseUrl);
         const res = await fetch(`${url}`, {
             method: `${method}`,
