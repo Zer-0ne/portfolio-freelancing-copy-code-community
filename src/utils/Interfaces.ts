@@ -184,3 +184,28 @@ export interface GoogleDriveFile {
 interface GoogleDriveResponse {
     files: GoogleDriveFile[];
 }
+
+
+interface TextItem {
+    type: string;
+    text: string;
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    fontSize: number;
+    fontFamily: string;
+    fontWeight: string;
+    color: string;
+    textAlign: 'left' | 'center' | 'right' | 'justify';
+    _id?: string;
+}
+
+export interface CertificateTemplate {
+    _id: string;
+    templateUrl: string;
+    fields: TextItem[];
+    createdAt: { $date: string };
+    updatedAt: { $date: string };
+    __v: number;
+}

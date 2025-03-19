@@ -48,7 +48,12 @@ const UserSchema = new Schema<UserDocument>({
         ref: 'Blog',
         default: [],
     },
-    certificate:[],
+    certificate: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: "Certificate", // Certificate Model Reference
+        },
+    ],
     image: String
 }, {
     timestamps: true

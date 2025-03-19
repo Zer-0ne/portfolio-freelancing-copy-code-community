@@ -121,15 +121,24 @@ export const userInfo = async (id: string, method: string = 'GET') => {
 
             if (session?.user?.username === id) return 'Cant do this action!'
         }
-
-        const res = await fetch(`/api/user/${id}`, {
+        const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
+        const url = new URL(`/api/user/${encodeURIComponent(id)}`, baseUrl);
+        const res = await fetch(`${url}`, {
             method: `${method}`,
+            cache: 'no-store'
         })
-        if (res.ok) {
-            return await res.json()
+        if (!res.ok) {
+            console.error(`API error: ${res.status} ${res.statusText}`);
+            return null;
         }
+        const data = await res.json()
+        // if (res.ok) {
+        return data
+        // }
     } catch (error) {
         // console.log(error)
+        console.error("Error fetching user info:", error);
+        return null;
     }
 }
 

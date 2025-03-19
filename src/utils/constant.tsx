@@ -483,7 +483,7 @@ export const contactForm = [
 ]
 
 
-export const roles: string[] = ['admin', 'user', 'moderator']
+export const roles: string[] = ['admin', 'user', 'moderator', 'editor']
 
 export const controls: string[] = ['certificate', 'joinus', 'feedback']
 

@@ -139,7 +139,7 @@ const Navbar = () => {
                                     inset: '-1px',
                                     borderRadius: '50%',
                                     zIndex: -1,
-                                    background: pathName.includes(item.path.replace('/', '')) ? (item.path).includes('admin') ? 'red' : 'white' : 'transparent',
+                                    background: pathName?.includes(item.path.replace('/', '')) ? (item.path).includes('admin') ? 'red' : 'white' : 'transparent',
                                     filter: 'blur(20px)'
                                 },
                                 ":hover": {
@@ -178,7 +178,7 @@ const Navbar = () => {
                                             inset: '-5px',
                                             borderRadius: '50%',
                                             zIndex: -1,
-                                            background: (pathName.includes(item.path.replace('/', '')) && item.path.length > 1) ? (item.path).includes('admin') ? 'red' : 'white' : 'transparent',
+                                            background: (pathName?.includes(item.path.replace('/', '')) && item.path.length > 1) ? (item.path).includes('admin') ? 'red' : 'white' : 'transparent',
                                             filter: 'blur(80px)'
                                         },
                                     }}>

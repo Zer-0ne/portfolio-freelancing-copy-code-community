@@ -12,7 +12,7 @@ export const GET = async (request: NextRequest, { params }: any) => {
         const { username } = await params
 
         let user;
-
+        
         // Check if the username is a valid ObjectId
         if (isValidObjectId(username)) {
             user = await Users.findById(username);
@@ -20,10 +20,11 @@ export const GET = async (request: NextRequest, { params }: any) => {
             // If it's not a valid ObjectId, assume it's a username
             user = await Users.findOne({ username });
         }
-
+        
         if (!user) return NextResponse.json({ message: 'User not found!' }, { status: 400 });
         const { password, ...userWithoutPassword } = user.toObject();
-
+        
+        // console.log(user)
 
         return NextResponse.json(userWithoutPassword)
     } catch (error) {

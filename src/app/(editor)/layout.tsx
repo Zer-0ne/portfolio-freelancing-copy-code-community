@@ -4,7 +4,7 @@ import type { Metadata } from 'next';
 import { Session } from '@/utils/Interfaces';
 
 export const metadata: Metadata = {
-    title: 'Admin Panel: Copy Code Community',
+    title: 'Editor Panel: Copy Code Community',
     description: `Copy Code Community is like a cool online club for people who love playing with computers and making websites and apps. Whether you're a total pro or just starting, everyone is invited to share their computer codes and chat about tech stuff.`,
     authors: [
         {
@@ -39,11 +39,10 @@ export default async function Layout({
     }
 
     // Fetch user information based on the current session
-    const currUser = await userInfo(session?.user?.username);
-    // console.log(currUser)
+    const currUser = await userInfo(session?.user?.username!);
 
     // Check if the user is allowed to access this page
-    const isAdmin = ['user', 'moderator'].includes(currUser?.role) ? false : true;
+    const isAdmin = ['user'].includes(currUser?.role) ? false : true;
 
     if (!isAdmin) {
         return notFound(); // Redirect or 404 if the user is not an admin
