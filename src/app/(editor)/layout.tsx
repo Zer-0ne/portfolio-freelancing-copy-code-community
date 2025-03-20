@@ -2,6 +2,7 @@ import React from 'react';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { Session } from '@/utils/Interfaces';
+import { currentSession } from '@/utils/Session';
 
 export const metadata: Metadata = {
     title: 'Editor Panel: Copy Code Community',
@@ -28,7 +29,7 @@ export default async function Layout({
 }) {
     // Dynamically import the utilities only when needed
     const { currentSession } = await import('@/utils/Session');
-    const { userInfo } = await import('@/utils/FetchFromApi');
+    // const { userInfo } = await import('@/utils/FetchFromApi');
 
     // Fetch the current session on the server side
     const session = await currentSession() as Session | null;
@@ -40,6 +41,7 @@ export default async function Layout({
 
     // Fetch user information based on the current session
     const currUser = await userInfo(session?.user?.username!);
+    // console.log(currUser)
 
     // Check if the user is allowed to access this page
     const isAdmin = ['user'].includes(currUser?.role) ? false : true;
@@ -53,4 +55,36 @@ export default async function Layout({
             {children}
         </div>
     );
+}
+
+const userInfo = async (id: string, method: string = 'GET') => {
+    try {
+        // await new Promise((resolve: TimerHandler) => setTimeout(resolve, 3000))
+        // check the session
+        if (method === "DELETE") {
+
+            const session = await currentSession() as Session;
+            if (!session) return 'Please Login!'
+
+            if (session?.user?.username === id) return 'Cant do this action!'
+        }
+        const baseUrl = process.env.BASE_URL;
+        // const url = new URL(`/api/user/${encodeURIComponent(id)}`, baseUrl);
+        const res = await fetch(`${baseUrl}/api/user/${id}`, {
+            method: `${method}`,
+            cache: 'no-store'
+        })
+        if (!res.ok) {
+            console.error(`API error: ${res.status} ${res.statusText}`);
+            return null;
+        }
+        const data = await res.json()
+        // if (res.ok) {
+        return data
+        // }
+    } catch (error) {
+        // console.log(error)
+        console.error("Error fetching user info:", error);
+        return null;
+    }
 }
