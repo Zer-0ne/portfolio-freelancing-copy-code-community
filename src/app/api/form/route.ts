@@ -40,7 +40,7 @@ class HandleCertificate {
                 id: `${id}`,
                 title: this.title,
                 email: this.email,
-                password: process.env.EMAIL_PASS,
+                password: process.env.EMAIL_PASS?.split(' ').join('-'),
                 date: `${monthName[new Date().getMonth()]} ${new Date().getDate()}, ${new Date().getFullYear()}`
             };
             const response = await fetch(`${process.env.FLASK_URL}`, {
