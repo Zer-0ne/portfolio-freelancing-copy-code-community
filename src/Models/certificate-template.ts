@@ -10,7 +10,7 @@ const certificateTemplateSchema = new Schema({
         {
             type: {
                 type: String,
-                enum: ['custom', 'qrcode'],
+                enum: ['custom','qrcode'], 
                 required: true
             },
             text: {
@@ -62,4 +62,4 @@ const certificateTemplateSchema = new Schema({
 });
 
 
-export default mongoose.model<any>('CertificateTemplate', certificateTemplateSchema) || mongoose.models.CertificateTemplate ;
+export default mongoose.models.CertificateTemplate || mongoose.model<any>('CertificateTemplate', certificateTemplateSchema);
