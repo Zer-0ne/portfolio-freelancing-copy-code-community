@@ -9,9 +9,10 @@ import mongoose from "mongoose";
 import nodemailer from "nodemailer";
 import Certificate from "@/Models/certificate";
 import User from "@/Models/Users";
+import connect from "@/utils/database";
 
 // Connect to MongoDB (ensure this runs globally in your app)
-mongoose.connect(process.env.MONGODB_URI as string);
+// mongoose.connect(process.env.MONGODB_URI as string);
 
 // Email transporter setup
 const transporter = nodemailer.createTransport({
@@ -63,6 +64,7 @@ export const POST = async (request: NextRequest) => {
     try {
         const session = await currentSession() as Session;
         if (!session) return NextResponse.json({ message: 'Please login' }, { status: 401 });
+        await connect()
 
         const {
             functionality,
