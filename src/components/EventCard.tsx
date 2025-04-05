@@ -293,7 +293,7 @@ const EventCard = ({
             </Link >
             <Box
                 sx={{
-                    display: ['admin', 'moderator'].includes(session[0]?.role) ? 'flex' : 'none',
+                    display: ['admin', 'moderator', 'editor'].includes(session[0]?.role) ? 'flex' : 'none',
                     gap: 1,
                     opacity: .5,
                     justifyContent: 'space-around',

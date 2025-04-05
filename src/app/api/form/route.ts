@@ -145,6 +145,11 @@ export const POST = async (request: NextRequest) => {
                 });
                 await newCertificate.save();
                 certificateId = newCertificate._id.toString();
+                await User.findByIdAndUpdate(
+                    user?._id,
+                    { $push: { certificate: newCertificate._id } },
+                    { new: true }
+                );
 
                 const certificateLink = `${process.env.BASE_URL}/certificate/${certificateId}`;
                 const mailOptions = {

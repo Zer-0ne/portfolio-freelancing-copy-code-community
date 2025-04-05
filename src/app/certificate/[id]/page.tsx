@@ -91,17 +91,17 @@ const CertificatePreview: React.FC = () => {
                 const data = await allPost(`certificate/${params.id}`);
 
                 const mappedData: CertificateData = {
-                    _id: data._id,
-                    templateUrl: data.template.templateUrl,
-                    fields: data.template.fields.map((field: TextItem) => ({
+                    _id: data?._id,
+                    templateUrl: data?.template.templateUrl,
+                    fields: data?.template.fields.map((field: TextItem) => ({
                         ...field,
                     })),
-                    createdAt: data.createdAt,
-                    updatedAt: data.updatedAt,
-                    __v: data.__v,
-                    eventName: data.eventName,
-                    userName: data?.name || data.user.name,
-                    date: new Date(data.date).toLocaleDateString('en-US', {
+                    createdAt: data?.createdAt,
+                    updatedAt: data?.updatedAt,
+                    __v: data?.__v,
+                    eventName: data?.eventName,
+                    userName: data?.name || data?.user?.name,
+                    date: new Date(data?.date).toLocaleDateString('en-US', {
                         year: 'numeric',
                         month: 'long',
                         day: 'numeric'

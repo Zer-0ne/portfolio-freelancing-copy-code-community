@@ -28,7 +28,7 @@ export const DELETE = async (request: NextRequest, { params }: any) => {
         // check the user is admin and moderator or not 
         const user = await Users.findOne({ username: session?.user?.username })
 
-        if (['user'].includes(user.role)) return NextResponse.json({ message: 'Your are not Authorized!', status: 'error' }, { status: 401 })
+        if (['user', 'editor'].includes(user.role)) return NextResponse.json({ message: 'Your are not Authorized!', status: 'error' }, { status: 401 })
 
 
         // connect to Database
