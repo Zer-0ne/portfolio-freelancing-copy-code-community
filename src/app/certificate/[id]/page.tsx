@@ -58,6 +58,7 @@ interface CertificateData {
     templateUrl: string;
     fields: TextItem[];
     createdAt: string;
+    category: string;
     updatedAt: string;
     __v: number;
     originalWidth?: number;
@@ -66,6 +67,32 @@ interface CertificateData {
     userName: string;
     date: string;
 }
+
+const CertificateSubHeading: {
+    [key: string]: (certificateData: CertificateData) => JSX.Element;
+} = {
+    participate: (certificateData: CertificateData) => (
+        <h4 className="font-light text-[1rem] opacity-80 text-center">
+            This certificate provided by{' '}
+            <span className="font-semibold">
+                Copy Code Community, Jamia Hamdard, New Delhi
+            </span>{' '}
+            is proof of the sheer grit, hard work, and dedication of the participant through which they have participated in the{' '}
+            {certificateData.eventName}. CopyCode Community congratulates them on achieving yet another milestone.
+        </h4>
+    ),
+    appreciation: (certificateData: CertificateData) => (
+        <h4 className="font-light text-[1rem] opacity-80 text-center">
+            This certificate of appreciation provided by{' '}
+            <span className="font-semibold">
+                Copy Code Community, Jamia Hamdard, New Delhi
+            </span>{' '}
+            recognizes the outstanding contribution and dedication of the participant in the{' '}
+            {certificateData.eventName}. CopyCode Community applauds their exceptional achievement.
+        </h4>
+    ),
+};
+
 
 const CertificatePreview: React.FC = () => {
     const [image, setImage] = useState<HTMLImageElement | null>(null);
@@ -96,6 +123,7 @@ const CertificatePreview: React.FC = () => {
                     fields: data?.template.fields.map((field: TextItem) => ({
                         ...field,
                     })),
+                    category: data?.category,
                     createdAt: data?.createdAt,
                     updatedAt: data?.updatedAt,
                     __v: data?.__v,
@@ -121,7 +149,7 @@ const CertificatePreview: React.FC = () => {
     // Generate QR Code
     useEffect(() => {
         if (!certificatePublicUrl) return;
-        
+
         // Generate QR code
         generateQRCode(certificatePublicUrl).then(dataUrl => {
             setQrCodeDataUrl(dataUrl);
@@ -225,19 +253,19 @@ const CertificatePreview: React.FC = () => {
     const drawCanvas = () => {
         const canvas = canvasRef.current;
         if (!canvas || !image || !certificateData) return;
-    
+
         const ctx = canvas.getContext('2d');
         if (!ctx) return;
-    
+
         // Handle high-DPI screens for better quality
         const dpr = window.devicePixelRatio || 1;
         canvas.width = canvas.offsetWidth * dpr;
         canvas.height = (canvas.offsetWidth * image.height / image.width) * dpr;
         ctx.scale(dpr, dpr);
-    
+
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(image, 0, 0, canvas.width / dpr, canvas.height / dpr);
-    
+
         certificateData.fields.forEach((item) => {
             const absItem = toAbsolute(item, canvas.width / dpr, canvas.height / dpr); // Adjust for dpr
 
@@ -443,12 +471,26 @@ const CertificatePreview: React.FC = () => {
         }
     };
 
+
+
     return (
         <Card className="shadow-md max-w-5xl mx-auto w-full">
             <CardHeader className="border-b">
-                <CardTitle className="text-lg">Certificate Preview</CardTitle>
+                <CardTitle className="text-lg">Certificate of {' '}
+
+                    <span className='capitalize'>
+                        {certificateData?.category}
+                    </span></CardTitle>
+                {/* <CardTitle className="text-lg">Certificate Preview</CardTitle> */}
             </CardHeader>
             <CardContent className="p-4">
+                <div
+                    className='flex  gap-2 items-center flex-col mb-3 justify-center'
+                >
+
+                    {CertificateSubHeading[certificateData?.category!](certificateData as CertificateData)}
+
+                </div>
                 <div ref={containerRef} className="flex justify-center bg-gray-50 p-4 rounded-md w-full">
                     {isLoading ? (
                         <div className="flex items-center justify-center w-full h-64">

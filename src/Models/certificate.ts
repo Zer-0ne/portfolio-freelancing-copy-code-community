@@ -32,12 +32,14 @@ const CertificateSchema = new Schema<CertificateDocument>(
         },
         template: {
             type: Schema.Types.ObjectId,
-            ref: "CertificateTemplate",
+            ref: "Certificatetemplate",
             required: true,
         },
         category: {
             type: String,
             default: "participate", // Default category
+            enum: ['participate', 'appreciation'],
+            required: true,
         },
     },
     {

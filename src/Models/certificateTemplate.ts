@@ -62,4 +62,4 @@ const certificateTemplateSchema = new Schema({
 });
 
 
-export default mongoose.models.CertificateTemplate || mongoose.model<any>('CertificateTemplate', certificateTemplateSchema);
+export default mongoose.models.CertificateTemplate || mongoose.model<any>('Certificatetemplate', certificateTemplateSchema);
