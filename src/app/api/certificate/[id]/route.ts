@@ -1,5 +1,5 @@
 import Certificate from "@/Models/certificate";
-import CertificateTemplate from "@/Models/CertificateTemplate";
+import CertificateTemplate from "@/Models/certTemplate";
 import connect from "@/utils/database";
 import { NextRequest, NextResponse } from "next/server";
 

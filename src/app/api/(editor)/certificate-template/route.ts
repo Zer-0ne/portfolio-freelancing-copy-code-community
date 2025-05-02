@@ -1,7 +1,7 @@
 import { Session } from "@/utils/Interfaces";
 import { currentSession } from "@/utils/Session";
 import { NextRequest, NextResponse } from "next/server";
-import CertificateTemplate from "@/Models/CertificateTemplate";
+import CertificateTemplate from "@/Models/certTemplate";
 
 export const POST = async (request: NextRequest) => {
     try {

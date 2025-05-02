@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { currentSession } from "@/utils/Session";
 import { Session } from "@/utils/Interfaces";
-import CertificateTemplate from "@/Models/CertificateTemplate";
+import CertificateTemplate from "@/Models/certTemplate";
 
 export const GET = async (request: NextRequest, { params }: any) => {
     try {
