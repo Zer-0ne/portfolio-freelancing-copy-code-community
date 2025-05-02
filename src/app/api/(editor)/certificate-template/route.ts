@@ -2,6 +2,7 @@ import { Session } from "@/utils/Interfaces";
 import { currentSession } from "@/utils/Session";
 import { NextRequest, NextResponse } from "next/server";
 import CertificateTemplate from "@/Models/certTemplate";
+import connect from "@/utils/database";
 
 export const POST = async (request: NextRequest) => {
     try {
@@ -23,6 +24,7 @@ export const POST = async (request: NextRequest) => {
 
 export const GET = async () => {
     try {
+        await connect()
         const data = await CertificateTemplate.find()
         return NextResponse.json(data, { status: 200 })
     } catch (error) {
@@ -36,10 +38,11 @@ export const PUT = async (request: NextRequest) => {
         const session = await currentSession() as Session;
         if (!session) return NextResponse.json({ message: 'Please login' }, { status: 401 })
 
+        if (!(['admin', 'moderator', 'editor'].includes(session.user.role))) return NextResponse.json({ message: 'You are not authorized to do this' }, { status: 403 })
+        await connect()
         /**
          * TODO: validation for admin and moderator and editor can do this
          */
-
         const data = await request.json();
         const { _id, ...updateData } = data;
 
@@ -57,9 +60,9 @@ export const PUT = async (request: NextRequest) => {
             return NextResponse.json({ message: 'Certificate template not found' }, { status: 404 });
         }
 
-        return NextResponse.json({ 
+        return NextResponse.json({
             message: 'Updated successfully!',
-            template: updatedTemplate 
+            template: updatedTemplate
         }, { status: 200 });
     } catch (error) {
         console.log(`Error in updating the template of certificate :: ${(error as Error).message}`);

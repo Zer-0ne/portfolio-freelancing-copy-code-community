@@ -146,7 +146,8 @@ export const POST = async (request: NextRequest) => {
                 if (!user) return NextResponse.json({ message: 'User not found', status: 'error' }, { status: 404 });
 
                 const newCertificate = new Certificate({
-                    date: new Date(),
+                    // event date: fields['eventDate'] only when the event is not today and admin issue the certificate
+                    date: fields['eventDate'] || new Date(),
                     user: user._id,
                     eventName: fields['certificate'],
                     template: fields['selectedTemplate'],

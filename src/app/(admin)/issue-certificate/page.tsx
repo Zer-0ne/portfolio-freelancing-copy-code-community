@@ -238,6 +238,7 @@ export default function CertificatePage() {
                             certificate: displayEvents.find(e => e._id === formData.certificate)?.title,
                             category: formData.category,
                             Name: user.name,
+                            eventDate: new Date(displayEvents.find(e => e._id === formData.certificate)?.eventDate!)
                             
                         },
                         sequence:[{
@@ -248,6 +249,8 @@ export default function CertificatePage() {
                             name:'certificate',
                         },{
                             name:'category',
+                        },{
+                            name:'eventDate'
                         }],
                         user
                     }),

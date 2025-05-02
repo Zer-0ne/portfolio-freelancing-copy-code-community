@@ -161,7 +161,7 @@ const CertificateEditor: React.FC = () => {
         if (image) {
             setTimeout(() => adjustCanvasSize(() => {
                 const canvas = canvasRef.current;
-                if (canvas && fields.length === 0) {
+                if (canvas && fields?.length === 0) {
                     console.log('Adding QR code for new image');
                     setFields([addDefaultQrCode(canvas.width, canvas.height)]);
                     drawCanvas();
@@ -234,7 +234,7 @@ const CertificateEditor: React.FC = () => {
         let currentY = y;
         const lines: { text: string; x: number }[] = [];
 
-        for (let i = 0; i < words.length; i++) {
+        for (let i = 0; i < words?.length; i++) {
             const testLine = line + words[i] + ' ';
             const testWidth = measureFormattedTextWidth(ctx, testLine, fontSize, fontFamily, fontWeight);
 
@@ -265,10 +265,10 @@ const CertificateEditor: React.FC = () => {
                     xPos = lineObj.x + maxWidth - lineWidth;
                     break;
                 case 'justify':
-                    if (index < lines.length - 1) {
+                    if (index < lines?.length - 1) {
                         const wordsInLine = lineObj.text?.split(' ');
-                        if (wordsInLine.length > 1) {
-                            const spaceWidth = (maxWidth - measureFormattedTextWidth(ctx, wordsInLine.join(''), fontSize, fontFamily, fontWeight)) / (wordsInLine.length - 1);
+                        if (wordsInLine?.length > 1) {
+                            const spaceWidth = (maxWidth - measureFormattedTextWidth(ctx, wordsInLine.join(''), fontSize, fontFamily, fontWeight)) / (wordsInLine?.length - 1);
                             let currentX = lineObj.x;
                             wordsInLine.forEach((word) => {
                                 renderFormattedText(ctx, word, currentX, y + index * lineHeight, fontSize, fontFamily, fontWeight, color);
@@ -406,7 +406,7 @@ const CertificateEditor: React.FC = () => {
     };
 
     const handleCreateTemplate = async () => {
-        if (!base64Image || !fields.length) {
+        if (!base64Image || !fields?.length) {
             alert('Please upload an image and add at least one field before creating a template');
             return;
         }
@@ -422,7 +422,7 @@ const CertificateEditor: React.FC = () => {
             const response = await createNew(data, 'certificate-template') as CertificateTemplate;
             setTemplateUrl(imageUrl);
             setTemplates([...templates, response]);
-            setSelectedTemplate(response._id);
+            setSelectedTemplate(response?._id);
             return response;
         } catch (error) {
             console.error('Error uploading to Firebase:', error);
@@ -433,7 +433,7 @@ const CertificateEditor: React.FC = () => {
     };
 
     const loadTemplate = (templateId: string) => {
-        const template = templates.find(t => t._id === templateId);
+        const template = templates.find(t => t?._id === templateId);
         if (!template) {
             console.error("Template not found:", templateId);
             return;
@@ -444,7 +444,7 @@ const CertificateEditor: React.FC = () => {
         setBase64Image(null);
         setSelectedField(null);
         setTextInput('');
-        setTemplateUrl(template.templateUrl);
+        setTemplateUrl(template?.templateUrl);
         setSelectedTemplate(templateId);
         
         const hasQrCode = template.fields.some(f => f.type === 'qrcode');
@@ -464,7 +464,7 @@ const CertificateEditor: React.FC = () => {
                 if (canvas && !hasQrCode) {
                     setFields(prev => {
                         const newFields = [...prev];
-                        newFields[newFields.length - 1] = addDefaultQrCode(canvas.width, canvas.height);
+                        newFields[newFields?.length - 1] = addDefaultQrCode(canvas.width, canvas.height);
                         return newFields;
                     });
                 }
@@ -472,10 +472,10 @@ const CertificateEditor: React.FC = () => {
             drawCanvas();
         };
         img.onerror = () => {
-            console.error("Error loading template image:", template.templateUrl);
+            console.error("Error loading template image:", template?.templateUrl);
             alert("Failed to load template image.");
         };
-        img.src = template.templateUrl;
+        img.src = template?.templateUrl;
     };
 
     const validateText = (text: string) => {
@@ -512,7 +512,7 @@ const CertificateEditor: React.FC = () => {
             textAlign: 'left'
         };
         setFields([...fields, newField]);
-        setSelectedField(fields.length);
+        setSelectedField(fields?.length);
         setTextInput('');
     };
 
@@ -801,7 +801,7 @@ const CertificateEditor: React.FC = () => {
             return;
         }
 
-        if (!fields.length) {
+        if (!fields?.length) {
             alert('Please add at least one field to update the template');
             return;
         }
@@ -821,7 +821,7 @@ const CertificateEditor: React.FC = () => {
             };
             await updatePost(selectedTemplate as string, data, 'certificate-template');
             const response = await fetchAll(`/certificate-template/${selectedTemplate}` as string) as CertificateTemplate;
-            setTemplates(templates.map(t => t._id === selectedTemplate ? response : t));
+            setTemplates(templates.map(t => t?._id === selectedTemplate ? response : t));
         } catch (error) {
             console.error('Error updating template:', error);
             alert('Failed to update template');
@@ -841,7 +841,7 @@ const CertificateEditor: React.FC = () => {
                     </CardHeader>
                     <CardContent>
                         <Input type="file" accept="image/*" onChange={handleImageUpload} className="mb-4" />
-                        {templates.length > 0 && (
+                        {templates?.length > 0 && (
                             <div className="mb-4">
                                 <label className="text-sm text-gray-600">Load Existing Template</label>
                                 <Select
@@ -853,15 +853,15 @@ const CertificateEditor: React.FC = () => {
                                     </SelectTrigger>
                                     <SelectContent>
                                         {templates.map(template => (
-                                            <SelectItem key={template._id} value={template._id}>
+                                            <SelectItem key={template?._id} value={template?._id}>
                                                 <div className="flex items-center">
                                                     <img
-                                                        src={template.templateUrl}
-                                                        alt={template._id}
+                                                        src={template?.templateUrl}
+                                                        alt={template?._id}
                                                         className="w-10 h-10 mr-2 object-cover rounded"
                                                         onError={(e) => (e.currentTarget.src = '/placeholder.png')}
                                                     />
-                                                    <span>{template.templateUrl?.split('/').pop()?.split('?')[0] || template._id}</span>
+                                                    <span>{template?.templateUrl?.split('/').pop()?.split('?')[0] || template?._id}</span>
                                                 </div>
                                             </SelectItem>
                                         ))}
