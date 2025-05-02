@@ -38,7 +38,9 @@ const CertificateSchema = new Schema<CertificateDocument>(
         category: {
             type: String,
             default: "participate", // Default category
-            enum: ['participate', 'appreciation'],
+            enum: ['participate', 'appreciation', "achievement",
+                "completion",
+                "excellence", 'participation'],
             required: true,
         },
     },

@@ -91,6 +91,16 @@ const CertificateSubHeading: {
             {certificateData.eventName}. CopyCode Community applauds their exceptional achievement.
         </h4>
     ),
+    // Add a default case for other categories or if category is undefined
+    default: (certificateData: CertificateData) => (
+        <h4 className="font-light text-[1rem] opacity-80 text-center">
+            This certificate is provided by{' '}
+            <span className="font-semibold">
+                Copy Code Community, Jamia Hamdard, New Delhi
+            </span>{' '}
+            for {certificateData.userName}'s participation in {certificateData.eventName}.
+        </h4>
+    )
 };
 
 
@@ -222,6 +232,7 @@ const CertificatePreview: React.FC = () => {
         name: certificateData?.userName || "John Doe",
         event_name: certificateData?.eventName || "CodeFest 2025",
         date: certificateData?.date || "March 15, 2025",
+        certificate_type: certificateData?.category || "Participation",
     };
 
     const generateShareableImage = async () => {
@@ -473,6 +484,15 @@ const CertificatePreview: React.FC = () => {
 
 
 
+    const getCertificateSubHeading = () => {
+        if (!certificateData) return null;
+        
+        const category = certificateData.category || 'default';
+        const SubHeadingComponent = CertificateSubHeading[category] || CertificateSubHeading.default;
+        
+        return SubHeadingComponent ? SubHeadingComponent(certificateData) : null;
+    };
+
     return (
         <Card className="shadow-md max-w-5xl mx-auto w-full">
             <CardHeader className="border-b">
@@ -488,8 +508,8 @@ const CertificatePreview: React.FC = () => {
                     className='flex  gap-2 items-center flex-col mb-3 justify-center'
                 >
 
-                    {CertificateSubHeading[certificateData?.category!](certificateData as CertificateData)}
-
+                    {/* {CertificateSubHeading[certificateData?.category!](certificateData as CertificateData)} */}
+                    {certificateData && getCertificateSubHeading()}
                 </div>
                 <div ref={containerRef} className="flex justify-center bg-gray-50 p-4 rounded-md w-full">
                     {isLoading ? (

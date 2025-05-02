@@ -72,6 +72,11 @@ export const POST = async (request: NextRequest) => {
             sequence,
             title,
             sheetId,
+
+
+            // We are only sending current user from client side when the certificate is issued by the admin.
+            user: currUser
+
         } = await request.json();
 
         // console.log(fields);
@@ -129,12 +134,15 @@ export const POST = async (request: NextRequest) => {
 
         let certificateId: string | null = null;
 
+
+        console.log(fields, sheetId)
+
         if (fields['certificate']) {
 
 
             // Execute certificate creation and email sending if selectedTemplate exists
             if (fields['selectedTemplate']) {
-                const user = await User.findOne({ email: session.user.email })
+                const user = currUser || await User.findOne({ email: session.user.email })
                 if (!user) return NextResponse.json({ message: 'User not found', status: 'error' }, { status: 404 });
 
                 const newCertificate = new Certificate({
@@ -142,7 +150,7 @@ export const POST = async (request: NextRequest) => {
                     user: user._id,
                     eventName: fields['certificate'],
                     template: fields['selectedTemplate'],
-                    category: "participate",
+                    category: (fields['category'] as string).toLowerCase() || "participate",
                     name: fields?.Name!
                 });
                 await newCertificate.save();
@@ -156,7 +164,7 @@ export const POST = async (request: NextRequest) => {
                 const certificateLink = `${process.env.BASE_URL}/certificate/${certificateId}`;
                 const mailOptions = {
                     from: `"CopyCode" <${process.env.EMAIL_USER}>`,
-                    to: session.user.email,
+                    to: currUser?.email || session.user.email,
                     subject: `🎉 Your Certificate for ${fields['certificate']} is Ready!`,
                     html: `
                         <!DOCTYPE html>
@@ -275,6 +283,8 @@ export const POST = async (request: NextRequest) => {
                 }
             }
         }
+
+        console.log(values, sheetId)
 
         const option: {
             create: GaxiosResponse<sheets_v4.Schema$Spreadsheet>,

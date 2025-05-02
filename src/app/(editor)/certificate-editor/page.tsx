@@ -88,12 +88,12 @@ const CertificateEditor: React.FC = () => {
         'Playfair Display', 'Raleway', 'Ubuntu', 'Merriweather', 'Poppins', 'Dancing Script'
     ];
 
-    const allowedVariables = ['name', 'event_name', 'certificate_id', 'date'];
+    const allowedVariables = ['name', 'event_name', 'certificate_type', 'date'];
 
     const sampleVariableValues = {
         name: "John Doe",
         event_name: "CodeFest 2025",
-        certificate_id: "CERT12345",
+        certificate_type: "participation",
         date: "March 15, 2025",
     };
 
@@ -493,7 +493,7 @@ const CertificateEditor: React.FC = () => {
         const canvas = canvasRef.current;
         if (!canvas || textInput.trim() === '' || !validateText(textInput)) {
             if (!validateText(textInput)) {
-                alert('Only {{name}}, {{event_name}}, {{certificate_id}}, and {{date}} are allowed as variables.');
+                alert('Only {{name}}, {{event_name}}, {{certificate_type}}, and {{date}} are allowed as variables.');
             }
             return;
         }
@@ -766,7 +766,7 @@ const CertificateEditor: React.FC = () => {
         if (selectedField === null) return;
 
         if (property === 'text' && !validateText(value as string)) {
-            alert('Only {{name}}, {{event_name}}, {{certificate_id}}, and {{date}} are allowed as variables.');
+            alert('Only {{name}}, {{event_name}}, {{certificate_type}}, and {{date}} are allowed as variables.');
             return;
         }
 
@@ -945,7 +945,7 @@ const CertificateEditor: React.FC = () => {
                             <p className="text-sm text-gray-600">
                                 Allowed variables: <span className="text-red-500">{`{{ name }}`}</span>,
                                 <span className="text-red-500">{`{{ event_name }}`}</span>,
-                                <span className="text-red-500">{`{{ certificate_id }}`}</span>,
+                                <span className="text-red-500">{`{{ certificate_type }}`}</span>,
                                 <span className="text-red-500">{`{{ date }}`}</span>
                                 <br />
                                 Select text and use buttons to format
