@@ -198,7 +198,7 @@ const Forms = ({
             });
         });
     }, []);
-    console.log(selectedTemplate)
+    // console.log(selectedTemplate)
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {

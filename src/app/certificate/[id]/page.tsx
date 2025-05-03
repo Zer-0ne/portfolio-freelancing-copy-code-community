@@ -68,12 +68,23 @@ interface CertificateData {
     date: string;
 }
 
+// Corrected grammar in subheadings
 const CertificateSubHeading: {
     [key: string]: (certificateData: CertificateData) => JSX.Element;
 } = {
-    participate: (certificateData: CertificateData) => (
+    participation: (certificateData: CertificateData) => (
         <h4 className="font-light text-[1rem] opacity-80 text-center">
             This certificate provided by{' '}
+            <span className="font-semibold">
+                Copy Code Community, Jamia Hamdard, New Delhi
+            </span>{' '}
+            is proof of the sheer grit, hard work, and dedication of the participant through which they have participated in the{' '}
+            {certificateData.eventName}. CopyCode Community congratulates them on achieving yet another milestone.
+        </h4>
+    ),
+    participate: (certificateData: CertificateData) => (
+        <h4 className="font-light text-[1rem] opacity-80 text-center">
+            This certificate of participation provided by{' '}
             <span className="font-semibold">
                 Copy Code Community, Jamia Hamdard, New Delhi
             </span>{' '}
@@ -103,13 +114,13 @@ const CertificateSubHeading: {
     )
 };
 
-
 const CertificatePreview: React.FC = () => {
     const [image, setImage] = useState<HTMLImageElement | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [certificateImageUrl, setCertificateImageUrl] = useState<string | null>(null);
     const [certificateData, setCertificateData] = useState<CertificateData | null>(null);
     const [qrCodeDataUrl, setQrCodeDataUrl] = useState<string | null>(null);
+    const [error, setError] = useState<string | null>(null);
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const containerRef = useRef<HTMLDivElement | null>(null);
     const params = useParams();
@@ -125,7 +136,17 @@ const CertificatePreview: React.FC = () => {
         const fetchData = async () => {
             try {
                 setIsLoading(true);
+                setError(null);
                 const data = await allPost(`certificate/${params.id}`);
+                
+                if (!data || !data.template) {
+                    throw new Error("Invalid certificate data received");
+                }
+
+                // Normalize category to handle different formats
+                let category = data?.category?.toLowerCase() || "participation";
+                // Fix common category misspellings
+                if (category === "participate") category = "participation";
 
                 const mappedData: CertificateData = {
                     _id: data?._id,
@@ -133,7 +154,7 @@ const CertificatePreview: React.FC = () => {
                     fields: data?.template.fields.map((field: TextItem) => ({
                         ...field,
                     })),
-                    category: data?.category,
+                    category: category,
                     createdAt: data?.createdAt,
                     updatedAt: data?.updatedAt,
                     __v: data?.__v,
@@ -148,6 +169,7 @@ const CertificatePreview: React.FC = () => {
                 setCertificateData(mappedData);
             } catch (error) {
                 console.error('Error fetching certificate data:', error);
+                setError("Failed to load certificate data. Please try again later.");
                 setIsLoading(false);
             }
         };
@@ -173,6 +195,7 @@ const CertificatePreview: React.FC = () => {
             return QRCode.toDataURL(url, { width: 300, margin: 1 });
         } catch (error) {
             console.error('Error generating QR code:', error);
+            // Create fallback QR code placeholder
             const canvas = document.createElement('canvas');
             canvas.width = 40;
             canvas.height = 40;
@@ -201,6 +224,7 @@ const CertificatePreview: React.FC = () => {
         };
         img.onerror = () => {
             console.error("Failed to load image from:", certificateData.templateUrl);
+            setError("Failed to load certificate template image.");
             setIsLoading(false);
         };
         img.src = certificateData.templateUrl;
@@ -244,6 +268,7 @@ const CertificatePreview: React.FC = () => {
             setCertificateImageUrl(dataUrl);
         } catch (error) {
             console.error("Error generating shareable image:", error);
+            setError("Failed to generate shareable image.");
         }
     };
 
@@ -305,7 +330,7 @@ const CertificatePreview: React.FC = () => {
         const scaleFactor = canvasWidth / baseWidth;
 
         // Convert rem to pixels and scale according to canvas size (for text fields)
-        const fontSizeInPixels = field.fontSize ? remToPx(field.fontSize) * scaleFactor * 2.2 : undefined;
+        const fontSizeInPixels = field.fontSize ? remToPx(field.fontSize) * scaleFactor * 2.0 : undefined;
 
         return {
             x: field.x * canvasWidth,
@@ -322,11 +347,13 @@ const CertificatePreview: React.FC = () => {
     };
 
     const replacePlaceholders = (text: string): string => {
+        if (!text) return '';
+        
         let replacedText = text;
         for (const key in variableValues) {
             const placeholder = `{{${key}}}`;
             const value = variableValues[key as keyof typeof variableValues];
-            replacedText = replacedText?.replace(new RegExp(placeholder, 'g'), value);
+            replacedText = replacedText.replace(new RegExp(placeholder, 'g'), value);
         }
         return replacedText;
     };
@@ -340,8 +367,10 @@ const CertificatePreview: React.FC = () => {
     };
 
     const measureFormattedTextWidth = (ctx: CanvasRenderingContext2D, text: string, fontSize: number, fontFamily: string, fontWeight: string) => {
+        if (!text) return 0;
+        
         let width = 0;
-        const parts = text?.split(/(<\/?b>|<\/?i>)/);
+        const parts = text.split(/(<\/?b>|<\/?i>)/);
         let isBold = fontWeight === 'bold';
         let isItalic = false;
 
@@ -365,14 +394,15 @@ const CertificatePreview: React.FC = () => {
         maxWidth: number, maxHeight: number, lineHeight: number, textAlign: string,
         fontSize: number, fontFamily: string, fontWeight: string, color: string
     ) => {
+        if (!text) return;
+        
         const fontFamilyName = getFontFamilyName(fontFamily);
-
-        const words = text?.split(' ');
+        const words = text.split(' ');
         let line = '';
         let currentY = y;
         const lines: { text: string; x: number }[] = [];
 
-        for (let i = 0; i < words?.length; i++) {
+        for (let i = 0; i < words.length; i++) {
             const testLine = line + words[i] + ' ';
             const testWidth = measureFormattedTextWidth(ctx, testLine, fontSize, fontFamily, fontWeight);
 
@@ -401,14 +431,14 @@ const CertificatePreview: React.FC = () => {
                     xPos = lineObj.x + maxWidth - lineWidth;
                     break;
                 case 'justify':
-                    if (index < lines?.length - 1) {
-                        const wordsInLine = lineObj.text?.split(' ');
-                        if (wordsInLine?.length > 1) {
-                            const spaceWidth = (maxWidth - measureFormattedTextWidth(ctx, wordsInLine.join(''), fontSize, fontFamily, fontWeight)) / (wordsInLine?.length - 1);
+                    if (index < lines.length - 1) {
+                        const wordsInLine = lineObj.text.split(' ');
+                        if (wordsInLine.length > 1) {
+                            const spaceWidth = (maxWidth - measureFormattedTextWidth(ctx, wordsInLine.join(''), fontSize, fontFamily, fontWeight)) / (wordsInLine.length - 1);
                             let currentX = lineObj.x;
                             wordsInLine.forEach((word) => {
                                 renderFormattedText(ctx, word, currentX, y + index * lineHeight, fontSize, fontFamily, fontWeight, color);
-                                currentX += ctx.measureText(word?.replace(/<\/?b>|<\/?i>/g, '')).width + spaceWidth;
+                                currentX += ctx.measureText(word.replace(/<\/?b>|<\/?i>/g, '')).width + spaceWidth;
                             });
                             return;
                         }
@@ -423,7 +453,9 @@ const CertificatePreview: React.FC = () => {
         ctx: CanvasRenderingContext2D, text: string, x: number, y: number,
         fontSize: number, fontFamily: string, fontWeight: string, color: string
     ) => {
-        const parts = text?.split(/(<\/?b>|<\/?i>)/);
+        if (!text) return;
+        
+        const parts = text.split(/(<\/?b>|<\/?i>)/);
         let currentX = x;
         let isBold = fontWeight === 'bold';
         let isItalic = false;
@@ -482,13 +514,29 @@ const CertificatePreview: React.FC = () => {
         }
     };
 
-
-
     const getCertificateSubHeading = () => {
         if (!certificateData) return null;
         
-        const category = certificateData.category || 'default';
-        const SubHeadingComponent = CertificateSubHeading[category] || CertificateSubHeading.default;
+        // First check exact match, then try lowercase match
+        let category = certificateData.category;
+        let SubHeadingComponent = CertificateSubHeading[category];
+        
+        // Try lowercase if no exact match found
+        if (!SubHeadingComponent) {
+            const lowercaseCategory = category.toLowerCase();
+            // Try to find a match with lowercase category
+            const categoryKey = Object.keys(CertificateSubHeading).find(
+                key => key.toLowerCase() === lowercaseCategory
+            );
+            if (categoryKey) {
+                SubHeadingComponent = CertificateSubHeading[categoryKey];
+            }
+        }
+        
+        // Use default if still no match
+        if (!SubHeadingComponent) {
+            SubHeadingComponent = CertificateSubHeading.default;
+        }
         
         return SubHeadingComponent ? SubHeadingComponent(certificateData) : null;
     };
@@ -496,19 +544,14 @@ const CertificatePreview: React.FC = () => {
     return (
         <Card className="shadow-md max-w-5xl mx-auto w-full">
             <CardHeader className="border-b">
-                <CardTitle className="text-lg">Certificate of {' '}
-
+                <CardTitle className="text-lg">Certificate of{' '}
                     <span className='capitalize'>
-                        {certificateData?.category}
-                    </span></CardTitle>
-                {/* <CardTitle className="text-lg">Certificate Preview</CardTitle> */}
+                        {certificateData?.category || 'Participation'}
+                    </span>
+                </CardTitle>
             </CardHeader>
             <CardContent className="p-4">
-                <div
-                    className='flex  gap-2 items-center flex-col mb-3 justify-center'
-                >
-
-                    {/* {CertificateSubHeading[certificateData?.category!](certificateData as CertificateData)} */}
+                <div className='flex gap-2 items-center flex-col mb-3 justify-center'>
                     {certificateData && getCertificateSubHeading()}
                 </div>
                 <div ref={containerRef} className="flex justify-center bg-gray-50 p-4 rounded-md w-full">
@@ -516,13 +559,15 @@ const CertificatePreview: React.FC = () => {
                         <div className="flex items-center justify-center w-full h-64">
                             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
                         </div>
+                    ) : error ? (
+                        <div className="text-center text-red-500 p-4">{error}</div>
                     ) : certificateData && image ? (
                         <canvas
                             ref={canvasRef}
                             className="rounded-md shadow-sm w-full"
                         />
                     ) : (
-                        <div>Failed to load certificate</div>
+                        <div className="text-center text-red-500 p-4">Failed to load certificate</div>
                     )}
                 </div>
             </CardContent>
@@ -530,6 +575,7 @@ const CertificatePreview: React.FC = () => {
                 <Button
                     onClick={downloadCertificate}
                     className="bg-blue-600 hover:bg-blue-700 flex items-center gap-2"
+                    disabled={!certificateData || isLoading || !!error}
                 >
                     <Download size={16} />
                     Download Certificate
@@ -537,6 +583,7 @@ const CertificatePreview: React.FC = () => {
                 <Button
                     onClick={shareToLinkedIn}
                     className="bg-blue-800 hover:bg-blue-900 flex items-center gap-2"
+                    disabled={!certificateData || isLoading || !!error}
                 >
                     <Linkedin size={16} />
                     Share on LinkedIn
@@ -544,6 +591,7 @@ const CertificatePreview: React.FC = () => {
                 <Button
                     onClick={shareToWhatsApp}
                     className="bg-green-600 hover:bg-green-700 flex items-center gap-2"
+                    disabled={!certificateData || isLoading || !!error}
                 >
                     <Share size={16} />
                     Share on WhatsApp
