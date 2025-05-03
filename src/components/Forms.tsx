@@ -262,7 +262,7 @@ const Forms = ({
                         <input
                             ref={radioRef}
                             onChange={(e) => {
-                                if (option.toLowerCase() === 'other') {
+                                if (option?.toLowerCase() === 'other') {
                                     setData(prevData => ({
                                         ...prevData,
                                         [field.name]: ''
@@ -279,7 +279,7 @@ const Forms = ({
                             id={option}
                             type={field.type}
                             checked={
-                                option.toLowerCase() === 'other'
+                                option?.toLowerCase() === 'other'
                                     ? typeof data?.[field.name] === 'string' &&
                                     !field.options?.includes(data[field.name] as string)
                                     : (data?.[field.name] as string) === option
@@ -287,7 +287,7 @@ const Forms = ({
                             name={field.name}
                             value={option}
                         />
-                        {option.toLowerCase() === 'other' ? (
+                        {option?.toLowerCase() === 'other' ? (
                             <input
                                 type="text"
                                 className='border-none !focus:opacity-10 my-1 !w-[40%] !max-w-[40%] resize-none outline-none bg-transparent flex gap-2 p-[1rem] text-[1rem]'

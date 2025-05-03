@@ -56,10 +56,10 @@ const page = () => {
   // Filter events based on search window.addEventListener('scroll', handleScroll);input
   const filteredEvents = blogs && blogs?.filter(
     (item: BlogsInterface) =>
-      item?.title?.toLowerCase().includes(searchInput.toLowerCase()) ||
-      item?.tag?.toLowerCase().includes(searchInput.toLowerCase()) ||
-      item?.description?.toLowerCase().includes(searchInput.toLowerCase()) ||
-      item?.updatedAt?.toLowerCase().includes(searchInput.toLowerCase())
+      item?.title?.toLowerCase().includes(searchInput?.toLowerCase()) ||
+      item?.tag?.toLowerCase().includes(searchInput?.toLowerCase()) ||
+      item?.description?.toLowerCase().includes(searchInput?.toLowerCase()) ||
+      item?.updatedAt?.toLowerCase().includes(searchInput?.toLowerCase())
   );
 
   // console.log(blogs)

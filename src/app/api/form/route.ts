@@ -135,7 +135,7 @@ export const POST = async (request: NextRequest) => {
         let certificateId: string | null = null;
 
 
-        console.log(fields, sheetId)
+        // console.log(fields, sheetId)
 
         if (fields['certificate']) {
 
@@ -151,7 +151,7 @@ export const POST = async (request: NextRequest) => {
                     user: user._id,
                     eventName: fields['certificate'],
                     template: fields['selectedTemplate'],
-                    category: (fields['category'] as string).toLowerCase() || "participate",
+                    category: (fields['category'] as string)?.toLowerCase() || "participate",
                     name: fields?.Name!
                 });
                 await newCertificate.save();
@@ -285,7 +285,7 @@ export const POST = async (request: NextRequest) => {
             }
         }
 
-        console.log(values, sheetId)
+        // console.log(values, sheetId)
 
         const option: {
             create: GaxiosResponse<sheets_v4.Schema$Spreadsheet>,
@@ -306,7 +306,8 @@ export const POST = async (request: NextRequest) => {
 
         const result = (functionality in option) && await option[functionality as keyof typeof option].data;
         return NextResponse.json({
-            message: fields['selectedTemplate'] ? 'Created successfully' : 'Created successfully',
+            // message: fields['selectedTemplate'] ? 'Created successfully' : 'Created successfully',
+            message: fields['selectedTemplate'] ? 'Feedback submitted successfully. Your event participation certificate has been issued.' : 'Thank you! Your event participation certificate has been issued.',
             data: result,
             certificateId: certificateId || undefined,
             status: 'success'

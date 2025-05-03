@@ -213,7 +213,7 @@ const Sidebar = ({
             .filter((child): child is TreeNode => child !== null) || [];
 
         // Return the node if it matches the search input or has filtered children
-        if (node.path.toLowerCase().includes(searchInput.toLowerCase()) || filteredChildren.length > 0) {
+        if (node.path?.toLowerCase().includes(searchInput?.toLowerCase()) || filteredChildren.length > 0) {
             return {
                 ...node,
                 children: filteredChildren,

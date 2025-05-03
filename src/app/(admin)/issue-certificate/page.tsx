@@ -115,8 +115,8 @@ export default function CertificatePage() {
 
     // Filter users based on search query
     const filteredUsers = displayUsers.filter(user =>
-        user.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        user.email?.toLowerCase().includes(searchQuery.toLowerCase())
+        user.name?.toLowerCase().includes(searchQuery?.toLowerCase()) ||
+        user.email?.toLowerCase().includes(searchQuery?.toLowerCase())
     )
 
     // Handle Select All toggle
@@ -161,8 +161,8 @@ export default function CertificatePage() {
 
         if (selectAll) {
             const newFilteredUsers = displayUsers.filter(user =>
-                user.name?.toLowerCase().includes(e.target.value.toLowerCase()) ||
-                user.email?.toLowerCase().includes(e.target.value.toLowerCase())
+                user.name?.toLowerCase().includes(e.target.value?.toLowerCase()) ||
+                user.email?.toLowerCase().includes(e.target.value?.toLowerCase())
             )
 
             setSelectAll(newFilteredUsers.length > 0 && newFilteredUsers.every(user =>
@@ -232,7 +232,7 @@ export default function CertificatePage() {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        sheetId: forms.find((form: FormStructure) => form.title.toLowerCase() === 'certificate')?.sheetId,
+                        sheetId: forms.find((form: FormStructure) => form.title?.toLowerCase() === 'certificate')?.sheetId,
                         fields: {
                             selectedTemplate: formData.selectedTemplate?._id,
                             certificate: displayEvents.find(e => e._id === formData.certificate)?.title,
