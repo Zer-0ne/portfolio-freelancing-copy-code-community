@@ -37,12 +37,12 @@ const Forms = ({
     const isAdmin = ['admin', 'moderator'].includes(session[0]?.role)
     const isCertificateForm = forms?.title === 'Certificate'
 
-    console.log(data)
+    // console.log(data)
 
     // Fetch selectedTemplate from Firebase on mount
     useEffect(() => {
         const fetchSelectedTemplate = async () => {
-            if (isAdmin && isCertificateForm) {
+            if (isCertificateForm) {
                 try {
                     const { realTimeDatabase } = await import('@/utils/Firebase');
                     const snapshot = await get(child(ref(realTimeDatabase), `forms/${forms._id}/selectedTemplate`));
@@ -66,7 +66,7 @@ const Forms = ({
             ...(prev || {}),
             selectedTemplate,
         }));
-    }, [selectedTemplate,setData])
+    }, [selectedTemplate, setData])
 
 
     // Handle Change of input fields
@@ -91,27 +91,27 @@ const Forms = ({
                 setIsDisabled
             );
             console.log('Uploaded file data:', data);
-    
+
             if (data && data.id) {
                 // Get existing drive data from localStorage
                 const existingDriveData = JSON.parse(localStorage.getItem('drive') || '{}');
-    
+
                 // Initialize the field object if it doesn't exist
                 if (!existingDriveData[name]) {
                     existingDriveData[name] = {};
                 }
-    
+
                 // Add the new file data under the specific field name
                 existingDriveData[name][data.id] = data;
                 localStorage.setItem('drive', JSON.stringify(existingDriveData));
-    
+
                 // Generate URLs only for files under the current field (name)
                 const fieldFiles = existingDriveData[name] || {};
                 const updatedFiles = Object.keys(fieldFiles).map(fileId => {
                     console.log('File ID:', fileId); // Logs "1WjGnLJ4Qve053udiIcIlQV8kugnevOYx"
                     return `https://drive.google.com/uc?export=view&id=${fileId}`;
                 });
-    
+
                 // Update state with the URLs for the current field
                 setData(prevData => ({
                     ...prevData,
@@ -198,7 +198,7 @@ const Forms = ({
             });
         });
     }, []);
-
+    console.log(selectedTemplate)
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
@@ -216,7 +216,7 @@ const Forms = ({
                 functionality: 'update',
                 fields: formData,
                 sheetId: forms?.sheetId,
-                sequence: desiredSequences && desiredSequences
+                sequence: desiredSequences && [...desiredSequences, { name: 'selectedTemplate' }]
             }, 'form', setIsDisabled);
             return setData(undefined);
         } catch (error) {
@@ -634,8 +634,8 @@ export const TemplateManagementModal = ({
                                 <div
                                     key={template._id}
                                     className={`border rounded-lg p-3 flex flex-col cursor-pointer ${selectedTemplate === template._id
-                                            ? 'border-[green] bg-[rgba(0,128,0,0.1)]'
-                                            : 'border-gray-300'
+                                        ? 'border-[green] bg-[rgba(0,128,0,0.1)]'
+                                        : 'border-gray-300'
                                         }`}
                                     onClick={() => toggleTemplate(template._id)}
                                 >
