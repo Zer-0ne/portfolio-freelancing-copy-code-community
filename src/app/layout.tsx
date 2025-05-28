@@ -8,6 +8,7 @@ import ReduxProdiver from '@/provider/ReduxProdiver'
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 import { ThemeProvider } from '@/provider/theme-provider';
+import { DrawerDialogDemo } from '@/components/dev-card';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -87,6 +88,12 @@ export default function RootLayout({
             </ReduxProdiver>
           </ThemeProvider>
         </NextAuthProvider>
+        {/* Floating Action Button Layer */}
+        <div className="absolute inset-0 z-20 pointer-events-none">
+          <div className="pointer-events-auto">
+            <DrawerDialogDemo />
+          </div>
+        </div>
       </body>
     </html>
   )

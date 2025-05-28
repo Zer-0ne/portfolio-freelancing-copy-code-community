@@ -622,7 +622,7 @@ export const TemplateManagementModal = ({
 
     return (
         <CustomModal open={open} setOpen={setOpen}>
-            <div className='flex flex-col gap-4 w-full'>
+            <div className='flex flex-col gap-4 max-h-[70vh] overflow-auto w-full'>
                 <h2 className='text-2xl font-bold'>Certificate Template Management</h2>
                 <div>
                     <h3 className='text-lg font-semibold mb-3'>Available Templates</h3>

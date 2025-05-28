@@ -22,7 +22,8 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
-      "@root/*":["./*"]
+      "@root/*":["./*"],
+      "@assests/*": ["./assests/*"],
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "sheets.config.js"],

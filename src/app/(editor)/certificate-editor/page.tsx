@@ -38,20 +38,41 @@ const fontMap = {
     'Dancing Script': dancingScript
 };
 
-interface TextItem {
-    type: 'custom' | 'qrcode';
-    text?: string;
+const certificateTypes = ['participation', 'appreciation', 'achievement', 'completion', 'excellence'];
+
+type BaseTextItem = {
     x: number;
     y: number;
     width: number;
     height: number;
-    fontSize?: number;
-    fontFamily?: string;
-    fontWeight?: string;
-    color?: string;
-    textAlign?: 'left' | 'center' | 'right' | 'justify';
     _id?: string;
 }
+
+type CustomTextItem = BaseTextItem & {
+    type: 'custom';
+    text: string;
+    fontSize: number;
+    fontFamily: string;
+    fontWeight: string;
+    color: string;
+    textAlign: 'left' | 'center' | 'right' | 'justify';
+}
+
+type DescriptionTextItem = BaseTextItem & {
+    type: 'description';
+    descriptions: Record<string, string>;
+    fontSize: number;
+    fontFamily: string;
+    fontWeight: string;
+    color: string;
+    textAlign: 'left' | 'center' | 'right' | 'justify';
+}
+
+type QrCodeItem = BaseTextItem & {
+    type: 'qrcode';
+}
+
+type TextItem = CustomTextItem | DescriptionTextItem | QrCodeItem;
 
 export interface CertificateTemplate {
     _id: string;
@@ -81,6 +102,11 @@ const CertificateEditor: React.FC = () => {
     const [resizing, setResizing] = useState<{ index: number; corner: 'tl' | 'tr' | 'bl' | 'br' } | null>(null);
     const [offset, setOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
     const [previewMode, setPreviewMode] = useState(false);
+    const [addFieldType, setAddFieldType] = useState<'custom' | 'description'>('custom');
+    const [descriptionInputs, setDescriptionInputs] = useState<Record<string, string>>(
+        Object.fromEntries(certificateTypes.map(type => [type, '']))
+    );
+    const [sampleCertificateType, setSampleCertificateType] = useState('participation');
 
     const fontOptions = [
         'Arial', 'Times New Roman', 'Courier New', 'Georgia', 'Verdana',
@@ -93,7 +119,7 @@ const CertificateEditor: React.FC = () => {
     const sampleVariableValues = {
         name: "John Doe",
         event_name: "CodeFest 2025",
-        certificate_type: "participation",
+        certificate_type: sampleCertificateType,
         date: "March 15, 2025",
     };
 
@@ -155,13 +181,13 @@ const CertificateEditor: React.FC = () => {
 
     useEffect(() => {
         drawCanvas();
-    }, [image, fields, selectedField, previewMode, qrCodeDataUrl]);
+    }, [image, fields, selectedField, previewMode, qrCodeDataUrl, sampleCertificateType]);
 
     useEffect(() => {
         if (image) {
             setTimeout(() => adjustCanvasSize(() => {
                 const canvas = canvasRef.current;
-                if (canvas && fields?.length === 0) {
+                if (canvas && fields.length === 0) {
                     console.log('Adding QR code for new image');
                     setFields([addDefaultQrCode(canvas.width, canvas.height)]);
                     drawCanvas();
@@ -181,7 +207,7 @@ const CertificateEditor: React.FC = () => {
         canvas.width = containerWidth;
         canvas.height = containerWidth * aspectRatio;
         drawCanvas();
-        
+
         if (callback) callback();
     };
 
@@ -190,13 +216,6 @@ const CertificateEditor: React.FC = () => {
         y: field.y * canvasHeight,
         width: field.width * canvasWidth,
         height: field.height * canvasHeight,
-        fontSize: field.fontSize ? remToPx(field.fontSize) : undefined,
-        text: field.type === 'custom' && previewMode ? replacePlaceholders(field.text!) : field.text,
-        fontFamily: field.fontFamily,
-        fontWeight: field.fontWeight,
-        color: field.color,
-        textAlign: field.textAlign,
-        type: field.type,
     });
 
     const replacePlaceholders = (text: string): string => {
@@ -209,9 +228,19 @@ const CertificateEditor: React.FC = () => {
         return replacedText;
     };
 
+    const getFieldText = (field: TextItem): string => {
+        if (field.type === 'custom') {
+            return previewMode ? replacePlaceholders(field.text) : field.text;
+        } else if (field.type === 'description') {
+            const descriptionText = field.descriptions[sampleCertificateType] || '';
+            return previewMode ? replacePlaceholders(descriptionText) : descriptionText;
+        }
+        return '';
+    };
+
     const measureFormattedTextWidth = (ctx: CanvasRenderingContext2D, text: string, fontSize: number, fontFamily: string, fontWeight: string) => {
         let width = 0;
-        const parts = text?.split(/(<\/?b>|<\/?i>)/);
+        const parts = text.split(/(<\/?b>|<\/?i>)/);
         let isBold = fontWeight === 'bold';
         let isItalic = false;
 
@@ -229,12 +258,12 @@ const CertificateEditor: React.FC = () => {
     };
 
     const wrapText = (ctx: CanvasRenderingContext2D, text: string, x: number, y: number, maxWidth: number, maxHeight: number, lineHeight: number, textAlign: string, fontSize: number, fontFamily: string, fontWeight: string, color: string) => {
-        const words = text?.split(' ');
+        const words = text.split(' ');
         let line = '';
         let currentY = y;
         const lines: { text: string; x: number }[] = [];
 
-        for (let i = 0; i < words?.length; i++) {
+        for (let i = 0; i < words.length; i++) {
             const testLine = line + words[i] + ' ';
             const testWidth = measureFormattedTextWidth(ctx, testLine, fontSize, fontFamily, fontWeight);
 
@@ -265,10 +294,10 @@ const CertificateEditor: React.FC = () => {
                     xPos = lineObj.x + maxWidth - lineWidth;
                     break;
                 case 'justify':
-                    if (index < lines?.length - 1) {
-                        const wordsInLine = lineObj.text?.split(' ');
-                        if (wordsInLine?.length > 1) {
-                            const spaceWidth = (maxWidth - measureFormattedTextWidth(ctx, wordsInLine.join(''), fontSize, fontFamily, fontWeight)) / (wordsInLine?.length - 1);
+                    if (index < lines.length - 1) {
+                        const wordsInLine = lineObj.text.split(' ');
+                        if (wordsInLine.length > 1) {
+                            const spaceWidth = (maxWidth - measureFormattedTextWidth(ctx, wordsInLine.join(''), fontSize, fontFamily, fontWeight)) / (wordsInLine.length - 1);
                             let currentX = lineObj.x;
                             wordsInLine.forEach((word) => {
                                 renderFormattedText(ctx, word, currentX, y + index * lineHeight, fontSize, fontFamily, fontWeight, color);
@@ -287,7 +316,7 @@ const CertificateEditor: React.FC = () => {
     };
 
     const renderFormattedText = (ctx: CanvasRenderingContext2D, text: string, x: number, y: number, fontSize: number, fontFamily: string, fontWeight: string, color: string) => {
-        const parts = text?.split(/(<\/?b>|<\/?i>)/);
+        const parts = text.split(/(<\/?b>|<\/?i>)/);
         let currentX = x;
         let isBold = fontWeight === 'bold';
         let isItalic = false;
@@ -324,42 +353,51 @@ const CertificateEditor: React.FC = () => {
         }
 
         fields.forEach((item, index) => {
-            const absItem = toAbsolute(item, canvas.width, canvas.height);
+            const absPos = toAbsolute(item, canvas.width, canvas.height);
 
-            if (item.type === 'custom' && absItem.text && absItem.fontSize && absItem.fontFamily && absItem.fontWeight && absItem.color && absItem.textAlign) {
-                ctx.textAlign = 'left';
-                const lineHeight = absItem.fontSize * 1.2;
-                const textHeight = wrapText(ctx, absItem.text, absItem.x, absItem.y, absItem.width, absItem.height, lineHeight, absItem.textAlign, absItem.fontSize, absItem.fontFamily, absItem.fontWeight, absItem.color);
+            if (item.type === 'custom' || item.type === 'description') {
+                const textToRender = getFieldText(item);
+                const fontSize = item.fontSize ? remToPx(item.fontSize) : undefined;
+                const fontFamily = item.fontFamily;
+                const fontWeight = item.fontWeight;
+                const color = item.color;
+                const textAlign = item.textAlign;
 
-                if (selectedField === index) {
-                    ctx.strokeStyle = '#007bff';
-                    ctx.lineWidth = 2;
-                    ctx.strokeRect(absItem.x - 5, absItem.y - absItem.fontSize - 5, absItem.width + 10, textHeight + 10);
+                if (textToRender && fontSize && fontFamily && fontWeight && color && textAlign) {
+                    ctx.textAlign = 'left';
+                    const lineHeight = fontSize * 1.2;
+                    const textHeight = wrapText(ctx, textToRender, absPos.x, absPos.y, absPos.width, absPos.height, lineHeight, textAlign, fontSize, fontFamily, fontWeight, color);
 
-                    ctx.fillStyle = '#007bff';
-                    const handleSize = 8;
-                    ctx.fillRect(absItem.x - 5 - handleSize / 2, absItem.y - absItem.fontSize - 5 - handleSize / 2, handleSize, handleSize);
-                    ctx.fillRect(absItem.x + absItem.width + 5 - handleSize / 2, absItem.y - absItem.fontSize - 5 - handleSize / 2, handleSize, handleSize);
-                    ctx.fillRect(absItem.x - 5 - handleSize / 2, absItem.y + textHeight + 5 - handleSize / 2, handleSize, handleSize);
-                    ctx.fillRect(absItem.x + absItem.width + 5 - handleSize / 2, absItem.y + textHeight + 5 - handleSize / 2, handleSize, handleSize);
+                    if (selectedField === index) {
+                        ctx.strokeStyle = '#007bff';
+                        ctx.lineWidth = 2;
+                        ctx.strokeRect(absPos.x - 5, absPos.y - fontSize - 5, absPos.width + 10, textHeight + 10);
+
+                        ctx.fillStyle = '#007bff';
+                        const handleSize = 8;
+                        ctx.fillRect(absPos.x - 5 - handleSize / 2, absPos.y - fontSize - 5 - handleSize / 2, handleSize, handleSize);
+                        ctx.fillRect(absPos.x + absPos.width + 5 - handleSize / 2, absPos.y - fontSize - 5 - handleSize / 2, handleSize, handleSize);
+                        ctx.fillRect(absPos.x - 5 - handleSize / 2, absPos.y + textHeight + 5 - handleSize / 2, handleSize, handleSize);
+                        ctx.fillRect(absPos.x + absPos.width + 5 - handleSize / 2, absPos.y + textHeight + 5 - handleSize / 2, handleSize, handleSize);
+                    }
                 }
             } else if (item.type === 'qrcode' && qrCodeDataUrl) {
                 const qrCodeImg = new Image();
                 qrCodeImg.onload = () => {
                     ctx.imageSmoothingEnabled = false;
-                    ctx.drawImage(qrCodeImg, absItem.x, absItem.y, absItem.width, absItem.height);
+                    ctx.drawImage(qrCodeImg, absPos.x, absPos.y, absPos.width, absPos.height);
 
                     if (selectedField === index) {
                         ctx.strokeStyle = '#007bff';
                         ctx.lineWidth = 2;
-                        ctx.strokeRect(absItem.x - 5, absItem.y - 5, absItem.width + 10, absItem.height + 10);
+                        ctx.strokeRect(absPos.x - 5, absPos.y - 5, absPos.width + 10, absPos.height + 10);
 
                         ctx.fillStyle = '#007bff';
                         const handleSize = 8;
-                        ctx.fillRect(absItem.x - 5 - handleSize / 2, absItem.y - 5 - handleSize / 2, handleSize, handleSize);
-                        ctx.fillRect(absItem.x + absItem.width + 5 - handleSize / 2, absItem.y - 5 - handleSize / 2, handleSize, handleSize);
-                        ctx.fillRect(absItem.x - 5 - handleSize / 2, absItem.y + absItem.height + 5 - handleSize / 2, handleSize, handleSize);
-                        ctx.fillRect(absItem.x + absItem.width + 5 - handleSize / 2, absItem.y + absItem.height + 5 - handleSize / 2, handleSize, handleSize);
+                        ctx.fillRect(absPos.x - 5 - handleSize / 2, absPos.y - 5 - handleSize / 2, handleSize, handleSize);
+                        ctx.fillRect(absPos.x + absPos.width + 5 - handleSize / 2, absPos.y - 5 - handleSize / 2, handleSize, handleSize);
+                        ctx.fillRect(absPos.x - 5 - handleSize / 2, absPos.y + absPos.height + 5 - handleSize / 2, handleSize, handleSize);
+                        ctx.fillRect(absPos.x + absPos.width + 5 - handleSize / 2, absPos.y + absPos.height + 5 - handleSize / 2, handleSize, handleSize);
                     }
                 };
                 qrCodeImg.onerror = () => console.error("Error loading QR code image");
@@ -406,7 +444,7 @@ const CertificateEditor: React.FC = () => {
     };
 
     const handleCreateTemplate = async () => {
-        if (!base64Image || !fields?.length) {
+        if (!base64Image || !fields.length) {
             alert('Please upload an image and add at least one field before creating a template');
             return;
         }
@@ -446,12 +484,12 @@ const CertificateEditor: React.FC = () => {
         setTextInput('');
         setTemplateUrl(template?.templateUrl);
         setSelectedTemplate(templateId);
-        
+
         const hasQrCode = template.fields.some(f => f.type === 'qrcode');
-        const updatedFields = hasQrCode 
-            ? template.fields 
+        const updatedFields = hasQrCode
+            ? template.fields
             : [...template.fields, addDefaultQrCode(1000, 1000)];
-        
+
         setFields(updatedFields);
 
         const img = new Image();
@@ -464,7 +502,7 @@ const CertificateEditor: React.FC = () => {
                 if (canvas && !hasQrCode) {
                     setFields(prev => {
                         const newFields = [...prev];
-                        newFields[newFields?.length - 1] = addDefaultQrCode(canvas.width, canvas.height);
+                        newFields[newFields.length - 1] = addDefaultQrCode(canvas.width, canvas.height);
                         return newFields;
                     });
                 }
@@ -491,29 +529,56 @@ const CertificateEditor: React.FC = () => {
 
     const addField = () => {
         const canvas = canvasRef.current;
-        if (!canvas || textInput.trim() === '' || !validateText(textInput)) {
-            if (!validateText(textInput)) {
-                alert('Only {{name}}, {{event_name}}, {{certificate_type}}, and {{date}} are allowed as variables.');
-            }
-            return;
-        }
+        if (!canvas) return;
 
-        const newField: TextItem = {
-            type: 'custom',
-            text: textInput,
-            x: 50 / canvas.width,
-            y: 50 / canvas.height,
-            width: 200 / canvas.width,
-            height: 50 / canvas.height,
-            fontSize: 1.25,
-            fontFamily: 'Roboto',
-            fontWeight: 'normal',
-            color: '#000000',
-            textAlign: 'left'
-        };
-        setFields([...fields, newField]);
-        setSelectedField(fields?.length);
-        setTextInput('');
+        if (addFieldType === 'custom') {
+            if (textInput.trim() === '' || !validateText(textInput)) {
+                if (!validateText(textInput)) {
+                    alert('Only {{name}}, {{event_name}}, {{certificate_type}}, and {{date}} are allowed as variables.');
+                }
+                return;
+            }
+            const newField: CustomTextItem = {
+                type: 'custom',
+                text: textInput,
+                x: 50 / canvas.width,
+                y: 50 / canvas.height,
+                width: 200 / canvas.width,
+                height: 50 / canvas.height,
+                fontSize: 1.25,
+                fontFamily: 'Roboto',
+                fontWeight: 'normal',
+                color: '#000000',
+                textAlign: 'left'
+            };
+            setFields([...fields, newField]);
+            setSelectedField(fields.length);
+            setTextInput('');
+        } else {
+            for (const type of certificateTypes) {
+                const text = descriptionInputs[type];
+                if (text.trim() === '' || !validateText(text)) {
+                    alert(`Please enter valid text for ${type}`);
+                    return;
+                }
+            }
+            const newField: DescriptionTextItem = {
+                type: 'description',
+                descriptions: descriptionInputs,
+                x: 50 / canvas.width,
+                y: 50 / canvas.height,
+                width: 200 / canvas.width,
+                height: 50 / canvas.height,
+                fontSize: 1.25,
+                fontFamily: 'Roboto',
+                fontWeight: 'normal',
+                color: '#000000',
+                textAlign: 'left'
+            };
+            setFields([...fields, newField]);
+            setSelectedField(fields.length);
+            setDescriptionInputs(Object.fromEntries(certificateTypes.map(type => [type, ''])));
+        }
     };
 
     const applyFormatting = (tag: 'b' | 'i') => {
@@ -542,101 +607,96 @@ const CertificateEditor: React.FC = () => {
         let fieldSelected = false;
 
         fields.forEach((item, index) => {
-            const absItem = toAbsolute(item, canvas.width, canvas.height);
+            const absPos = toAbsolute(item, canvas.width, canvas.height);
             const handleSize = 8;
             const handleTolerance = 4;
 
-            if (item.type === 'custom' && absItem.text && absItem.fontSize && absItem.fontFamily && absItem.fontWeight && absItem.color && absItem.textAlign) {
-                ctx.font = `${absItem.fontWeight === 'bold' ? '700' : absItem.fontWeight === 'lighter' ? '300' : '400'} ${absItem.fontSize}px "${absItem.fontFamily}"`;
-                const lineHeight = absItem.fontSize * 1.2;
-                const textHeight = wrapText(ctx, absItem.text, absItem.x, absItem.y, absItem.width, absItem.height, lineHeight, absItem.textAlign, absItem.fontSize, absItem.fontFamily, absItem.fontWeight, absItem.color);
+            if (item.type === 'custom' || item.type === 'description') {
+                const fontSize = item.fontSize ? remToPx(item.fontSize) : 0;
+                const textHeight = fontSize * 1.2 * (getFieldText(item).split('\n').length || 1);
 
-                if (mouseX >= absItem.x - 5 - handleSize / 2 - handleTolerance &&
-                    mouseX <= absItem.x - 5 + handleSize / 2 + handleTolerance &&
-                    mouseY >= absItem.y - absItem.fontSize - 5 - handleSize / 2 - handleTolerance &&
-                    mouseY <= absItem.y - absItem.fontSize - 5 + handleSize / 2 + handleTolerance) {
+                if (mouseX >= absPos.x - 5 - handleSize / 2 - handleTolerance &&
+                    mouseX <= absPos.x - 5 + handleSize / 2 + handleTolerance &&
+                    mouseY >= absPos.y - fontSize - 5 - handleSize / 2 - handleTolerance &&
+                    mouseY <= absPos.y - fontSize - 5 + handleSize / 2 + handleTolerance) {
                     setResizing({ index, corner: 'tl' });
                     setSelectedField(index);
-                    setOffset({ x: mouseX - absItem.x, y: mouseY - absItem.y });
+                    setOffset({ x: mouseX - absPos.x, y: mouseY - absPos.y });
                     fieldSelected = true;
-                }
-                else if (mouseX >= absItem.x + absItem.width + 5 - handleSize / 2 - handleTolerance &&
-                    mouseX <= absItem.x + absItem.width + 5 + handleSize / 2 + handleTolerance &&
-                    mouseY >= absItem.y - absItem.fontSize - 5 - handleSize / 2 - handleTolerance &&
-                    mouseY <= absItem.y - absItem.fontSize - 5 + handleSize / 2 + handleTolerance) {
+                } else if (mouseX >= absPos.x + absPos.width + 5 - handleSize / 2 - handleTolerance &&
+                    mouseX <= absPos.x + absPos.width + 5 + handleSize / 2 + handleTolerance &&
+                    mouseY >= absPos.y - fontSize - 5 - handleSize / 2 - handleTolerance &&
+                    mouseY <= absPos.y - fontSize - 5 + handleSize / 2 + handleTolerance) {
                     setResizing({ index, corner: 'tr' });
                     setSelectedField(index);
-                    setOffset({ x: mouseX - (absItem.x + absItem.width), y: mouseY - absItem.y });
+                    setOffset({ x: mouseX - (absPos.x + absPos.width), y: mouseY - absPos.y });
                     fieldSelected = true;
-                }
-                else if (mouseX >= absItem.x - 5 - handleSize / 2 - handleTolerance &&
-                    mouseX <= absItem.x - 5 + handleSize / 2 + handleTolerance &&
-                    mouseY >= absItem.y + textHeight + 5 - handleSize / 2 - handleTolerance &&
-                    mouseY <= absItem.y + textHeight + 5 + handleSize / 2 + handleTolerance) {
+                } else if (mouseX >= absPos.x - 5 - handleSize / 2 - handleTolerance &&
+                    mouseX <= absPos.x - 5 + handleSize / 2 + handleTolerance &&
+                    mouseY >= absPos.y + textHeight + 5 - handleSize / 2 - handleTolerance &&
+                    mouseY <= absPos.y + textHeight + 5 + handleSize / 2 + handleTolerance) {
                     setResizing({ index, corner: 'bl' });
                     setSelectedField(index);
-                    setOffset({ x: mouseX - absItem.x, y: mouseY - (absItem.y + textHeight) });
+                    setOffset({ x: mouseX - absPos.x, y: mouseY - (absPos.y + textHeight) });
                     fieldSelected = true;
-                }
-                else if (mouseX >= absItem.x + absItem.width + 5 - handleSize / 2 - handleTolerance &&
-                    mouseX <= absItem.x + absItem.width + 5 + handleSize / 2 + handleTolerance &&
-                    mouseY >= absItem.y + textHeight + 5 - handleSize / 2 - handleTolerance &&
-                    mouseY <= absItem.y + textHeight + 5 + handleSize / 2 + handleTolerance) {
+                } else if (mouseX >= absPos.x + absPos.width + 5 - handleSize / 2 - handleTolerance &&
+                    mouseX <= absPos.x + absPos.width + 5 + handleSize / 2 + handleTolerance &&
+                    mouseY >= absPos.y + textHeight + 5 - handleSize / 2 - handleTolerance &&
+                    mouseY <= absPos.y + textHeight + 5 + handleSize / 2 + handleTolerance) {
                     setResizing({ index, corner: 'br' });
                     setSelectedField(index);
-                    setOffset({ x: mouseX - (absItem.x + absItem.width), y: mouseY - (absItem.y + textHeight) });
+                    setOffset({ x: mouseX - (absPos.x + absPos.width), y: mouseY - (absPos.y + textHeight) });
                     fieldSelected = true;
-                }
-                else if (mouseX >= absItem.x - 5 && mouseX <= absItem.x + absItem.width + 5 &&
-                    mouseY >= absItem.y - absItem.fontSize - 5 && mouseY <= absItem.y + textHeight + 5) {
+                } else if (mouseX >= absPos.x - 5 && mouseX <= absPos.x + absPos.width + 5 &&
+                    mouseY >= absPos.y - fontSize - 5 && mouseY <= absPos.y + textHeight + 5) {
                     setDragging(index);
                     setSelectedField(index);
-                    setOffset({ x: mouseX - absItem.x, y: mouseY - absItem.y });
-                    setTextInput(item.text!);
+                    setOffset({ x: mouseX - absPos.x, y: mouseY - absPos.y });
+                    if (item.type === 'custom') {
+                        setTextInput(item.text);
+                    } else {
+                        setTextInput('');
+                    }
                     fieldSelected = true;
                 }
             } else if (item.type === 'qrcode') {
-                if (mouseX >= absItem.x - 5 - handleSize / 2 - handleTolerance &&
-                    mouseX <= absItem.x - 5 + handleSize / 2 + handleTolerance &&
-                    mouseY >= absItem.y - 5 - handleSize / 2 - handleTolerance &&
-                    mouseY <= absItem.y - 5 + handleSize / 2 + handleTolerance) {
+                if (mouseX >= absPos.x - 5 - handleSize / 2 - handleTolerance &&
+                    mouseX <= absPos.x - 5 + handleSize / 2 + handleTolerance &&
+                    mouseY >= absPos.y - 5 - handleSize / 2 - handleTolerance &&
+                    mouseY <= absPos.y - 5 + handleSize / 2 + handleTolerance) {
                     setResizing({ index, corner: 'tl' });
                     setSelectedField(index);
-                    setOffset({ x: mouseX - absItem.x, y: mouseY - absItem.y });
+                    setOffset({ x: mouseX - absPos.x, y: mouseY - absPos.y });
                     fieldSelected = true;
-                }
-                else if (mouseX >= absItem.x + absItem.width + 5 - handleSize / 2 - handleTolerance &&
-                    mouseX <= absItem.x + absItem.width + 5 + handleSize / 2 + handleTolerance &&
-                    mouseY >= absItem.y - 5 - handleSize / 2 - handleTolerance &&
-                    mouseY <= absItem.y - 5 + handleSize / 2 + handleTolerance) {
+                } else if (mouseX >= absPos.x + absPos.width + 5 - handleSize / 2 - handleTolerance &&
+                    mouseX <= absPos.x + absPos.width + 5 + handleSize / 2 + handleTolerance &&
+                    mouseY >= absPos.y - 5 - handleSize / 2 - handleTolerance &&
+                    mouseY <= absPos.y - 5 + handleSize / 2 + handleTolerance) {
                     setResizing({ index, corner: 'tr' });
                     setSelectedField(index);
-                    setOffset({ x: mouseX - (absItem.x + absItem.width), y: mouseY - absItem.y });
+                    setOffset({ x: mouseX - (absPos.x + absPos.width), y: mouseY - absPos.y });
                     fieldSelected = true;
-                }
-                else if (mouseX >= absItem.x - 5 - handleSize / 2 - handleTolerance &&
-                    mouseX <= absItem.x - 5 + handleSize / 2 + handleTolerance &&
-                    mouseY >= absItem.y + absItem.height + 5 - handleSize / 2 - handleTolerance &&
-                    mouseY <= absItem.y + absItem.height + 5 + handleSize / 2 + handleTolerance) {
+                } else if (mouseX >= absPos.x - 5 - handleSize / 2 - handleTolerance &&
+                    mouseX <= absPos.x - 5 + handleSize / 2 + handleTolerance &&
+                    mouseY >= absPos.y + absPos.height + 5 - handleSize / 2 - handleTolerance &&
+                    mouseY <= absPos.y + absPos.height + 5 + handleSize / 2 + handleTolerance) {
                     setResizing({ index, corner: 'bl' });
                     setSelectedField(index);
-                    setOffset({ x: mouseX - absItem.x, y: mouseY - (absItem.y + absItem.height) });
+                    setOffset({ x: mouseX - absPos.x, y: mouseY - (absPos.y + absPos.height) });
                     fieldSelected = true;
-                }
-                else if (mouseX >= absItem.x + absItem.width + 5 - handleSize / 2 - handleTolerance &&
-                    mouseX <= absItem.x + absItem.width + 5 + handleSize / 2 + handleTolerance &&
-                    mouseY >= absItem.y + absItem.height + 5 - handleSize / 2 - handleTolerance &&
-                    mouseY <= absItem.y + absItem.height + 5 + handleSize / 2 + handleTolerance) {
+                } else if (mouseX >= absPos.x + absPos.width + 5 - handleSize / 2 - handleTolerance &&
+                    mouseX <= absPos.x + absPos.width + 5 + handleSize / 2 + handleTolerance &&
+                    mouseY >= absPos.y + absPos.height + 5 - handleSize / 2 - handleTolerance &&
+                    mouseY <= absPos.y + absPos.height + 5 + handleSize / 2 + handleTolerance) {
                     setResizing({ index, corner: 'br' });
                     setSelectedField(index);
-                    setOffset({ x: mouseX - (absItem.x + absItem.width), y: mouseY - (absItem.y + absItem.height) });
+                    setOffset({ x: mouseX - (absPos.x + absPos.width), y: mouseY - (absPos.y + absPos.height) });
                     fieldSelected = true;
-                }
-                else if (mouseX >= absItem.x - 5 && mouseX <= absItem.x + absItem.width + 5 &&
-                    mouseY >= absItem.y - 5 && mouseY <= absItem.y + absItem.height + 5) {
+                } else if (mouseX >= absPos.x - 5 && mouseX <= absPos.x + absPos.width + 5 &&
+                    mouseY >= absPos.y - 5 && mouseY <= absPos.y + absPos.height + 5) {
                     setDragging(index);
                     setSelectedField(index);
-                    setOffset({ x: mouseX - absItem.x, y: mouseY - absItem.y });
+                    setOffset({ x: mouseX - absPos.x, y: mouseY - absPos.y });
                     setTextInput('');
                     fieldSelected = true;
                 }
@@ -659,10 +719,10 @@ const CertificateEditor: React.FC = () => {
         if (dragging !== null) {
             setFields((prevFields) => {
                 const newFields = [...prevFields];
-                const absItem = toAbsolute(newFields[dragging], canvas.width, canvas.height);
+                const absPos = toAbsolute(newFields[dragging], canvas.width, canvas.height);
                 const newX = mouseX - offset.x;
                 const newY = mouseY - offset.y;
-                const relPos = toRelative(newX, newY, absItem.width, absItem.height, canvas.width, canvas.height);
+                const relPos = toRelative(newX, newY, absPos.width, absPos.height, canvas.width, canvas.height);
                 newFields[dragging] = {
                     ...newFields[dragging],
                     x: relPos.x,
@@ -673,35 +733,37 @@ const CertificateEditor: React.FC = () => {
         } else if (resizing !== null) {
             setFields((prevFields) => {
                 const newFields = [...prevFields];
-                const absItem = toAbsolute(newFields[resizing.index], canvas.width, canvas.height);
-                let newX = absItem.x;
-                let newY = absItem.y;
-                let newSize: number;
+                const absPos = toAbsolute(newFields[resizing.index], canvas.width, canvas.height);
+                let newX = absPos.x;
+                let newY = absPos.y;
+                let newWidth = absPos.width;
+                let newHeight = absPos.height;
 
                 if (newFields[resizing.index].type === 'qrcode') {
+                    let newSize: number;
                     switch (resizing.corner) {
                         case 'tl':
-                            newSize = Math.max(50, absItem.x + absItem.width - mouseX + offset.x);
+                            newSize = Math.max(50, absPos.x + absPos.width - mouseX + offset.x);
                             newX = mouseX - offset.x;
-                            newY = absItem.y + absItem.height - newSize;
+                            newY = absPos.y + absPos.height - newSize;
                             break;
                         case 'tr':
-                            newSize = Math.max(50, mouseX - absItem.x - offset.x);
-                            newX = absItem.x;
-                            newY = absItem.y + absItem.height - newSize;
+                            newSize = Math.max(50, mouseX - absPos.x - offset.x);
+                            newX = absPos.x;
+                            newY = absPos.y + absPos.height - newSize;
                             break;
                         case 'bl':
-                            newSize = Math.max(50, absItem.x + absItem.width - mouseX + offset.x);
+                            newSize = Math.max(50, absPos.x + absPos.width - mouseX + offset.x);
                             newX = mouseX - offset.x;
-                            newY = absItem.y;
+                            newY = absPos.y;
                             break;
                         case 'br':
-                            newSize = Math.max(50, mouseX - absItem.x - offset.x);
-                            newX = absItem.x;
-                            newY = absItem.y;
+                            newSize = Math.max(50, mouseX - absPos.x - offset.x);
+                            newX = absPos.x;
+                            newY = absPos.y;
                             break;
                         default:
-                            newSize = absItem.width;
+                            newSize = absPos.width;
                     }
                     const relPos = toRelative(newX, newY, newSize, newSize, canvas.width, canvas.height);
                     newFields[resizing.index] = {
@@ -712,28 +774,26 @@ const CertificateEditor: React.FC = () => {
                         height: relPos.height,
                     };
                 } else {
-                    let newWidth = absItem.width;
-                    let newHeight = absItem.height;
                     switch (resizing.corner) {
                         case 'tl':
-                            newWidth = Math.max(50, absItem.x + absItem.width - mouseX + offset.x);
-                            newHeight = Math.max(30, absItem.y + absItem.height - mouseY + offset.y);
+                            newWidth = Math.max(50, absPos.x + absPos.width - mouseX + offset.x);
+                            newHeight = Math.max(30, absPos.y + absPos.height - mouseY + offset.y);
                             newX = mouseX - offset.x;
                             newY = mouseY - offset.y;
                             break;
                         case 'tr':
-                            newWidth = Math.max(50, mouseX - absItem.x - offset.x);
-                            newHeight = Math.max(30, absItem.y + absItem.height - mouseY + offset.y);
+                            newWidth = Math.max(50, mouseX - absPos.x - offset.x);
+                            newHeight = Math.max(30, absPos.y + absPos.height - mouseY + offset.y);
                             newY = mouseY - offset.y;
                             break;
                         case 'bl':
-                            newWidth = Math.max(50, absItem.x + absItem.width - mouseX + offset.x);
-                            newHeight = Math.max(30, mouseY - absItem.y - offset.y);
+                            newWidth = Math.max(50, absPos.x + absPos.width - mouseX + offset.x);
+                            newHeight = Math.max(30, mouseY - absPos.y - offset.y);
                             newX = mouseX - offset.x;
                             break;
                         case 'br':
-                            newWidth = Math.max(50, mouseX - absItem.x - offset.x);
-                            newHeight = Math.max(30, mouseY - absItem.y - offset.y);
+                            newWidth = Math.max(50, mouseX - absPos.x - offset.x);
+                            newHeight = Math.max(30, mouseY - absPos.y - offset.y);
                             break;
                     }
                     const relPos = toRelative(newX, newY, newWidth, newHeight, canvas.width, canvas.height);
@@ -762,7 +822,7 @@ const CertificateEditor: React.FC = () => {
         setResizing(null);
     };
 
-    const updateSelectedField = (property: keyof TextItem, value: string | number) => {
+    const updateSelectedField = (property: keyof TextItem | string, value: string | number) => {
         if (selectedField === null) return;
 
         if (property === 'text' && !validateText(value as string)) {
@@ -801,7 +861,7 @@ const CertificateEditor: React.FC = () => {
             return;
         }
 
-        if (!fields?.length) {
+        if (!fields.length) {
             alert('Please add at least one field to update the template');
             return;
         }
@@ -841,7 +901,7 @@ const CertificateEditor: React.FC = () => {
                     </CardHeader>
                     <CardContent>
                         <Input type="file" accept="image/*" onChange={handleImageUpload} className="mb-4" />
-                        {templates?.length > 0 && (
+                        {templates.length > 0 && (
                             <div className="mb-4">
                                 <label className="text-sm text-gray-600">Load Existing Template</label>
                                 <Select
@@ -878,6 +938,19 @@ const CertificateEditor: React.FC = () => {
                                 {previewMode ? "Exit Preview Mode" : "Preview with Sample Data"}
                             </Button>
                         </div>
+                        <div className="mb-4">
+                            <label className="text-sm text-gray-600">Sample Certificate Type for Preview</label>
+                            <Select value={sampleCertificateType} onValueChange={setSampleCertificateType}>
+                                <SelectTrigger>
+                                    <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {certificateTypes.map(type => (
+                                        <SelectItem key={type} value={type}>{type}</SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </div>
                         {image && (
                             <div ref={containerRef}>
                                 <canvas
@@ -899,69 +972,159 @@ const CertificateEditor: React.FC = () => {
                     </CardHeader>
                     <CardContent>
                         <div className="space-y-4">
-                            <div className="border rounded-md p-2 bg-black border-gray-600">
-                                <div className="flex gap-2 mb-2">
-                                    <Button
-                                        variant="outline"
-                                        size="sm"
-                                        onClick={() => applyFormatting('b')}
-                                        className="h-8 w-8 p-0"
-                                    >
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                            <path d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6zM6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z" />
-                                        </svg>
-                                    </Button>
-                                    <Button
-                                        variant="outline"
-                                        size="sm"
-                                        onClick={() => applyFormatting('i')}
-                                        className="h-8 w-8 p-0"
-                                    >
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                            <line x1="19" y1="4" x2="10" y2="20" />
-                                            <line x1="14" y1="4" x2="5" y2="4" />
-                                            <line x1="19" y1="20" x2="10" y2="20" />
-                                        </svg>
-                                    </Button>
-                                </div>
-                                <Textarea
-                                    ref={textAreaRef}
-                                    value={textInput}
-                                    onChange={(e) => setTextInput(e.target.value)}
-                                    placeholder="e.g., <b>{{name}}</b>, This is <i>{{event_name}}</i> on {{date}}"
-                                    className="min-h-[100px] resize-y border-none bg-black text-gray-300 focus:ring-0 placeholder-gray-500"
-                                    disabled={selectedField !== null && fields[selectedField]?.type === 'qrcode'}
-                                />
+                            <div>
+                                <label className="text-sm text-gray-600">Field Type</label>
+                                <Select value={addFieldType} onValueChange={(value: 'custom' | 'description') => setAddFieldType(value)}>
+                                    <SelectTrigger>
+                                        <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="custom">Normal (Custom Text)</SelectItem>
+                                        <SelectItem value="description">Description</SelectItem>
+                                    </SelectContent>
+                                </Select>
                             </div>
+                            {addFieldType === 'custom' ? (
+                                <div className="border rounded-md p-2 bg-black border-gray-600">
+                                    <div className="flex gap-2 mb-2">
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            onClick={() => applyFormatting('b')}
+                                            className="h-8 w-8 p-0"
+                                        >
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                <path d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6zM6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z" />
+                                            </svg>
+                                        </Button>
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            onClick={() => applyFormatting('i')}
+                                            className="h-8 w-8 p-0"
+                                        >
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                <line x1="19" y1="4" x2="10" y2="20" />
+                                                <line x1="14" y1="4" x2="5" y2="4" />
+                                                <line x1="19" y1="20" x2="10" y2="20" />
+                                            </svg>
+                                        </Button>
+                                    </div>
+                                    <Textarea
+                                        ref={textAreaRef}
+                                        value={textInput}
+                                        onChange={(e) => setTextInput(e.target.value)}
+                                        placeholder="e.g., <b>{{name}}</b>, This is <i>{{event_name}}</i> on {{date}}"
+                                        className="min-h-[100px] resize-y border-none bg-black text-gray-300 focus:ring-0 placeholder-gray-500"
+                                    />
+                                </div>
+                            ) : (
+                                <div>
+                                    {certificateTypes.map(type => (
+                                        <div key={type} className="mb-2">
+                                            <label className="text-sm text-gray-600">{type}</label>
+                                            <Textarea
+                                                value={descriptionInputs[type]}
+                                                onChange={(e) => setDescriptionInputs(prev => ({ ...prev, [type]: e.target.value }))}
+                                                placeholder={`Description for ${type}`}
+                                                className="min-h-[60px]"
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                             <div className="flex gap-2">
                                 <Button
                                     onClick={addField}
-                                    disabled={textInput.trim() === '' || (selectedField !== null && fields[selectedField]?.type === 'qrcode')}
+                                    disabled={addFieldType === 'custom' ? textInput.trim() === '' : certificateTypes.some(type => descriptionInputs[type].trim() === '')}
                                     className="w-full"
                                 >
-                                    {selectedField === null ? 'Add Text Field' : 'Update Text Field'}
+                                    {selectedField === null ? 'Add Field' : 'Update Field'}
                                 </Button>
                             </div>
                             <p className="text-sm text-gray-600">
-                                Allowed variables: <span className="text-red-500">{`{{ name }}`}</span>,
-                                <span className="text-red-500">{`{{ event_name }}`}</span>,
-                                <span className="text-red-500">{`{{ certificate_type }}`}</span>,
-                                <span className="text-red-500">{`{{ date }}`}</span>
+                                Allowed variables: <span className="text-red-500">{`{{name}}`}</span>,
+                                <span className="text-red-500">{`{{event_name}}`}</span>,
+                                <span className="text-red-500">{`{{certificate_type}}`}</span>,
+                                <span className="text-red-500">{`{{date}}`}</span>
                                 <br />
-                                Select text and use buttons to format
+                                Select text and use buttons to format (for custom fields)
                             </p>
                         </div>
 
                         {selectedField !== null && (
                             <div className="mt-6">
-                                <h3 className="text-lg font-medium mb-4">Field Properties ({fields[selectedField].type === 'custom' ? 'Text' : 'QR Code'})</h3>
+                                <h3 className="text-lg font-medium mb-4">Field Properties ({fields[selectedField].type})</h3>
                                 <div className="space-y-4">
                                     {fields[selectedField].type === 'custom' && (
+                                        <div className="border rounded-md p-2 bg-black border-gray-600">
+                                            <div className="flex gap-2 mb-2">
+                                                <Button
+                                                    variant="outline"
+                                                    size="sm"
+                                                    onClick={() => applyFormatting('b')}
+                                                    className="h-8 w-8 p-0"
+                                                >
+                                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                        <path d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6zM6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z" />
+                                                    </svg>
+                                                </Button>
+                                                <Button
+                                                    variant="outline"
+                                                    size="sm"
+                                                    onClick={() => applyFormatting('i')}
+                                                    className="h-8 w-8 p-0"
+                                                >
+                                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                        <line x1="19" y1="4" x2="10" y2="20" />
+                                                        <line x1="14" y1="4" x2="5" y2="4" />
+                                                        <line x1="19" y1="20" x2="10" y2="20" />
+                                                    </svg>
+                                                </Button>
+                                            </div>
+                                            <Textarea
+                                                ref={textAreaRef}
+                                                value={textInput}
+                                                onChange={(e) => {
+                                                    setTextInput(e.target.value);
+                                                    updateSelectedField('text', e.target.value);
+                                                }}
+                                                className="min-h-[100px] resize-y border-none bg-black text-gray-300 focus:ring-0 placeholder-gray-500"
+                                            />
+                                        </div>
+                                    )}
+                                    {fields[selectedField].type === 'description' && (
+                                        <div>
+                                            {certificateTypes.map(type => (
+                                                <div key={type} className="mb-4">
+                                                    <label className="text-sm text-gray-600">{type}</label>
+                                                    <Textarea
+                                                        value={(fields[selectedField] as DescriptionTextItem).descriptions[type]}
+                                                        onChange={(e) => {
+                                                            setFields(prevFields => {
+                                                                const newFields = [...prevFields];
+                                                                const field = newFields[selectedField];
+                                                                if (field.type === 'description') {
+                                                                    newFields[selectedField] = {
+                                                                        ...field,
+                                                                        descriptions: { ...field.descriptions, [type]: e.target.value }
+                                                                    };
+                                                                }
+                                                                return newFields;
+                                                            });
+                                                        }}
+                                                        className="min-h-[100px]"
+                                                    />
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                    {fields[selectedField].type !== 'qrcode' && (
                                         <>
                                             <div>
                                                 <label className="text-sm text-gray-600">Font Family</label>
                                                 <Select
-                                                    value={fields[selectedField]?.fontFamily}
+                                                    value={fields[selectedField].fontFamily}
                                                     onValueChange={(value) => updateSelectedField('fontFamily', value)}
                                                 >
                                                     <SelectTrigger>
@@ -976,7 +1139,7 @@ const CertificateEditor: React.FC = () => {
                                             </div>
 
                                             <div>
-                                                <label className="text-sm text-gray-600">Font Size ({fields[selectedField]?.fontSize}rem)</label>
+                                                <label className="text-sm text-gray-600">Font Size ({fields[selectedField].fontSize}rem)</label>
                                                 <input
                                                     type="range"
                                                     min="0.625"
@@ -991,7 +1154,7 @@ const CertificateEditor: React.FC = () => {
                                             <div>
                                                 <label className="text-sm text-gray-600">Font Weight</label>
                                                 <Select
-                                                    value={fields[selectedField]?.fontWeight}
+                                                    value={fields[selectedField].fontWeight}
                                                     onValueChange={(value) => updateSelectedField('fontWeight', value)}
                                                 >
                                                     <SelectTrigger>
@@ -1034,16 +1197,14 @@ const CertificateEditor: React.FC = () => {
                                             </div>
                                         </>
                                     )}
-
                                     <div>
                                         {canvasRef.current && (
                                             <>
-                                                <p className="text-sm text-gray-600">Width: {(fields[selectedField]?.width * canvasRef.current.width).toFixed(0)}px</p>
-                                                <p className="text-sm text-gray-600">Height: {(fields[selectedField]?.height * canvasRef.current.height).toFixed(0)}px</p>
+                                                <p className="text-sm text-gray-600">Width: {(fields[selectedField].width * canvasRef.current.width).toFixed(0)}px</p>
+                                                <p className="text-sm text-gray-600">Height: {(fields[selectedField].height * canvasRef.current.height).toFixed(0)}px</p>
                                             </>
                                         )}
                                     </div>
-
                                     <Button
                                         variant="destructive"
                                         onClick={deleteSelectedField}

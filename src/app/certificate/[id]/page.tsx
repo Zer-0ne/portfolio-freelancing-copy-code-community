@@ -38,20 +38,42 @@ const fontMap = {
     'Dancing Script': dancingScript
 };
 
-interface TextItem {
-    type: string;
-    text?: string; // Optional for QR code
+// Certificate types consistent with CertificateEditor
+const certificateTypes = ['participation', 'appreciation', 'achievement', 'completion', 'excellence'];
+
+interface BaseTextItem {
     x: number;
     y: number;
     width: number;
     height: number;
-    fontSize?: number; // In rem, optional for QR code
-    fontFamily?: string;
-    fontWeight?: string;
-    color?: string;
-    textAlign?: 'left' | 'center' | 'right' | 'justify';
     _id?: string;
 }
+
+interface CustomTextItem extends BaseTextItem {
+    type: 'custom';
+    text: string;
+    fontSize: number;
+    fontFamily: string;
+    fontWeight: string;
+    color: string;
+    textAlign: 'left' | 'center' | 'right' | 'justify';
+}
+
+interface DescriptionTextItem extends BaseTextItem {
+    type: 'description';
+    descriptions: Record<string, string>;
+    fontSize: number;
+    fontFamily: string;
+    fontWeight: string;
+    color: string;
+    textAlign: 'left' | 'center' | 'right' | 'justify';
+}
+
+interface QrCodeItem extends BaseTextItem {
+    type: 'qrcode';
+}
+
+type TextItem = CustomTextItem | DescriptionTextItem | QrCodeItem;
 
 interface CertificateData {
     _id: string;
@@ -82,16 +104,6 @@ const CertificateSubHeading: {
             {certificateData.eventName}. CopyCode Community congratulates them on achieving yet another milestone.
         </h4>
     ),
-    participate: (certificateData: CertificateData) => (
-        <h4 className="font-light text-[1rem] opacity-80 text-center">
-            This certificate of participation provided by{' '}
-            <span className="font-semibold">
-                Copy Code Community, Jamia Hamdard, New Delhi
-            </span>{' '}
-            is proof of the sheer grit, hard work, and dedication of the participant through which they have participated in the{' '}
-            {certificateData.eventName}. CopyCode Community congratulates them on achieving yet another milestone.
-        </h4>
-    ),
     appreciation: (certificateData: CertificateData) => (
         <h4 className="font-light text-[1rem] opacity-80 text-center">
             This certificate of appreciation provided by{' '}
@@ -102,7 +114,36 @@ const CertificateSubHeading: {
             {certificateData.eventName}. CopyCode Community applauds their exceptional achievement.
         </h4>
     ),
-    // Add a default case for other categories or if category is undefined
+    achievement: (certificateData: CertificateData) => (
+        <h4 className="font-light text-[1rem] opacity-80 text-center">
+            This certificate of achievement provided by{' '}
+            <span className="font-semibold">
+                Copy Code Community, Jamia Hamdard, New Delhi
+            </span>{' '}
+            celebrates the remarkable success of the participant in the{' '}
+            {certificateData.eventName}. CopyCode Community honors their outstanding performance.
+        </h4>
+    ),
+    completion: (certificateData: CertificateData) => (
+        <h4 className="font-light text-[1rem] opacity-80 text-center">
+            This certificate of completion provided by{' '}
+            <span className="font-semibold">
+                Copy Code Community, Jamia Hamdard, New Delhi
+            </span>{' '}
+            certifies that the participant has successfully completed the{' '}
+            {certificateData.eventName}. CopyCode Community commends their commitment to learning.
+        </h4>
+    ),
+    excellence: (certificateData: CertificateData) => (
+        <h4 className="font-light text-[1rem] opacity-80 text-center">
+            This certificate of excellence provided by{' '}
+            <span className="font-semibold">
+                Copy Code Community, Jamia Hamdard, New Delhi
+            </span>{' '}
+            acknowledges the exemplary performance of the participant in the{' '}
+            {certificateData.eventName}. CopyCode Community salutes their pursuit of excellence.
+        </h4>
+    ),
     default: (certificateData: CertificateData) => (
         <h4 className="font-light text-[1rem] opacity-80 text-center">
             This certificate is provided by{' '}
@@ -131,7 +172,11 @@ const CertificatePreview: React.FC = () => {
     };
 
     useEffect(() => {
-        if (!params?.id) return;
+        if (!params?.id) {
+            setError("Certificate ID is missing.");
+            setIsLoading(false);
+            return;
+        }
 
         const fetchData = async () => {
             try {
@@ -145,8 +190,6 @@ const CertificatePreview: React.FC = () => {
 
                 // Normalize category to handle different formats
                 let category = data?.category?.toLowerCase() || "participation";
-                // Fix common category misspellings
-                if (category === "participate") category = "participation";
 
                 const mappedData: CertificateData = {
                     _id: data?._id,
@@ -154,17 +197,17 @@ const CertificatePreview: React.FC = () => {
                     fields: data?.template.fields.map((field: TextItem) => ({
                         ...field,
                     })),
-                    category: category,
+                    category,
                     createdAt: data?.createdAt,
                     updatedAt: data?.updatedAt,
                     __v: data?.__v,
                     eventName: data?.eventName,
-                    userName: data?.name || data?.user?.name,
-                    date: new Date(data?.date).toLocaleDateString('en-US', {
+                    userName: data?.name || data?.user?.name || "Unknown",
+                    date: data?.date ? new Date(data.date).toLocaleDateString('en-US', {
                         year: 'numeric',
                         month: 'long',
                         day: 'numeric'
-                    })
+                    }) : "Unknown"
                 };
                 setCertificateData(mappedData);
             } catch (error) {
@@ -182,9 +225,11 @@ const CertificatePreview: React.FC = () => {
     useEffect(() => {
         if (!certificatePublicUrl) return;
 
-        // Generate QR code
         generateQRCode(certificatePublicUrl).then(dataUrl => {
             setQrCodeDataUrl(dataUrl);
+        }).catch(err => {
+            console.error('QR Code generation failed:', err);
+            setError("Failed to generate QR code.");
         });
     }, [certificatePublicUrl]);
 
@@ -195,7 +240,6 @@ const CertificatePreview: React.FC = () => {
             return QRCode.toDataURL(url, { width: 300, margin: 1 });
         } catch (error) {
             console.error('Error generating QR code:', error);
-            // Create fallback QR code placeholder
             const canvas = document.createElement('canvas');
             canvas.width = 40;
             canvas.height = 40;
@@ -256,7 +300,7 @@ const CertificatePreview: React.FC = () => {
         name: certificateData?.userName || "John Doe",
         event_name: certificateData?.eventName || "CodeFest 2025",
         date: certificateData?.date || "March 15, 2025",
-        certificate_type: certificateData?.category || "Participation",
+        certificate_type: certificateData?.category || "participation",
     };
 
     const generateShareableImage = async () => {
@@ -293,7 +337,6 @@ const CertificatePreview: React.FC = () => {
         const ctx = canvas.getContext('2d');
         if (!ctx) return;
 
-        // Handle high-DPI screens for better quality
         const dpr = window.devicePixelRatio || 1;
         canvas.width = canvas.offsetWidth * dpr;
         canvas.height = (canvas.offsetWidth * image.height / image.width) * dpr;
@@ -303,16 +346,27 @@ const CertificatePreview: React.FC = () => {
         ctx.drawImage(image, 0, 0, canvas.width / dpr, canvas.height / dpr);
 
         certificateData.fields.forEach((item) => {
-            const absItem = toAbsolute(item, canvas.width / dpr, canvas.height / dpr); // Adjust for dpr
+            const absItem = toAbsolute(item, canvas.width / dpr, canvas.height / dpr);
 
             if (item.type === 'custom' && absItem.text && absItem.fontSize && absItem.fontFamily && absItem.fontWeight && absItem.color && absItem.textAlign) {
                 ctx.textAlign = 'left';
-                const lineHeight = absItem.fontSize * 1.2; // Now in pixels
+                const lineHeight = absItem.fontSize * 1.2;
                 wrapText(
                     ctx, absItem.text, absItem.x, absItem.y, absItem.width, absItem.height,
                     lineHeight, absItem.textAlign, absItem.fontSize, absItem.fontFamily,
                     absItem.fontWeight, absItem.color
                 );
+            } else if (item.type === 'description' && item.descriptions && absItem.fontSize && absItem.fontFamily && absItem.fontWeight && absItem.color && absItem.textAlign) {
+                const descriptionText = item.descriptions[certificateData.category.toLowerCase()] || item.descriptions['participation'] || '';
+                if (descriptionText) {
+                    ctx.textAlign = 'left';
+                    const lineHeight = absItem.fontSize * 1.2;
+                    wrapText(
+                        ctx, replacePlaceholders(descriptionText), absItem.x, absItem.y, absItem.width, absItem.height,
+                        lineHeight, absItem.textAlign, absItem.fontSize, absItem.fontFamily,
+                        absItem.fontWeight, absItem.color
+                    );
+                }
             } else if (item.type === 'qrcode' && qrCodeDataUrl) {
                 const qrCodeImg = new Image();
                 qrCodeImg.onload = () => {
@@ -329,8 +383,7 @@ const CertificatePreview: React.FC = () => {
         const baseWidth = 1000;
         const scaleFactor = canvasWidth / baseWidth;
 
-        // Convert rem to pixels and scale according to canvas size (for text fields)
-        const fontSizeInPixels = field.fontSize ? remToPx(field.fontSize) * scaleFactor * 2.0 : undefined;
+        const fontSizeInPixels = (field as CustomTextItem).fontSize ? remToPx((field as CustomTextItem).fontSize) * scaleFactor * 2.0 : 16;
 
         return {
             x: field.x * canvasWidth,
@@ -338,11 +391,11 @@ const CertificatePreview: React.FC = () => {
             width: field.width * canvasWidth,
             height: field.height * canvasHeight,
             fontSize: fontSizeInPixels,
-            text: field.text ? replacePlaceholders(field.text) : undefined,
-            fontFamily: field.fontFamily,
-            fontWeight: field.fontWeight,
-            color: field.color,
-            textAlign: field.textAlign || 'center',
+            text: field.type === 'custom' ? replacePlaceholders(field.text || '') : undefined,
+            fontFamily: (field as CustomTextItem).fontFamily || 'Arial',
+            fontWeight: (field as CustomTextItem).fontWeight || 'normal',
+            color: (field as CustomTextItem).color || '#000000',
+            textAlign: ((field as CustomTextItem).textAlign || 'center') as 'left' | 'center' | 'right' | 'justify',
         };
     };
 
@@ -359,7 +412,7 @@ const CertificatePreview: React.FC = () => {
     };
 
     const getFontFamilyName = (fontFamily?: string): string => {
-        if (!fontFamily) return 'Arial'; // Fallback font
+        if (!fontFamily) return 'Arial';
         if (fontFamily in fontMap) {
             return fontMap[fontFamily as keyof typeof fontMap].style.fontFamily;
         }
@@ -501,6 +554,7 @@ const CertificatePreview: React.FC = () => {
             window.open(linkedInShareUrl, '_blank');
         } catch (error) {
             console.error("Error sharing to LinkedIn:", error);
+            setError("Failed to share to LinkedIn.");
         }
     };
 
@@ -511,34 +565,16 @@ const CertificatePreview: React.FC = () => {
             window.open(whatsappShareUrl, '_blank');
         } catch (error) {
             console.error("Error sharing to WhatsApp:", error);
+            setError("Failed to share to WhatsApp.");
         }
     };
 
     const getCertificateSubHeading = () => {
         if (!certificateData) return null;
         
-        // First check exact match, then try lowercase match
-        let category = certificateData.category;
-        let SubHeadingComponent = CertificateSubHeading[category];
-        
-        // Try lowercase if no exact match found
-        if (!SubHeadingComponent) {
-            const lowercaseCategory = category.toLowerCase();
-            // Try to find a match with lowercase category
-            const categoryKey = Object.keys(CertificateSubHeading).find(
-                key => key.toLowerCase() === lowercaseCategory
-            );
-            if (categoryKey) {
-                SubHeadingComponent = CertificateSubHeading[categoryKey];
-            }
-        }
-        
-        // Use default if still no match
-        if (!SubHeadingComponent) {
-            SubHeadingComponent = CertificateSubHeading.default;
-        }
-        
-        return SubHeadingComponent ? SubHeadingComponent(certificateData) : null;
+        const category = certificateData.category.toLowerCase();
+        const SubHeadingComponent = CertificateSubHeading[category] || CertificateSubHeading.default;
+        return SubHeadingComponent(certificateData);
     };
 
     return (

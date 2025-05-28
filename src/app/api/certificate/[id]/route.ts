@@ -1,5 +1,6 @@
 import Certificate from "@/Models/certificate";
 import CertificateTemplate from "@/Models/certTemplate";
+import User from "@/Models/Users";
 import connect from "@/utils/database";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -13,6 +14,7 @@ export const GET = async (request: NextRequest, { params }: any) => {
             return NextResponse.json({ message: "Certificate ID is required" }, { status: 400 });
         }
         await CertificateTemplate.find(); // Ensure the template is loaded
+        await User.find(); // Ensure the user is loaded
         const data = await Certificate.findById(id)
             .populate('user') // Populate the user field
             .populate('template'); // Populate the template field
