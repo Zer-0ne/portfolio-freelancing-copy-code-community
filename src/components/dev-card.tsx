@@ -143,9 +143,10 @@ function DraggableButton({ children }: { children?: React.ReactNode }) {
     const [pos, setPos] = React.useState({ x: 0, y: 0 });
     const dragging = React.useRef(false);
     const dragStartPos = React.useRef({ x: 0, y: 0 });
-    const mouseStartPos = React.useRef({ x: 0, y: 0 });
+    const startPos = React.useRef({ x: 0, y: 0 });
     const hasDraggedRef = React.useRef(false);
     const wrapperRef = React.useRef<HTMLDivElement>(null);
+    const dragThreshold = 15; // Increased threshold for better touch experience
 
     // On mount, move to bottom-right (24px margin)
     React.useEffect(() => {
@@ -168,77 +169,117 @@ function DraggableButton({ children }: { children?: React.ReactNode }) {
         };
     }, []);
 
-    // Global mouse move and up handlers
+    // Helper function to get client coordinates from mouse or touch event
+    const getClientCoords = (e: MouseEvent | TouchEvent) => {
+        if ('touches' in e && e.touches.length > 0) {
+            return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+        } else if ('clientX' in e) {
+            return { x: e.clientX, y: e.clientY };
+        }
+        return { x: 0, y: 0 };
+    };
+
+    // Global mouse and touch move handlers
     React.useEffect(() => {
-        const handleMouseMove = (e: MouseEvent) => {
+        const handleMove = (e: MouseEvent | TouchEvent) => {
             if (!dragging.current) return;
-            const newX = e.clientX - dragStartPos.current.x;
-            const newY = e.clientY - dragStartPos.current.y;
-            const vw = window.innerWidth;
-            const vh = window.innerHeight;
-            const bw = wrapperRef.current?.offsetWidth || 0;
-            const bh = wrapperRef.current?.offsetHeight || 0;
-            const constrainedX = Math.max(0, Math.min(newX, vw - bw));
-            const constrainedY = Math.max(0, Math.min(newY, vh - bh));
-            setPos({ x: constrainedX, y: constrainedY });
+            
+            const coords = getClientCoords(e);
+            const dx = coords.x - startPos.current.x;
+            const dy = coords.y - startPos.current.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+
+            // Only start actual dragging if threshold is exceeded
+            if (distance > dragThreshold) {
+                e.preventDefault();
+                hasDraggedRef.current = true;
+                
+                // Prevent scrolling during drag on mobile
+                document.body.style.overflow = 'hidden';
+                document.body.style.touchAction = 'none';
+
+                const newX = coords.x - dragStartPos.current.x;
+                const newY = coords.y - dragStartPos.current.y;
+                const vw = window.innerWidth;
+                const vh = window.innerHeight;
+                const bw = wrapperRef.current?.offsetWidth || 0;
+                const bh = wrapperRef.current?.offsetHeight || 0;
+                const constrainedX = Math.max(0, Math.min(newX, vw - bw));
+                const constrainedY = Math.max(0, Math.min(newY, vh - bh));
+                setPos({ x: constrainedX, y: constrainedY });
+            }
         };
 
-        const handleMouseUp = (e: MouseEvent) => {
+        const handleEnd = (e: MouseEvent | TouchEvent) => {
             if (dragging.current) {
-                const dx = e.clientX - mouseStartPos.current.x;
-                const dy = e.clientY - mouseStartPos.current.y;
+                const coords = getClientCoords(e);
+                const dx = coords.x - startPos.current.x;
+                const dy = coords.y - startPos.current.y;
                 const distance = Math.sqrt(dx * dx + dy * dy);
-                if (distance > 5) { // Threshold of 5 pixels
-                    hasDraggedRef.current = true;
+
+                // Only consider it dragged if moved beyond threshold
+                if (distance > dragThreshold) {
+                    // Reset drag flag after a delay to prevent click
                     setTimeout(() => {
                         hasDraggedRef.current = false;
-                    }, 100); // Reset after 100ms
+                    }, 200);
+                } else {
+                    // Quick tap/click - allow click event
+                    hasDraggedRef.current = false;
                 }
             }
+            
             dragging.current = false;
             document.body.style.cursor = '';
+            document.body.style.overflow = '';
+            document.body.style.touchAction = '';
         };
 
-        document.addEventListener('mousemove', handleMouseMove);
-        document.addEventListener('mouseup', handleMouseUp);
+        // Mouse events
+        document.addEventListener('mousemove', handleMove);
+        document.addEventListener('mouseup', handleEnd);
+
+        // Touch events
+        document.addEventListener('touchmove', handleMove, { passive: false });
+        document.addEventListener('touchend', handleEnd);
+
         return () => {
-            document.removeEventListener('mousemove', handleMouseMove);
-            document.removeEventListener('mouseup', handleMouseUp);
+            document.removeEventListener('mousemove', handleMove);
+            document.removeEventListener('mouseup', handleEnd);
+            document.removeEventListener('touchmove', handleMove);
+            document.removeEventListener('touchend', handleEnd);
         };
     }, []);
 
-    const handleMouseDown = (e: React.MouseEvent) => {
-        const rect = wrapperRef.current?.getBoundingClientRect();
-        if (!rect) return;
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        const margin = 20;
-        const nearLeftEdge = x < margin;
-        const nearRightEdge = x > rect.width - margin;
-        const nearTopEdge = y < margin;
-        const nearBottomEdge = y > rect.height - margin;
-        if (nearLeftEdge || nearRightEdge || nearTopEdge || nearBottomEdge) {
+    const handleStart = (e: React.MouseEvent | React.TouchEvent) => {
+        e.preventDefault();
+        
+        const coords = getClientCoords(e.nativeEvent);
+        
+        dragging.current = true;
+        hasDraggedRef.current = false;
+        document.body.style.cursor = 'grabbing';
+
+        startPos.current = { x: coords.x, y: coords.y };
+        dragStartPos.current = {
+            x: coords.x - pos.x,
+            y: coords.y - pos.y,
+        };
+    };
+
+    const handleClick = (e: React.MouseEvent) => {
+        if (hasDraggedRef.current) {
+            e.stopPropagation();
             e.preventDefault();
-            dragging.current = true;
-            document.body.style.cursor = 'grabbing';
-            mouseStartPos.current = { x: e.clientX, y: e.clientY };
-            dragStartPos.current = {
-                x: e.clientX - pos.x,
-                y: e.clientY - pos.y,
-            };
         }
     };
 
     return (
         <div
             ref={wrapperRef}
-            onMouseDown={handleMouseDown}
-            onClickCapture={(e) => {
-                if (hasDraggedRef.current) {
-                    e.stopPropagation();
-                    e.preventDefault();
-                }
-            }}
+            onMouseDown={handleStart}
+            onTouchStart={handleStart}
+            onClick={handleClick}
             style={{
                 position: 'fixed',
                 left: pos.x,
