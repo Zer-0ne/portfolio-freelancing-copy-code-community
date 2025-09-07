@@ -55,18 +55,21 @@ export const GET = async (request: NextRequest, { params }:  any) => {
 };
 export const DELETE = async (request: NextRequest, { params }: any) => {
     try {
+        const { fileId: rawFileId } = params;
+        const [fileId, isLoginRequiredSuffix] = rawFileId.split('-');
+        const isLoginRequired = isLoginRequiredSuffix ?? 'true'; // default to true if missing
+        console.log({ fileId, isLoginRequired });
+
+        // Session fetch
         const session = (await currentSession()) as Session;
-        if (!session) {
+
+        // Check session only if required
+        if (isLoginRequired === 'true' && !session) {
             return NextResponse.json(
                 { message: "Please login", status: "error" },
                 { status: 401 }
             );
         }
-
-
-        // Parse request data
-        const { fileId } = params;
-
 
         const drive = google.drive({
             version: "v3",
@@ -82,21 +85,22 @@ export const DELETE = async (request: NextRequest, { params }: any) => {
             ]),
         });
 
-        // Step 1: Create the folder
+        // Delete the file from Drive
         await drive.files.delete({
-            fileId
-        })
+            fileId: fileId
+        });
 
         return NextResponse.json({
             message: 'Deleted!',
             status: "success",
         });
     } catch (error) {
-        console.error("Error deletinf file file:", (error as Data).message);
+        console.error("Error deleting file:", (error as Data).message);
         return NextResponse.json(
             { error: "Something went wrong!", status: "error" },
             { status: 500 }
         );
     }
 };
+
 

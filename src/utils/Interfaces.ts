@@ -129,7 +129,8 @@ export interface FormStructure {
     'Accepting Response': boolean;
     fields: FormField[],
     sheetId: string;
-    folderId: string
+    folderId: string;
+    verifiedUser?: boolean;
 }
 
 export interface FormField {

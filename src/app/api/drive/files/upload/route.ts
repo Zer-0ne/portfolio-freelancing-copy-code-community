@@ -25,15 +25,9 @@ export const revalidate = 60;
 export const POST = async (request: NextRequest) => {
     try {
         const session = (await currentSession()) as Session;
-        if (!session) {
-            return NextResponse.json(
-                { message: "Please login", status: "error" },
-                { status: 401 }
-            );
-        }
-
+        
         // Parse request data
-        const { folderName, folderId, file, remainingUploads } = await request.json();
+        const { folderName, folderId, file, remainingUploads,isLoginRequired } = await request.json();
         // console.log(folderName, file)
         if (remainingUploads < 1) {
             return NextResponse.json(
@@ -41,7 +35,14 @@ export const POST = async (request: NextRequest) => {
                 { status: 400 }
             );
         }
-
+        console.log(!session && isLoginRequired)
+        
+        if (!session && isLoginRequired) {
+            return NextResponse.json(
+                { message: "Please login", status: "error" },
+                { status: 401 }
+            );
+        }
 
         const drive = google.drive({
             version: "v3",

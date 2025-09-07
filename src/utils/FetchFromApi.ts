@@ -181,19 +181,21 @@ export const imagesInFolder = async (folderName: string, imageLinks: string[]) =
 export const createNew = async (data: Data, route: string, setIsDisabled?: React.Dispatch<React.SetStateAction<boolean>>) => {
     const Toast = toast.loading('Please wait')
     try {
-
-        // check the session
         const session = await currentSession() as Session;
-        if (!session) return toast.update(Toast, update('Please Login!', 'error'))
+        const isLoginRequired = data?.isLoginRequired;
+        console.log(data.isLoginRequired)
 
-        // check the user is admin or not 
-        const user = await userInfo(session?.user?.username)
-        if (!['comment', 'form'].includes(route)) {
-            if (['user'].includes(user.role)) return toast.update(Toast, update('Your are not Authorized!', 'error'))
+        if (!session && isLoginRequired) return toast.update(Toast, update('Please Login!', 'error'))
+
+        // Fetch user info only if login required and session available
+        let user = null;
+        if (isLoginRequired && session) {
+            user = await userInfo(session?.user?.username);
+            if (!['comment', 'form'].includes(route)) {
+                if (['user'].includes(user.role)) return toast.update(Toast, update('Your are not Authorized!', 'error'))
+            }
         }
 
-
-        // Convert file to Base64
         if (data.file) {
             const file = data.file as File;
             const base64File = await new Promise<string>((resolve, reject) => {
@@ -202,27 +204,33 @@ export const createNew = async (data: Data, route: string, setIsDisabled?: React
                 reader.onerror = reject;
                 reader.readAsDataURL(file); // Convert to Base64
             });
-
-            data.file = { name: file.name, type: file.type, content: base64File }; // Include metadata
+            data.file = { name: file.name, type: file.type, content: base64File };
         }
 
         setIsDisabled && setIsDisabled(true)
+
+        // Prepare body conditionally
+        const bodyData = {
+            ...data,
+            ...(user ? { authorId: user._id } : {})  // only add authorId if user exists
+        };
+
         const response = await fetch(`/api/${route}`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                ...data,
-                authorId: user._id
-            })
+            body: JSON.stringify(bodyData)
         })
+
         const res = await response.json()
+
         if (response.ok) {
             setIsDisabled && setIsDisabled(false)
             toast.update(Toast, update(res.message, res.status))
             return res
         }
+
         setIsDisabled && setIsDisabled(false)
         return toast.update(Toast, update(res.message ?? res.error, res.status))
     } catch (error) {
@@ -231,6 +239,7 @@ export const createNew = async (data: Data, route: string, setIsDisabled?: React
         return toast.update(Toast, update('Something went wrong!', 'error'))
     }
 }
+
 
 export const createNewContact = async (data: Data, setIsDisabled: React.Dispatch<React.SetStateAction<boolean>>) => {
     const Toast = toast.loading('Please wait')
@@ -273,22 +282,31 @@ export const deletePost = async (id: string, route: string, item?: BlogsInterfac
     const Toast = toast.loading('Please wait')
     try {
         // check the session
+        let isLoginRequired = id.split('-')[1];
+
         const session = await currentSession() as Session;
-        if (!session) return toast.update(Toast, update('Please Login!', 'error'))
+        if (isLoginRequired === 'true' && !session) return toast.update(Toast, update('Please Login!', 'error'))
+
 
         // check the user is admin or not 
-        const user = await userInfo(session?.user?.username)
-        if (['user'].includes(user.role)) return toast.update(Toast, update('Your are not Authorized!', 'error'))
+        if (isLoginRequired === 'true' && session) {
+            const user = await userInfo(session?.user?.username)
+            if (['user'].includes(user.role)) return toast.update(Toast, update('Your are not Authorized!', 'error'))
+        }
+
 
         if (item && (item as EventsInterface).image) {
             const storageRef = ref(storage, `/Thumbnails/${item?.title}`);
             await deleteObject(storageRef);
         }
 
+
         if (item && item?.contentImage.length) {
+
 
             const storageRef = ref(storage, `/content/${item?.title}`);
             const result = await listAll(storageRef);
+
 
             // Iterate through each item in the folder
             await Promise.all(result.items.map(async (imageRef: any) => {
@@ -299,21 +317,30 @@ export const deletePost = async (id: string, route: string, item?: BlogsInterfac
                 await deleteObject(imageRef);
                 console.log(`Deleted ${downloadURL}`);
 
+
             }));
         }
 
+
+
+        // when we are sending the isloginrequired with id with -true or -false and we need to split it
         const res = await fetch(`/api/${route}/${id}`, { method: 'DELETE' });
         const data_from_server = await res.json();
         if (res.ok) {
-            return toast.update(Toast, update(data_from_server.message ?? data_from_server.error, data_from_server.status));
+            toast.update(Toast, update(data_from_server.message ?? data_from_server.error, data_from_server.status));
+            return true
+
         }
         return toast.update(Toast, update(data_from_server.message ?? data_from_server.error, data_from_server.status));
     } catch (error) {
         console.log(error)
-        return toast.update(Toast, update('Something Went Wrong!', 'error'))
+        toast.update(Toast, update('Something Went Wrong!', 'error'))
+        return false
+
 
     }
 }
+
 
 // edit the post
 export const editPost = async (id: string, data: Data, route: string) => {

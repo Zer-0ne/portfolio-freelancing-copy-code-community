@@ -4,18 +4,17 @@ import { Data } from '@/utils/Interfaces'
 import { colors } from '@/utils/colors'
 import { child, get, ref, set } from 'firebase/database'
 import { notFound, useParams } from 'next/navigation'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import DeleteIcon from '@mui/icons-material/Delete';
 import ToggleBtn from '@/components/toggle-btn'
 import DropDown from '@/components/DropDown'
 import Image from 'next/image'
 import GoogleDrive from '@/assests/svg/drive.svg'
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 
 const page = () => {
-    /**
-     * Creating the variable like useState 
-     */
     const [array, setArray] = useState<Data[]>([])
     const { session } = useSelector((state: RootState) => state.session)
     const [data, setdata] = useState<Data>()
@@ -23,12 +22,12 @@ const page = () => {
     const [currentSelectedFeild, setCurrentSelectedFeild] = useState<number>();
     const { id }: any = useParams()
     const [isCreating, setIsCreating] = useState(false)
+    const isCertificateForm = data?.title === 'Certificate'
 
-    /**
-     * declaration and defination of addFeild function
-     * in this function  we are adding new feilds to our array.
-     * @param e - event object which is passed by react onchange event
-     */
+
+    // Global verified user switch state
+    const [verifiedUser, setVerifiedUser] = useState(true); // Default ON
+
     const addFeild = () => {
         setArray([...array, {}])
     }
@@ -43,29 +42,27 @@ const page = () => {
             const { createNew } = await import('@/utils/FetchFromApi')
             const { realTimeDatabase } = await import('@/utils/Firebase')
             const nameArray = await array.map((obj: Data) => obj?.name);
-            // console.log(data)
             if (data && data['title'] && !data['sheetId'] && isCreating) setdata({ ...data, sheetId: await createNew({ functionality: 'create', fields: [...nameArray], title: data?.title }, 'form', setIsDisabled).then((resp) => resp.data.spreadsheetId) })
             data && await set(ref(realTimeDatabase, `forms/${id}`), {
                 _id: id,
                 'Accepting Response': true,
                 ...data,
                 fields: array,
+                verifiedUser, // save global toggle state with form data
             });
         }
         data && write()
-    }, [array, data, session])
+    }, [array, data, session, verifiedUser])
 
     useEffect(() => {
         const fetch = async () => {
             const { realTimeDatabase } = await import('@/utils/Firebase')
             const snapshot = await get(child(ref(realTimeDatabase), `forms/${id}`))
-            // const { createNew } = await import('@/utils/FetchFromApi')
-            // const nameArray = await array.map((obj) => obj?.name);
             if (snapshot.exists()) {
-                console.log(snapshot.val())
-                await setdata(snapshot.val())
-                // console.log(data && await createNew({ functionality: 'create', fields: [...nameArray], title: data?.title }, 'form', setIsDisabled).then((resp) => resp).catch(() => ''))
-                setArray(snapshot.val()?.fields || [])
+                const formData = snapshot.val()
+                setdata(formData)
+                setArray(formData?.fields || [])
+                if (typeof formData?.verifiedUser === 'boolean') setVerifiedUser(formData.verifiedUser)
             }
         }
         fetch()
@@ -88,50 +85,52 @@ const page = () => {
         }
     }
 
-    // console.log(data)
-
-    /**
-     * Here the jsx
-     */
     return (
-        <div
-            className='container !max-w-[1000px] mx-[auto] my-3 px-4 flex flex-wrap flex-col gap-2'
-        >
+        <div className='container !max-w-[1000px] mx-[auto] my-3 px-4 flex flex-wrap flex-col gap-2'>
+
+            {/* Global verified user toggle */}
+            <div className="flex items-center space-x-2 mb-4">
+                <Switch
+                    id="verified-user"
+                    checked={verifiedUser}
+                    onCheckedChange={setVerifiedUser}
+                    disabled={isCertificateForm} // Disable if it's a certificate form
+                    className='bg-[green] data-[state=checked]:bg-[green] hover:bg-[darkgreen] data-[state=checked]:hover:bg-[darkgreen]'
+                />
+                <Label htmlFor="verified-user">Verified User</Label>
+            </div>
+
             <Container>
                 <input name='title' onChange={handleChange} value={data?.title as string} placeholder='Enter Heading here' className='border-none outline-none bg-transparent text-[2rem] flex gap-2 p-[1rem]'></input>
                 <textarea rows={4} value={data?.subtitle as string} name='subtitle' onChange={handleChange} className='border-none flex-1 resize-none w-[100%] outline-none bg-transparent flex gap-2 p-[1rem] text-[1rem]' placeholder='Enter a decription here'></textarea>
             </Container>
             {
-                array?.map((item: Data, index: number) => (<>
-                    <FieldContainer handleCreateFolder={handleCreateFolder} setCurrentSelectedFeild={setCurrentSelectedFeild} currentSelectedFeild={currentSelectedFeild} item={item as Data} setArray={setArray} index={index} key={index}>
+                array?.map((item: Data, index: number) => (
+                    <FieldContainer
+                        handleCreateFolder={handleCreateFolder}
+                        setCurrentSelectedFeild={setCurrentSelectedFeild}
+                        currentSelectedFeild={currentSelectedFeild}
+                        item={item as Data}
+                        setArray={setArray}
+                        index={index}
+                        key={index}
+                    >
                         <></>
                     </FieldContainer>
-                </>))
+                ))
             }
             <button onClick={addFeild} disabled={isDisabled} className='flex flex-1 rounded-lg border-dotted p-[1rem] justify-center items-center m-[5px] border-[2px] text-[green] cursor-pointer border-[green] opacity-80 basis-[50px] grow-0 shrink-0  hover:opacity-100 transition-all ease-in-out delay-150'>Add a new field</button>
         </div>
     )
 }
 
-/**
- * 
- * @param param0 Here the  props of Container Component that is children which allows the  passing of component inside container
- * @returns jsx
- */
 const Container = ({ children, }: { children: React.ReactNode }) => {
     return (
-        <>
-            {/* decription */}
-            <div className={`p-[2rem] rounded-lg shadow-md py-[1rem] flex-1 w-[100%]`} style={{ background: colors.commentConatinerBg }}>
-                {children}
-            </div>
-        </>
+        <div className={`p-[2rem] rounded-lg shadow-md py-[1rem] flex-1 w-[100%]`} style={{ background: colors.commentConatinerBg }}>
+            {children}
+        </div>
     )
 }
-
-/**
- * Here the another component
- */
 
 const FieldContainer = (
     { children, item, setArray, index,
@@ -142,9 +141,9 @@ const FieldContainer = (
         setCurrentSelectedFeild: React.Dispatch<React.SetStateAction<number | undefined>>,
         currentSelectedFeild?: number; handleCreateFolder: () => Promise<void>
     }) => {
-    const [types, setTypes] = useState(item.type || 'text'); // Initialize with item type
+
+    const [types, setTypes] = useState(item.type || 'text');
     const [data, setData] = useState<Data>();
-    // console.log(item)
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -152,7 +151,6 @@ const FieldContainer = (
             const newArray: Data[] = [...prevArray];
             const updatedItem: Data = { ...item, [name]: (name === 'required') ? (e.target as any).checked : value, type: types };
             if (name === 'options') {
-                // Split choices by comma and trim spaces
                 const choicesArray = value.split(',').map((choice: any) => choice.trim());
                 updatedItem[name] = choicesArray;
             }
@@ -170,26 +168,21 @@ const FieldContainer = (
         });
     }, [data])
 
-
-    /**
-     * Delete current feild
-     * @param index 
-     */
     const deleteField = (index: number) => {
         setArray((array) => array.filter((_, i) => i !== index));
     }
 
     const handleClick = () => {
-        setCurrentSelectedFeild(index); // Set the selected field index
+        setCurrentSelectedFeild(index);
     }
 
     const handleTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const newType = e.target.value;
-        setTypes(newType); // Update local state
+        setTypes(newType);
         setArray((prevArray: Data[]) => {
             const newArray = [...prevArray];
-            const updatedItem = { ...item, type: newType }; // Update the type in the item
-            newArray[index] = updatedItem; // Update the array with the new item
+            const updatedItem = { ...item, type: newType };
+            newArray[index] = updatedItem;
             return newArray;
         });
     }
@@ -203,7 +196,6 @@ const FieldContainer = (
         audio: 'audio/*',
         zip: 'application/zip'
     }
-    // <input type='file' onChange={handleChange} name='file' className='border-none flex-1 resize-none w-[100%] outline-none bg-transparent flex gap-2 p-[1rem] text-[1rem]' />
 
     const typesOfFields: {
         [key in string]: React.JSX.Element
@@ -213,12 +205,10 @@ const FieldContainer = (
         paragraph: <textarea onChange={handleChange} value={item.placeholder as string || ''} rows={4} name='placeholder' className='border-none flex-1 resize-none w-[100%] outline-none bg-transparent flex gap-2 p-[1rem] text-[1rem]' placeholder='Enter a placeholder here'></textarea>,
         radio: <input onChange={handleChange} value={(item.options as string[])?.join(', ') || ''} name='options' className='border-none flex-1 resize-none w-[100%] outline-none bg-transparent flex gap-2 p-[1rem] text-[1rem]' placeholder='Enter choices separated by commas' />,
         file: <div className='max-w-[300px] flex flex-col gap-3'>
-            <div
-                className='flex flex-1 opacity-70 justify-between items-center gap-1'
-            >
+            <div className='flex flex-1 opacity-70 justify-between items-center gap-1'>
                 <p>Allow only specific file types</p>
                 <ToggleBtn
-                    isClicked={(item && item['specificFile']) as boolean}
+                    isClicked={Boolean(item && item['specificFile'])}
                     className='!w-[40px] !h-[20px]'
                     onClick={() => {
                         setData(data => ({ ...data, ['specificFile']: (data && !data['specificFile']) }))
@@ -231,9 +221,7 @@ const FieldContainer = (
                         {item && item['specificFile'] && (
                             <>
                                 {Object.entries(fileTypes).reduce((rows: string[] | any[], [key, value], index) => {
-                                    if (index % 2 === 0) {
-                                        rows.push([] as any); // New row
-                                    }
+                                    if (index % 2 === 0) rows.push([] as any);
                                     (rows[rows.length - 1] as any).push(
                                         <td key={key} className='flex max-w-[100px] min-w-[100px] items-center'>
                                             <input
@@ -253,25 +241,18 @@ const FieldContainer = (
                                     );
                                     return rows;
                                 }, []).map((row, rowIndex) => (
-                                    <tr className='flex max-w-[200px] justify-between items-center' key={rowIndex}>
-                                        {row}
-                                    </tr>
+                                    <tr className='flex max-w-[200px] justify-between items-center' key={rowIndex}>{row}</tr>
                                 ))}
                             </>
                         )}
                     </tbody>
                 </table>
             </div>
-            <div
-                className='flex flex-1 justify-between items-center gap-2'
-            >
+            <div className='flex flex-1 justify-between items-center gap-2'>
                 <p className='text-[1rem] opacity-70'>Maximum number of files</p>
                 <DropDown
                     name='maxFiles'
-                    style={{
-                        width: '60px!important',
-                        zIndex: 20
-                    }}
+                    style={{ width: '60px!important', zIndex: 20 }}
                     onChange={setData}
                     placeholder={item['maxFiles'] as string || '1'}
                     values={['1', '5', '10']}
@@ -304,13 +285,8 @@ const FieldContainer = (
                         <option className='bg-black rounded-sm' value="date">Date</option>
                         <option className='bg-black rounded-sm' value="time">Time</option>
                     </select>
-                    {(currentSelectedFeild === index) && <button
-                        className=''
-                        onClick={() => deleteField(currentSelectedFeild ?? index)}>
-                        <DeleteIcon />
-                    </button>}
+                    {(currentSelectedFeild === index) && <button className='' onClick={() => deleteField(currentSelectedFeild ?? index)}><DeleteIcon /></button>}
                 </div>
-
             </div>
             {typesOfFields[types as string]}
             {children}

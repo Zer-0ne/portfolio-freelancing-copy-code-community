@@ -41,7 +41,9 @@ const page = () => {
 
     return (
         <>
-            <AuthModal />
+            {(forms.verifiedUser === undefined || (forms.verifiedUser)) &&
+                <AuthModal />
+            }
             <Forms
                 forms={forms as FormStructure}
             />

@@ -10,6 +10,7 @@ import nodemailer from "nodemailer";
 import Certificate from "@/Models/certificate";
 import User from "@/Models/Users";
 import connect from "@/utils/database";
+import crypto from "crypto";
 
 // Connect to MongoDB (ensure this runs globally in your app)
 // mongoose.connect(process.env.MONGODB_URI as string);
@@ -62,10 +63,7 @@ class HandleCertificate {
 // POST handler
 export const POST = async (request: NextRequest) => {
     try {
-        const session = await currentSession() as Session;
-        if (!session) return NextResponse.json({ message: 'Please login' }, { status: 401 });
-        await connect()
-
+        let session = await currentSession() as Session;
         const {
             functionality,
             fields,
@@ -73,11 +71,28 @@ export const POST = async (request: NextRequest) => {
             title,
             sheetId,
 
+            // check for login requirement
+            isLoginRequired,
+
 
             // We are only sending current user from client side when the certificate is issued by the admin.
             user: currUser
 
         } = await request.json();
+        if (!session && isLoginRequired) return NextResponse.json({ message: 'Please login' }, { status: 401 });
+        await connect()
+
+
+        if (!session) {
+            const randomUserId = crypto.randomBytes(16).toString("hex");
+            session = {
+                user: {
+                    email: `anonymous_${randomUserId}@example.com`,
+                    id: randomUserId,
+                    // aur jo bhi fields required ho yaha add karo
+                }
+            } as Session;
+        }
 
         // console.log(fields);
 
@@ -307,7 +322,7 @@ export const POST = async (request: NextRequest) => {
         const result = (functionality in option) && await option[functionality as keyof typeof option].data;
         return NextResponse.json({
             // message: fields['selectedTemplate'] ? 'Created successfully' : 'Created successfully',
-            message: fields['selectedTemplate'] ? 'Feedback submitted successfully. Your event participation certificate has been issued.' : 'Thank you! Your event participation certificate has been issued.',
+            message: fields['certificate']?(fields['selectedTemplate'] ? 'Feedback submitted successfully. Your event participation certificate has been issued.' : 'Thank you! Your event participation certificate has been issued.'):'Form submitted successfully',
             data: result,
             certificateId: certificateId || undefined,
             status: 'success'

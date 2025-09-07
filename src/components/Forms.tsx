@@ -78,14 +78,18 @@ const Forms = ({
         setData((prevFormData) => ({ ...prevFormData, [name]: value }));
     }
 
+    // console.log(forms)
+
     const handleUpload = async (file: File, name: string) => {
         try {
+            console.log(forms.verifiedUser)
             const { createNew } = await import('@/utils/FetchFromApi');
             const { data } = await createNew(
                 {
                     folderId: forms.folderId,
                     file,
-                    remainingUploads: remainingUploadFile
+                    remainingUploads: remainingUploadFile,
+                    isLoginRequired: forms?.verifiedUser ?? true
                 },
                 'drive/files/upload',
                 setIsDisabled
@@ -168,19 +172,22 @@ const Forms = ({
     const handleDeleteUploadedImage = async (fileId: string, name: string) => {
         try {
             const { deletePost } = await import('@/utils/FetchFromApi');
-            await deletePost(fileId, 'drive/files/get/');
-            const existingDriveData = JSON.parse(localStorage.getItem('drive') || '{}');
-            if (existingDriveData[name] && existingDriveData[name][fileId]) {
-                delete existingDriveData[name][fileId];
+            const res = await deletePost(`${fileId}-${forms.verifiedUser ?? true}`, 'drive/files/get/');
+            if (res) {
+
+                const existingDriveData = JSON.parse(localStorage.getItem('drive') || '{}');
+                if (existingDriveData[name] && existingDriveData[name][fileId]) {
+                    delete existingDriveData[name][fileId];
+                }
+                localStorage.setItem('drive', JSON.stringify(existingDriveData));
+                const updatedFiles = Object.keys(JSON.parse(localStorage.getItem('drive') || '{}')).map(key => {
+                    return `https://drive.google.com/uc?export=view&id=${key}`;
+                });
+                setData(prevData => ({
+                    ...prevData,
+                    [name]: updatedFiles.length > 0 ? updatedFiles : null
+                }));
             }
-            localStorage.setItem('drive', JSON.stringify(existingDriveData));
-            const updatedFiles = Object.keys(JSON.parse(localStorage.getItem('drive') || '{}')).map(key => {
-                return `https://drive.google.com/uc?export=view&id=${key}`;
-            });
-            setData(prevData => ({
-                ...prevData,
-                [name]: updatedFiles.length > 0 ? updatedFiles : null
-            }));
         } catch (error) {
             console.log((error as Data).message);
         }
@@ -216,6 +223,7 @@ const Forms = ({
                 functionality: 'update',
                 fields: formData,
                 sheetId: forms?.sheetId,
+                isLoginRequired: forms?.verifiedUser ?? true,
                 sequence: desiredSequences && [...desiredSequences, { name: 'selectedTemplate' }]
             }, 'form', setIsDisabled);
             return setData(undefined);
