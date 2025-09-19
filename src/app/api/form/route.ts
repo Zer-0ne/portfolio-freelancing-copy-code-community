@@ -78,12 +78,22 @@ export const POST = async (request: NextRequest) => {
             // We are only sending current user from client side when the certificate is issued by the admin.
             user: currUser,
 
-            // is accepting the form or not
-            isAccepting
+            // id of the form
+            formId
 
         } = await request.json();
         if (!session && isLoginRequired) return NextResponse.json({ message: 'Please login' }, { status: 401 });
         await connect()
+        let isAccepting = false;
+        const fetch = async () => {
+            if (!formId) return
+            const { get, child, ref } = await import('firebase/database')
+            const { realTimeDatabase } = await import('@/utils/Firebase')
+            const snapshot = await get(child(ref(realTimeDatabase), `forms/${formId}`))
+            if (!snapshot.exists()) throw new Error("No such form exists");
+            isAccepting = await (snapshot.val())?.['Accepting Response']
+        }
+        await fetch()
 
 
         if (!session) {
@@ -92,7 +102,7 @@ export const POST = async (request: NextRequest) => {
                 user: {
                     email: `anonymous_${randomUserId}@example.com`,
                     id: randomUserId,
-                    role:'user'
+                    role: 'user'
                 }
             } as Session;
         }
