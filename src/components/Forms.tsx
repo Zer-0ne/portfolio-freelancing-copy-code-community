@@ -172,7 +172,7 @@ const Forms = ({
     const handleDeleteUploadedImage = async (fileId: string, name: string) => {
         try {
             const { deletePost } = await import('@/utils/FetchFromApi');
-            const res = await deletePost(`${fileId}-${forms.verifiedUser ?? true}`, 'drive/files/get/');
+            const res = await deletePost(`${fileId}:-:${forms.verifiedUser ?? true}`, 'drive/files/get/');
             if (res) {
 
                 const existingDriveData = JSON.parse(localStorage.getItem('drive') || '{}');

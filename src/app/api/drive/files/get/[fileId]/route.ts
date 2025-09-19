@@ -56,7 +56,7 @@ export const GET = async (request: NextRequest, { params }:  any) => {
 export const DELETE = async (request: NextRequest, { params }: any) => {
     try {
         const { fileId: rawFileId } = params;
-        const [fileId, isLoginRequiredSuffix] = rawFileId.split('-');
+        const [fileId, isLoginRequiredSuffix] = rawFileId.split(':-:');
         const isLoginRequired = isLoginRequiredSuffix ?? 'true'; // default to true if missing
         console.log({ fileId, isLoginRequired });
 
