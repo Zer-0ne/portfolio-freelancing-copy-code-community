@@ -222,6 +222,7 @@ const Forms = ({
             await createNew({
                 functionality: 'update',
                 fields: formData,
+                isAccepting: forms?.['Accepting Response'],
                 sheetId: forms?.sheetId,
                 isLoginRequired: forms?.verifiedUser ?? true,
                 sequence: desiredSequences && [...desiredSequences, { name: 'selectedTemplate' }]

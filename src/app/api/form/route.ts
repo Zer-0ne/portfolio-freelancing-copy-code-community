@@ -76,7 +76,10 @@ export const POST = async (request: NextRequest) => {
 
 
             // We are only sending current user from client side when the certificate is issued by the admin.
-            user: currUser
+            user: currUser,
+
+            // is accepting the form or not
+            isAccepting
 
         } = await request.json();
         if (!session && isLoginRequired) return NextResponse.json({ message: 'Please login' }, { status: 401 });
@@ -89,12 +92,22 @@ export const POST = async (request: NextRequest) => {
                 user: {
                     email: `anonymous_${randomUserId}@example.com`,
                     id: randomUserId,
-                    // aur jo bhi fields required ho yaha add karo
+                    role:'user'
                 }
             } as Session;
         }
 
         // console.log(fields);
+        if (!isAccepting && session.user.role === 'user') {
+            return NextResponse.json(
+                {
+                    message: "This form is currently closed. Please contact our team for assistance.",
+                    status: "error"
+                },
+                { status: 403 }
+            );
+
+        }
 
         function joinArrays(data: Data) {
             const result: Data = {};
@@ -322,8 +335,8 @@ export const POST = async (request: NextRequest) => {
         const result = (functionality in option) && await option[functionality as keyof typeof option].data;
         return NextResponse.json({
             // message: fields['selectedTemplate'] ? 'Created successfully' : 'Created successfully',
-            message: fields['certificate']?(fields['selectedTemplate'] ? 'Feedback submitted successfully. Your event participation certificate has been issued.' : 'Thank you! Your event participation certificate has been issued.'):'Form submitted successfully',
-            data: result,
+            message: fields['certificate'] ? (fields['selectedTemplate'] ? 'Feedback submitted successfully. Your event participation certificate has been issued.' : 'Thank you! Your event participation certificate has been issued.') : 'Form submitted successfully',
+            // data: result,
             certificateId: certificateId || undefined,
             status: 'success'
         });
