@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import { update } from "./ToastConfig";
 
 // create user 
-export const createUser = async (data: Data) => {
+export const createUser = async (data: Data, method?: "PATCH") => {
     try {
         const os = await import('os')
         const hostname = os.hostname();
@@ -178,7 +178,7 @@ export const imagesInFolder = async (folderName: string, imageLinks: string[]) =
 }
 
 // create a new post
-export const createNew = async (data: Data, route: string, setIsDisabled?: React.Dispatch<React.SetStateAction<boolean>>) => {
+export const createNew = async (data: Data, route: string, setIsDisabled?: React.Dispatch<React.SetStateAction<boolean>>, method?: "PATCH") => {
     const Toast = toast.loading('Please wait')
     try {
         const session = await currentSession() as Session;
@@ -216,7 +216,7 @@ export const createNew = async (data: Data, route: string, setIsDisabled?: React
         };
 
         const response = await fetch(`/api/${route}`, {
-            method: "POST",
+            method:  method || "POST",
             headers: {
                 'Content-Type': 'application/json'
             },

@@ -34,3 +34,41 @@ export const POST = async (request: NextRequest) => {
 
     }
 }
+
+export const PATCH = async (request: NextRequest) => {
+    try {
+        const session = await currentSession() as Session;
+        if (!session) return NextResponse.json({ message: 'Please login' }, { status: 401 })
+        const user = await Users.findOne({ username: session?.user?.username })
+
+        if (['user'].includes(user.role)) return NextResponse.json({ message: 'Your are not Authorized!' }, { status: 401 })
+
+        const {
+            fileId,
+            permissionId,
+            role
+        } = await request.json();
+
+        const drive = google.drive({ version: 'v3', auth: await auth(['https://www.googleapis.com/auth/drive.file']) });
+
+        await drive.permissions.update({
+            fileId: fileId,
+            permissionId: permissionId,
+            requestBody: {
+                role: role
+            }
+        });
+
+        return NextResponse.json({ 
+            message: 'Role updated successfully!', 
+            status: 'success' 
+        });
+
+    } catch (error: any) {
+        console.log((error as Data).message)
+        return NextResponse.json({ 
+            error: 'Failed to update role!', 
+            status: 'error' 
+        }, { status: 500 })
+    }
+}

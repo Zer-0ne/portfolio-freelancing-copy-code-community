@@ -479,6 +479,38 @@ export const Container = ({ children, customStyle }: { children: React.ReactNode
     )
 }
 
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Separator } from '@/components/ui/separator';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { toast } from 'sonner';
+import { Share2, Users, Mail, Trash2, Crown, UserCheck, Eye, Edit, Settings, Shield } from 'lucide-react';
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from '@/components/ui/tooltip';
+
 export const ShareDocModal = ({
     open,
     setOpen,
@@ -488,89 +520,351 @@ export const ShareDocModal = ({
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
     forms: FormStructure;
 }) => {
-    const [data, setData] = useState<Data>()
+    const [data, setData] = useState<Data>({});
     const [accessPeople, setAccessPeople] = useState<{
         id: string;
         role: string;
         emailAddress: string;
-    }[]>()
+    }[]>([]);
+    const [loading, setLoading] = useState(false);
+    const [fetchingPermissions, setFetchingPermissions] = useState(true);
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setData((prev) => ({ ...prev, [name]: value }));
-    }
-    const fetch = async () => {
-        const { getData } = await import('@/utils/FetchFromApi')
-        setAccessPeople(await getData('/api/drive/permissions/list', {
-            fileId: forms.sheetId
-        }))
-    }
+    };
+
+    const handleSelectChange = (name: string, value: string) => {
+        setData((prev) => ({ ...prev, [name]: value }));
+    };
+
+    const fetchPermissions = async () => {
+        if (!forms.sheetId) return;
+        setFetchingPermissions(true);
+        try {
+            const { getData } = await import('@/utils/FetchFromApi');
+            const permissions = await getData('/api/drive/permissions/list', {
+                fileId: forms.sheetId
+            });
+            setAccessPeople(permissions || []);
+        } catch (error) {
+            console.error('Failed to fetch permissions:', error);
+            toast.error('Failed to load permissions');
+        } finally {
+            setFetchingPermissions(false);
+        }
+    };
+
     useEffect(() => {
-        fetch()
-    }, [])
+        if (open && forms.sheetId) {
+            fetchPermissions();
+        }
+    }, [open, forms.sheetId]);
+
+    const getRoleIcon = (role: string) => {
+        switch (role) {
+            case 'owner': return <Crown className="w-3 h-3 sm:w-4 sm:h-4 text-yellow-500" />;
+            case 'organizer': return <Shield className="w-3 h-3 sm:w-4 sm:h-4 text-purple-500" />;
+            case 'fileOrganizer': return <Settings className="w-3 h-3 sm:w-4 sm:h-4 text-blue-500" />;
+            case 'writer': return <Edit className="w-3 h-3 sm:w-4 sm:h-4 text-green-500" />;
+            case 'commenter': return <UserCheck className="w-3 h-3 sm:w-4 sm:h-4 text-orange-500" />;
+            case 'reader': return <Eye className="w-3 h-3 sm:w-4 sm:h-4 text-gray-500" />;
+            default: return <Eye className="w-3 h-3 sm:w-4 sm:h-4 text-gray-500" />;
+        }
+    };
+
+    const getRoleBadgeVariant = (role: string) => {
+        switch (role) {
+            case 'owner': return 'default';
+            case 'organizer': return 'secondary';
+            case 'fileOrganizer': return 'outline';
+            case 'writer': return 'destructive';
+            case 'commenter': return 'secondary';
+            case 'reader': return 'outline';
+            default: return 'outline';
+        }
+    };
+
+    const handleShare = async () => {
+        if (!data.emailAddress || !data.role) {
+            toast.error('Please enter an email address and select a role');
+            return;
+        }
+
+        setLoading(true);
+        try {
+            const { sharePermission } = await import('@/utils/FetchFromApi');
+            await sharePermission({
+                fileId: forms?.sheetId,
+                emailAddress: data?.emailAddress,
+                role: data?.role
+            });
+            toast.success('Permission granted successfully!');
+            setData({});
+            await fetchPermissions();
+        } catch (error) {
+            toast.error('Failed to share document');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleRoleUpdate = async (permissionId: string, emailAddress: string, newRole: string) => {
+        setLoading(true);
+        try {
+            const { createNew } = await import('@/utils/FetchFromApi');
+            await createNew({
+                fileId: forms.sheetId,
+                permissionId: permissionId,
+                emailAddress: emailAddress,
+                role: newRole
+            }, 'drive/permissions/', undefined, 'PATCH');
+            
+            toast.success(`Role updated successfully for ${emailAddress}`);
+            await fetchPermissions();
+        } catch (error) {
+            console.error('Failed to update role:', error);
+            toast.error('Failed to update role');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleRemoveAccess = async (permissionId: string, email: string) => {
+        setLoading(true);
+        try {
+            const { createNew } = await import('@/utils/FetchFromApi');
+            await createNew({
+                permissionId: permissionId,
+                emailAddress: email,
+                fileId: forms.sheetId
+            }, 'drive/permissions/delete');
+            toast.success(`Access removed for ${email}`);
+            await fetchPermissions();
+        } catch (error) {
+            toast.error('Failed to remove access');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const roleOptions = [
+        { value: 'reader', label: 'Viewer', description: 'Can view and comment' },
+        { value: 'commenter', label: 'Commenter', description: 'Can view and comment' },
+        { value: 'writer', label: 'Editor', description: 'Can edit, comment, and view' },
+        { value: 'fileOrganizer', label: 'File Organizer', description: 'Can organize files and folders' },
+        { value: 'organizer', label: 'Organizer', description: 'Full access except ownership' }
+    ];
 
     return (
-        <CustomModal open={open} setOpen={setOpen}>
-            <div className='flex flex-1 flex-wrap flex-col gap-3'>
-                <h2 style={{ fontSize: 24 }} className='font-bold !text-[24px]'>Share "{forms?.title}"</h2>
-                <input type="text" name='emailAddress' className='!w-[100%]' onChange={handleChange} placeholder='Enter the email...' style={{ ...styles.customInput() }} />
-                {accessPeople && (
-                    <div className='flex flex-1 w-[100%] z-10 flex-col px-1 gap-2'>
-                        <h3 className='capitalize text-[1rem] font-semibold mt-3'>People with access</h3>
-                        {accessPeople?.map((people, index) => (
-                            <div className={`relative ${(people?.role === 'owner') ? 'hidden' : 'flex'} flex-1 justify-between overflow-visible gap-1 opacity-70 items-center`} key={index}>
-                                <p className='truncate flex-1'>{people.emailAddress}</p>
-                                <div onClick={() => setData(data => ({ ...data, ['emailAddress']: people.emailAddress }))}>
-                                    <DropDown
-                                        values={['reader', 'commenter', 'writer', 'fileOrganizer', 'organizer'] as DrivePermissionRole[]}
-                                        name='role'
-                                        placeholder={people?.role as string}
-                                        onChange={setData}
-                                    />
-                                </div>
-                                <button
-                                    onClick={async () => {
-                                        const { createNew } = await import('@/utils/FetchFromApi');
-                                        await createNew({
-                                            permissionId: people.id,
-                                            fileId: forms.sheetId
-                                        }, 'drive/permissions/delete')
-                                        await fetch()
-                                    }}
-                                    className={`hover:text-[red] transition-all delay-300 ease-in-out after:content-['Remove_Access'] relative after:absolute after:-bottom-[40px] after:-translate-x-[70%] after:scale-0 after:backdrop-blur-sm after:bg-[rgb(0, 0, 0)] after:rounded-[5px] after:text-white after:px-[6px] after:py-[6px] after:text-[10px] after:capitalize after:opacity-0 hover:after:-translate-x-[80%] after:transition-all after:delay-300 after:ease-in-out hover:after:scale-100 hover:after:opacity-100 after:border-[1px] after:border-[rgba(255, 255, 255, 0.125)]`}
-                                >
-                                    <DoDisturbIcon />
-                                </button>
-                            </div>
-                        ))}
+        <Dialog open={open} onOpenChange={setOpen}>
+            <DialogContent className="w-[95vw] max-w-[95vw] sm:max-w-lg md:max-w-2xl h-[60vh] sm:max-h-[80vh] flex flex-col border border-white/20 bg-black/20 backdrop-blur-sm backdrop-saturate-[187%] rounded-xl shadow-lg mx-2 sm:mx-auto">
+                <DialogHeader className="space-y-2 sm:space-y-3 px-2 sm:px-0 flex-shrink-0">
+                    <div className="flex items-center space-x-2 sm:space-x-3">
+                        <div className="p-1.5 sm:p-2 bg-primary/10 rounded-full">
+                            <Share2 className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+                        </div>
+                        <div className="flex-1">
+                            <DialogTitle className="text-lg sm:text-xl md:text-2xl font-semibold text-foreground">
+                                Share Document
+                            </DialogTitle>
+                            <DialogDescription className="text-sm text-muted-foreground line-clamp-2">
+                                Share "{forms?.title}" with others
+                            </DialogDescription>
+                        </div>
                     </div>
-                )}
-                <DropDown
-                    values={['reader', 'commenter', 'writer', 'fileOrganizer', 'organizer'] as DrivePermissionRole[]}
-                    name='role'
-                    placeholder='Enter the permission'
-                    onChange={setData}
-                    valuesStyles={{ maxHeight: '50px' }}
-                />
-                <div className='flex self-end my-2 gap-2'>
-                    <button className='self-end' onClick={() => setOpen(prev => !prev)} style={{ padding: 5 }}>Cancel</button>
-                    <button
-                        style={{ padding: '5px 10px' }}
-                        onClick={async () => {
-                            const { sharePermission } = await import('@/utils/FetchFromApi')
-                            await sharePermission({
-                                fileId: forms?.sheetId,
-                                emailAddress: data?.emailAddress,
-                                role: data?.role
-                            });
-                            setOpen(prev => !prev)
-                        }}
-                        className='mx-2 !p-[10px] rounded bg-[green]'
-                    >Send</button>
+                </DialogHeader>
+
+                {/* Scrollable Content */}
+                <div className="flex-1 overflow-hidden px-2 sm:px-0">
+                    <div className="h-full overflow-y-auto space-y-4 sm:space-y-6 pr-2" 
+                         style={{ 
+                             WebkitOverflowScrolling: 'touch',
+                             scrollbarWidth: 'thin'
+                         }}>
+                        
+                        {/* Share Input Section */}
+                        <div className="space-y-3 sm:space-y-4">
+                            <div className="space-y-2">
+                                <Label htmlFor="email" className="text-sm font-medium text-foreground">
+                                    Add people
+                                </Label>
+                                {/* Mobile: Stack vertically with flex-wrap, Desktop: Horizontal */}
+                                <div className="flex flex-wrap gap-2 sm:flex-nowrap sm:gap-2">
+                                    <div className="relative flex-1 min-w-0 w-full sm:w-auto">
+                                        <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                                        <Input
+                                            id="email"
+                                            name="emailAddress"
+                                            type="email"
+                                            placeholder="Enter email address"
+                                            value={data.emailAddress as string || ''}
+                                            onChange={handleChange}
+                                            className="pl-10 h-10 sm:h-auto bg-input/50 border-border focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/20 w-full"
+                                        />
+                                    </div>
+                                    <Select
+                                        value={data.role as string || ''}
+                                        onValueChange={(value) => handleSelectChange('role', value)}
+                                    >
+                                        <SelectTrigger className="w-full sm:w-40 h-10 sm:h-auto bg-input/50 border-border focus:border-primary focus:ring-2 focus:ring-primary/20">
+                                            <SelectValue placeholder="Select role" />
+                                        </SelectTrigger>
+                                        <SelectContent className="bg-popover border-border max-w-[90vw] sm:max-w-none z-50">
+                                            {roleOptions.map((option) => (
+                                                <SelectItem key={option.value} value={option.value}>
+                                                    <div className="flex items-center space-x-2">
+                                                        {getRoleIcon(option.value)}
+                                                        <div>
+                                                            <div className="font-medium text-sm">{option.label}</div>
+                                                            <div className="text-xs text-muted-foreground hidden sm:block">
+                                                                {option.description}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                            </div>
+                            <Button
+                                onClick={handleShare}
+                                disabled={loading || !data.emailAddress || !data.role}
+                                className="w-full h-10 bg-primary hover:bg-primary/90 text-primary-foreground"
+                            >
+                                {loading ? 'Sharing...' : 'Share'}
+                            </Button>
+                        </div>
+
+                        <Separator />
+
+                        {/* People with Access Section */}
+                        <div className="space-y-3  sm:space-y-4 pb-4">
+                            <div className="flex items-center space-x-2">
+                                <Users className="w-4 h-4 text-muted-foreground" />
+                                <h3 className="text-sm font-medium text-foreground">
+                                    People with access ({accessPeople.length})
+                                </h3>
+                            </div>
+
+                            {fetchingPermissions ? (
+                                <div className="space-y-3">
+                                    {[1, 2, 3].map((i) => (
+                                        <div key={i} className="flex items-center space-x-3 p-3 bg-muted/50 rounded-lg animate-pulse">
+                                            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-muted rounded-full shrink-0" />
+                                            <div className="flex-1 space-y-2">
+                                                <div className="h-3 sm:h-4 bg-muted rounded w-1/2" />
+                                                <div className="h-2 sm:h-3 bg-muted rounded w-1/3" />
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="space-y-2 !overflow-y-auto">
+                                    {accessPeople?.map((person, index) => (
+                                        <Card key={index} className={`transition-all duration-200 hover:shadow-md ${person.role === 'owner' ? 'bg-primary/5 border-primary/20' : 'bg-card hover:bg-muted/50'}`}>
+                                            <CardContent className="p-3 sm:p-4">
+                                                <div className="flex flex-col space-y-3 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
+                                                    <div className="flex items-center space-x-2 sm:space-x-3 flex-1 min-w-0">
+                                                        <Avatar className="w-8 h-8 sm:w-10 sm:h-10 shrink-0">
+                                                            <AvatarFallback className="bg-primary/10 text-primary font-medium text-sm">
+                                                                {person.emailAddress.charAt(0).toUpperCase()}
+                                                            </AvatarFallback>
+                                                        </Avatar>
+                                                        <div className="flex-1 min-w-0">
+                                                            <p className="text-sm font-medium text-foreground truncate">
+                                                                {person.emailAddress}
+                                                            </p>
+                                                            <div className="flex items-center space-x-2 mt-1">
+                                                                {getRoleIcon(person.role)}
+                                                                <Badge
+                                                                    variant={getRoleBadgeVariant(person.role)}
+                                                                    className="text-xs"
+                                                                >
+                                                                    {person.role}
+                                                                </Badge>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Actions with flex-wrap */}
+                                                    <div className="flex flex-wrap items-center gap-2 justify-end sm:justify-start w-full sm:w-auto">
+                                                        {person.role !== 'owner' && (
+                                                            <>
+                                                                <Select
+                                                                    value={person.role}
+                                                                    onValueChange={(newRole) => {
+                                                                        if (newRole !== person.role) {
+                                                                            handleRoleUpdate(person.id, person.emailAddress, newRole);
+                                                                        }
+                                                                    }}
+                                                                    disabled={loading}
+                                                                >
+                                                                    <SelectTrigger className="w-28 sm:w-32 h-8 text-xs bg-background border-border">
+                                                                        <SelectValue />
+                                                                    </SelectTrigger>
+                                                                    <SelectContent className="bg-popover border-border max-w-[80vw] sm:max-w-none z-50">
+                                                                        {roleOptions.map((option) => (
+                                                                            <SelectItem key={option.value} value={option.value}>
+                                                                                <div className="flex items-center space-x-2">
+                                                                                    {getRoleIcon(option.value)}
+                                                                                    <span className="text-xs">{option.label}</span>
+                                                                                </div>
+                                                                            </SelectItem>
+                                                                        ))}
+                                                                    </SelectContent>
+                                                                </Select>
+
+                                                                <TooltipProvider>
+                                                                    <Tooltip>
+                                                                        <TooltipTrigger asChild>
+                                                                            <Button
+                                                                                variant="ghost"
+                                                                                size="sm"
+                                                                                onClick={() => handleRemoveAccess(person.id, person.emailAddress)}
+                                                                                disabled={loading}
+                                                                                className="h-8 w-8 p-0 text-destructive hover:text-destructive hover:bg-destructive/10 shrink-0"
+                                                                            >
+                                                                                <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
+                                                                            </Button>
+                                                                        </TooltipTrigger>
+                                                                        <TooltipContent>
+                                                                            Remove access
+                                                                        </TooltipContent>
+                                                                    </Tooltip>
+                                                                </TooltipProvider>
+                                                            </>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </CardContent>
+                                        </Card>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </CustomModal>
-    )
-}
+
+                <DialogFooter className="flex flex-col-reverse sm:flex-row sm:justify-between gap-3 sm:gap-0 px-2 sm:px-0 flex-shrink-0 pt-4 border-t border-border/50">
+                    <div className="flex items-center justify-center sm:justify-start text-xs text-muted-foreground">
+                        <Shield className="w-3 h-3 mr-1" />
+                        Data is shared securely via Google Drive
+                    </div>
+                    <Button 
+                        variant="outline" 
+                        onClick={() => setOpen(false)}
+                        className="w-full sm:w-auto h-9"
+                    >
+                        Close
+                    </Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    );
+};
+
 
 export const TemplateManagementModal = ({
     open,
