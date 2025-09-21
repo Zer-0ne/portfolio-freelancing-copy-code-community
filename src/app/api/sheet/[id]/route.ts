@@ -22,7 +22,7 @@ export const DELETE = async (request: NextRequest, { params }: any) => {
         // check the user is admin and moderator or not 
         const user = await Users.findOne({ username: session?.user?.username })
         if (['user'].includes(user?.role)) return NextResponse.json({ message: 'Your are not Authorized!', status: 'error' }, { status: 401 })
-        const { id } = params;
+        const { id } = await params;
         const drive = google.drive({ version: 'v3', auth: await auth() });
         await drive.files.delete({ fileId: id });
         return NextResponse.json({ message: 'File deleted successfully' }, { status: 200 });
@@ -61,7 +61,7 @@ export const GET = async (request: NextRequest, { params }: any) => {
 
         // Prepare and send the binary file directly in the response
         const excelBuffer = Buffer.from(response.data as ArrayBuffer);
-        return new NextResponse(excelBuffer, {
+        return new NextResponse(excelBuffer as any, {
             headers: {
                 'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
                 'Content-Disposition': `attachment; filename="spreadsheet.xlsx"`,

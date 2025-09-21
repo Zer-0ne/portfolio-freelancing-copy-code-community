@@ -53,20 +53,23 @@ export default function RootLayout({
 
 }) {
   return (
-    <html lang="en" className='h-screen'>
+    <html lang="en" className='h-screen dark'>
       <head>
       </head>
       <body
         style={{
           // overscrollBehavior: 'none'
         }}
-        className={`${inter.className} !m-0`}  >
+        className={`${inter.className} !m-0  `}  >
         <NextAuthProvider>
           <ThemeProvider
             attribute="class"
             // defaultTheme="system"
+            // defaultTheme="dark"
             defaultTheme="dark"
-            enableSystem
+            forcedTheme="dark"
+            enableSystem={false}
+            disableTransitionOnChange={false}
           >
             <ReduxProdiver>
               <Navbar />

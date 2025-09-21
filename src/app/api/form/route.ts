@@ -346,7 +346,7 @@ export const POST = async (request: NextRequest) => {
         return NextResponse.json({
             // message: fields['selectedTemplate'] ? 'Created successfully' : 'Created successfully',
             message: fields['certificate'] ? (fields['selectedTemplate'] ? 'Feedback submitted successfully. Your event participation certificate has been issued.' : 'Thank you! Your event participation certificate has been issued.') : 'Form submitted successfully',
-            // data: result,
+            data: result,
             certificateId: certificateId || undefined,
             status: 'success'
         });

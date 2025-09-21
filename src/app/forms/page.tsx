@@ -32,17 +32,31 @@ const Page = () => {
       const { realTimeDatabase } = await import('@/utils/Firebase')
       const snapshot = await get(child(ref(realTimeDatabase), `forms/`))
       if (snapshot.exists()) {
-        setData(Object.values(snapshot.val()) || [])
+        const allForms: FormStructure[] = Object.values(snapshot.val()) || []
+        
+        // Filter forms based on user role
+        if (session?.[0] && ['admin', 'moderator'].includes(session[0]?.role)) {
+          // Admin/Moderator can see all forms
+          setData(allForms)
+        } else {
+          // Regular users (including no session) can only see forms that are accepting responses
+          const acceptingForms = allForms.filter((form: FormStructure) => form['Accepting Response'] === true)
+          setData(acceptingForms)
+        }
       }
     }
+    
+    // Fetch forms even if no session
     fetchForms()
-  }, [])
+  }, [session])
+
+  const isAdminOrModerator = session?.[0] && ['admin', 'moderator'].includes(session[0]?.role)
 
   return (
     <div className="min-h-screen text-gray-100">
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-wrap gap-6 justify-center">
-          {['admin', 'moderator'].includes(session[0]?.role) && (
+          {isAdminOrModerator && (
             <Link
               href={`/forms/create/${Date.now()}`}
               className="flex items-center justify-center rounded-xl p-6 border-2 border-dashed border-green-500/40 bg-white/5 dark:bg-black/10 backdrop-blur-lg hover:bg-white/10 dark:hover:bg-black/20 transition-all duration-300 ease-in-out text-green-400 font-medium text-lg basis-[250px] grow-0 shrink-0 shadow-lg hover:shadow-xl"
@@ -51,7 +65,7 @@ const Page = () => {
             </Link>
           )}
           {data.map((item, index) => (
-            <FormCard key={index} item={item} session={session} />
+            <FormCard key={`${item._id}-${index}`} item={item} session={session} setData={setData} />
           ))}
         </div>
       </div>
@@ -63,11 +77,12 @@ export default Page
 
 interface FormCardProps {
   item: FormStructure
-  session: any
+  session: any[]
+  setData: React.Dispatch<React.SetStateAction<FormStructure[]>>
 }
 
-const FormCard: React.FC<FormCardProps> = ({ item, session }) => {
-  const [isAccepting, setIsAccepting] = useState<boolean>(item['Accepting Response'])
+const FormCard: React.FC<FormCardProps> = ({ item, session, setData }) => {
+  const [isAccepting, setIsAccepting] = useState<boolean>(item['Accepting Response'] ?? false)
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
   const [confirmText, setConfirmText] = useState<string>('')
 
@@ -77,7 +92,7 @@ const FormCard: React.FC<FormCardProps> = ({ item, session }) => {
 
   useEffect(() => {
     const write = async () => {
-      if (!['admin', 'moderator'].includes(session[0]?.role)) return
+      if (!session?.[0] || !['admin', 'moderator'].includes(session[0]?.role)) return
       const { set, ref, get, child } = await import('firebase/database')
       const { realTimeDatabase } = await import('@/utils/Firebase')
       const snapshot = await get(child(ref(realTimeDatabase), `forms/${item._id}`))
@@ -99,22 +114,35 @@ const FormCard: React.FC<FormCardProps> = ({ item, session }) => {
 
     const Toast = toast.loading('Deleting form...')
     try {
-      if (!['admin', 'moderator'].includes(session[0]?.role)) {
+      if (!session?.[0] || !['admin', 'moderator'].includes(session[0]?.role)) {
         throw new Error('You are not authorized')
       }
-
-      const response = await fetch(`/api/sheet/${item?.sheetId}`, {
-        method: 'DELETE',
-      })
-      if (!response.ok) {
-        const errorMessage = await response.text()
-        throw new Error(`Failed to delete sheet: ${errorMessage}`)
+      if (item.sheetId) {
+        const response = await fetch(`/api/sheet/${item?.sheetId}`, {
+          method: 'DELETE',
+        })
+        if (!response.ok) {
+          const errorMessage = await response.text()
+          throw new Error(`Failed to delete sheet: ${errorMessage}`)
+        }
+      }
+      if (item.folderId) {
+        const response = await fetch(`/api/drive/files/${item?.folderId}`, {
+          method: 'DELETE',
+        })
+        if (!response.ok) {
+          const errorMessage = await response.text()
+          throw new Error(`Failed to delete folder: ${errorMessage}`)
+        }
       }
 
       const { realTimeDatabase } = await import('@/utils/Firebase')
       const { ref, remove } = await import('firebase/database')
       const formsRef = ref(realTimeDatabase, `forms/${item._id}`)
       await remove(formsRef)
+
+      // Update local state to remove deleted form
+      setData(prevData => prevData.filter(form => form._id !== item._id))
 
       toast.update(Toast, update('Form deleted successfully!', 'success'))
       setIsDialogOpen(false)
@@ -125,12 +153,21 @@ const FormCard: React.FC<FormCardProps> = ({ item, session }) => {
     }
   }
 
+  const isAdminOrModerator = session?.[0] && ['admin', 'moderator'].includes(session[0]?.role)
+
   return (
     <div className="relative flex flex-col bg-white/5 dark:bg-black/10 backdrop-blur-lg hover:bg-white/10 dark:hover:bg-black/20 transition-all duration-300 ease-in-out basis-[250px] grow-0 shrink-0 shadow-lg hover:shadow-xl">
       {/* Header Section: Actions and Toggle */}
-      <div className={`flex justify-between ${session[0] && ['admin', 'moderator'].includes(session[0]?.role) && 'rounded-xl border-2 border-dashed p-6 py-1 rounded-b-none '} items-center mb-4`}>
+      <div className={`flex justify-between ${isAdminOrModerator && 'rounded-xl border-2 border-dashed p-6 py-1 rounded-b-none '} items-center mb-4 relative`}>
+        {/* Closed badge - positioned to not overlap with toggle */}
+        {isAdminOrModerator && !isAccepting && (
+          <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 bg-red-500 text-white text-xs px-2 py-1 rounded-full z-10">
+            Closed
+          </div>
+        )}
+        
         {/* Actions for Admins/Moderators */}
-        {session[0] && ['admin', 'moderator'].includes(session[0]?.role) && (
+        {isAdminOrModerator && (
           <div className="flex gap-2 items-center">
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <DialogTrigger asChild>
@@ -184,8 +221,9 @@ const FormCard: React.FC<FormCardProps> = ({ item, session }) => {
             </Link>
           </div>
         )}
-        {/* Toggle Switch */}
-        {['admin', 'moderator'].includes(session[0]?.role) && (
+        
+        {/* Toggle Switch - Only for Admin/Moderator */}
+        {isAdminOrModerator && (
           <Switch
             checked={isAccepting}
             onCheckedChange={handleToggle}
@@ -195,7 +233,10 @@ const FormCard: React.FC<FormCardProps> = ({ item, session }) => {
       </div>
 
       {/* Form Title Link */}
-      <Link href={`forms/${item._id}`} className={`justify-center hover:text-green-400 transition-colors duration-200 flex-1 rounded-xl p-6 border-2 border-dashed border-white/20  ${session[0] && ['admin', 'moderator'].includes(session[0]?.role) && 'rounded-t-none'} w-full text-center`}>
+      <Link 
+        href={`forms/${item._id}`} 
+        className={`justify-center hover:text-green-400 transition-colors duration-200 flex-1 rounded-xl p-6 border-2 border-dashed border-white/20 ${isAdminOrModerator && 'rounded-t-none'} w-full text-center`}
+      >
         <div className="text-gray-100 font-semibold text-lg hover:text-green-400 transition-colors duration-200">
           {item.title as string}
         </div>
