@@ -2,7 +2,7 @@ import { Data, DrivePermissionRole, EventsInterface, FormField, FormStructure, C
 import { colors } from '@/utils/colors'
 import { styles } from '@/utils/styles'
 import dynamic from 'next/dynamic'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { AppDispatch, RootState } from '@/store/store'
 import { useDispatch, useSelector } from 'react-redux'
 import { Box } from '@mui/material'
@@ -380,7 +380,7 @@ const Forms = ({
                             zIndex: 1,
                             display: 'flex',
                             flexWrap: 'wrap',
-                        }} className='flex !mx-2 sticky top-40 gap-3 w-full justify-center items-stretch flex-1'>
+                        }} className='flex !mx-2 sticky top-40 gap-3 w-full justify-center  items-stretch flex-1'>
                             <ShareDocModal open={openShareModal} setOpen={setOpenShareModal} forms={forms} />
                             <button type='button' style={{
                                 padding: '10px 20px',
@@ -619,7 +619,7 @@ export const ShareDocModal = ({
                 emailAddress: emailAddress,
                 role: newRole
             }, 'drive/permissions/', undefined, 'PATCH');
-            
+
             toast.success(`Role updated successfully for ${emailAddress}`);
             await fetchPermissions();
         } catch (error) {
@@ -677,12 +677,12 @@ export const ShareDocModal = ({
 
                 {/* Scrollable Content */}
                 <div className="flex-1 overflow-hidden px-2 sm:px-0">
-                    <div className="h-full overflow-y-auto space-y-4 sm:space-y-6 pr-2" 
-                         style={{ 
-                             WebkitOverflowScrolling: 'touch',
-                             scrollbarWidth: 'thin'
-                         }}>
-                        
+                    <div className="h-full overflow-y-auto space-y-4 sm:space-y-6 pr-2"
+                        style={{
+                            WebkitOverflowScrolling: 'touch',
+                            scrollbarWidth: 'thin'
+                        }}>
+
                         {/* Share Input Section */}
                         <div className="space-y-3 sm:space-y-4">
                             <div className="space-y-2">
@@ -769,7 +769,7 @@ export const ShareDocModal = ({
                                                     <div className="flex items-center space-x-2 sm:space-x-3 flex-1 min-w-0">
                                                         <Avatar className="w-8 h-8 sm:w-10 sm:h-10 shrink-0">
                                                             <AvatarFallback className="bg-primary/10 text-primary font-medium text-sm">
-                                                                {person.emailAddress.charAt(0).toUpperCase()}
+                                                                {person.emailAddress?.charAt(0).toUpperCase()}
                                                             </AvatarFallback>
                                                         </Avatar>
                                                         <div className="flex-1 min-w-0">
@@ -852,8 +852,8 @@ export const ShareDocModal = ({
                         <Shield className="w-3 h-3 mr-1" />
                         Data is shared securely via Google Drive
                     </div>
-                    <Button 
-                        variant="outline" 
+                    <Button
+                        variant="outline"
                         onClick={() => setOpen(false)}
                         className="w-full sm:w-auto h-9"
                     >
@@ -865,6 +865,32 @@ export const ShareDocModal = ({
     );
 };
 
+
+import {
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+} from '@/components/ui/card';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
+import {
+    FileImage,
+    Check,
+    AlertCircle,
+    Upload,
+    X,
+} from 'lucide-react';
+import Link from 'next/link'
 
 export const TemplateManagementModal = ({
     open,
@@ -885,26 +911,23 @@ export const TemplateManagementModal = ({
 }) => {
     const [uploading, setUploading] = useState(false);
     const [newTemplate, setNewTemplate] = useState<File | null>(null);
-    const fileInputRef = React.useRef<HTMLInputElement>(null);
-
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files && e.target.files.length > 0) {
-            setNewTemplate(e.target.files[0]);
-        }
-    };
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     const deleteTemplate = async (templateId: string) => {
         try {
             const { deletePost } = await import('@/utils/FetchFromApi');
             await deletePost(templateId, 'certificate-template/');
             setTemplates(prev => prev.filter(template => template._id !== templateId));
+
             if (selectedTemplate === templateId) {
                 setSelectedTemplate('');
                 const { realTimeDatabase } = await import('@/utils/Firebase');
                 await set(ref(realTimeDatabase, `forms/${formId}/selectedTemplate`), null);
             }
+            toast.success('Template deleted successfully');
         } catch (error) {
             console.error('Error deleting template:', error);
+            toast.error('Failed to delete template');
         }
     };
 
@@ -914,73 +937,221 @@ export const TemplateManagementModal = ({
             if (selectedTemplate === templateId) {
                 setSelectedTemplate('');
                 await set(ref(realTimeDatabase, `forms/${formId}/selectedTemplate`), null);
+                toast.success('Template deselected');
             } else {
                 setSelectedTemplate(templateId);
                 await set(ref(realTimeDatabase, `forms/${formId}/selectedTemplate`), templateId);
+                toast.success('Template selected');
             }
         } catch (error) {
             console.error('Error updating Firebase:', error);
+            toast.error('Failed to update selection');
         }
     };
 
+    const getTemplateDisplayName = (url: string, id: string) => {
+        const filename = url.split('/').pop()?.split('?')[0];
+        return filename || `Template ${id.slice(-6)}`;
+    };
+
     return (
-        <CustomModal open={open} setOpen={setOpen}>
-            <div className='flex flex-col gap-4 max-h-[70vh] overflow-auto w-full'>
-                <h2 className='text-2xl font-bold'>Certificate Template Management</h2>
-                <div>
-                    <h3 className='text-lg font-semibold mb-3'>Available Templates</h3>
+        <Dialog open={open} onOpenChange={setOpen}>
+            <DialogContent className="max-w-4xl max-h-[85vh] backdrop-blur-sm bg-background/20 backdrop-saturate-[187%] flex flex-col">
+                <DialogHeader>
+                    <div className="flex items-center overflow-auto space-x-2">
+                        <div className="p-2 bg-primary/10 rounded-lg">
+                            <FileImage className="w-5 h-5 text-primary" />
+                        </div>
+                        <div>
+                            <DialogTitle className="text-2xl">
+                                Certificate Templates
+                            </DialogTitle>
+                            <DialogDescription>
+                                Manage and select certificate templates for your form
+                            </DialogDescription>
+                        </div>
+                    </div>
+                </DialogHeader>
+
+                <Separator />
+
+                {/* Content Area */}
+                <div className="flex-1 overflow-auto">
                     {templates.length === 0 ? (
-                        <p className='text-gray-500'>No templates available</p>
+                        <div className="flex-1 flex flex-col items-center justify-center py-12">
+                            <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-4">
+                                <FileImage className="w-8 h-8 text-muted-foreground" />
+                            </div>
+                            <h3 className="text-lg font-semibold mb-2">No templates available</h3>
+                            <p className="text-muted-foreground text-center max-w-md">
+                                Upload your first certificate template to get started with automated certificate generation
+                            </p>
+                            <Link href={'/certificate-editor'} className="mt-4 flex items-center justify-center bg-white rounded-lg p-3 hover:bg-background transition-all duration-300 ease-in-out text-primary-foreground hover:text-primary" >
+                                <Upload className="w-4 h-4 mr-2" />
+                                Upload Template
+                            </Link>
+                        </div>
                     ) : (
-                        <div className='grid grid-cols-2 gap-4'>
-                            {templates.map(template => (
-                                <div
-                                    key={template._id}
-                                    className={`border rounded-lg p-3 flex flex-col cursor-pointer ${selectedTemplate === template._id
-                                        ? 'border-[green] bg-[rgba(0,128,0,0.1)]'
-                                        : 'border-gray-300'
-                                        }`}
-                                    onClick={() => toggleTemplate(template._id)}
-                                >
-                                    <div className='relative'>
-                                        <img
-                                            src={template.templateUrl}
-                                            alt="Certificate Template"
-                                            className='w-full h-32 object-cover rounded'
-                                            onError={(e) => (e.currentTarget.src = '/placeholder.png')}
-                                        />
-                                        <button
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                deleteTemplate(template._id);
-                                            }}
-                                            className='absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 hover:bg-red-600'
-                                        >
-                                            <DeleteIcon />
-                                        </button>
-                                    </div>
-                                    <div className='mt-2 text-sm truncate'>
-                                        {template.templateUrl.split('/').pop()?.split('?')[0] || template._id}
-                                    </div>
-                                    <div className='mt-2 text-center text-sm font-semibold'>
-                                        {selectedTemplate === template._id ? 'Selected' : 'Click to Select'}
+                        <ScrollArea className="h-full pr-4">
+                            <div className="space-y-6">
+                                {/* Stats */}
+                                <div className="flex items-center justify-between">
+                                    <div className="flex items-center space-x-4">
+                                        <div className="text-sm text-muted-foreground">
+                                            {templates.length} template{templates.length !== 1 ? 's' : ''} available
+                                        </div>
+                                        {selectedTemplate && (
+                                            <Badge variant="outline" className="text-green-600 border-green-200">
+                                                <Check className="w-3 h-3 mr-1" />
+                                                Template Selected
+                                            </Badge>
+                                        )}
                                     </div>
                                 </div>
-                            ))}
-                        </div>
+
+                                {/* Templates Grid */}
+                                <div className="grid m-4 pb-8 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                                    {templates.map(template => (
+                                        <Card
+                                            key={template._id}
+                                            className={`group p-2 cursor-pointer transition-all duration-200 hover:shadow-md ${selectedTemplate === template._id
+                                                    ? 'ring-2 ring-offset-green-400 ring-green-600 ring-offset-2 bg-primary/5'
+                                                    : 'hover:bg-muted/50'
+                                                }`}
+                                            onClick={() => toggleTemplate(template._id)}
+                                        >
+                                            <CardHeader className="p-0 relative">
+                                                {/* Image */}
+                                                <div className="aspect-[4/3] relative overflow-hidden rounded-t-lg">
+                                                    <Image
+                                                        src={template.templateUrl}
+                                                        alt="Certificate Template"
+                                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                                        width={100}
+                                                        height={100}
+                                                        quality={1}
+                                                        onError={(e) => {
+                                                            e.currentTarget.src = '/placeholder.png';
+                                                        }}
+                                                        loading="lazy"
+                                                    />
+
+                                                    {/* Selection Badge */}
+                                                    {selectedTemplate === template._id && (
+                                                        <div className="absolute top-3 left-3">
+                                                            <Badge className="bg-primary text-green-600 shadow-md">
+                                                                <Crown className="w-3 h-3 mr-1" />
+                                                                Selected
+                                                            </Badge>
+                                                        </div>
+                                                    )}
+
+                                                    {/* Delete Button */}
+                                                    <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                        <AlertDialog>
+                                                            <AlertDialogTrigger asChild>
+                                                                <Button
+                                                                    variant="destructive"
+                                                                    size="sm"
+                                                                    className="w-8 h-8 p-0 shadow-md"
+                                                                    onClick={(e) => e.stopPropagation()}
+                                                                >
+                                                                    <Trash2 className="w-4 h-4" />
+                                                                </Button>
+                                                            </AlertDialogTrigger>
+                                                            <AlertDialogContent>
+                                                                <AlertDialogHeader>
+                                                                    <AlertDialogTitle>Delete Template</AlertDialogTitle>
+                                                                    <AlertDialogDescription>
+                                                                        Are you sure you want to delete this template?
+                                                                        This action cannot be undone.
+                                                                    </AlertDialogDescription>
+                                                                </AlertDialogHeader>
+                                                                <AlertDialogFooter>
+                                                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                                    <AlertDialogAction
+                                                                        onClick={() => deleteTemplate(template._id)}
+                                                                        className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                                                    >
+                                                                        Delete
+                                                                    </AlertDialogAction>
+                                                                </AlertDialogFooter>
+                                                            </AlertDialogContent>
+                                                        </AlertDialog>
+                                                    </div>
+                                                </div>
+                                            </CardHeader>
+
+                                            <CardContent className="p-4">
+                                                <div className="space-y-2">
+                                                    <CardTitle className="text-sm truncate">
+                                                        {getTemplateDisplayName(template.templateUrl, template._id)}
+                                                    </CardTitle>
+                                                    <CardDescription className="text-xs">
+                                                        Click to {selectedTemplate === template._id ? 'deselect' : 'select'} template
+                                                    </CardDescription>
+                                                </div>
+                                            </CardContent>
+
+                                            <CardFooter className="p-4 pt-0">
+                                                <div className="w-full">
+                                                    {selectedTemplate === template._id ? (
+                                                        <Badge variant="default" className="w-full justify-center">
+                                                            <Check className="w-3 h-3 mr-1" />
+                                                            Active Template
+                                                        </Badge>
+                                                    ) : (
+                                                        <Badge variant="outline" className="w-full justify-center group-hover:border-primary group-hover:text-primary">
+                                                            Select Template
+                                                        </Badge>
+                                                    )}
+                                                </div>
+                                            </CardFooter>
+                                        </Card>
+                                    ))}
+                                </div>
+                            </div>
+                        </ScrollArea>
                     )}
                 </div>
-                <div className='flex justify-end mt-4'>
-                    <button
-                        onClick={() => setOpen(false)}
-                        className='bg-gray-600 text-white py-2 px-4 rounded'
-                    >
-                        Close
-                    </button>
+
+                <Separator />
+
+                {/* Footer */}
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div className="flex items-center text-sm text-muted-foreground">
+                        {selectedTemplate ? (
+                            <div className="flex items-center space-x-2">
+                                <Check className="w-4 h-4 text-green-600" />
+                                <span>Template ready for certificate generation</span>
+                            </div>
+                        ) : (
+                            <div className="flex items-center space-x-2">
+                                <AlertCircle className="w-4 h-4 text-amber-600" />
+                                <span>Select a template to enable certificates</span>
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="flex gap-2">
+                        <Button variant="outline" onClick={() => setOpen(false)}>
+                            Close
+                        </Button>
+                    </div>
                 </div>
-            </div>
-        </CustomModal>
+
+                {/* Hidden file input for future use */}
+                {/* <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    className="hidden"
+                /> */}
+            </DialogContent>
+        </Dialog>
     );
 };
+
 
 export default Forms

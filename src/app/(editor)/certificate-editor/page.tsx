@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { allPost, createNew, allPost as fetchAll, editPost as updatePost } from '@/utils/FetchFromApi';
+import { useMediaQuery, useTheme } from '@mui/material';
 
 // Define Google Fonts
 const roboto = Roboto({ subsets: ['latin'], weight: ['400', '700', '300'] });
@@ -107,6 +108,8 @@ const CertificateEditor: React.FC = () => {
         Object.fromEntries(certificateTypes.map(type => [type, '']))
     );
     const [sampleCertificateType, setSampleCertificateType] = useState('participation');
+    const theme = useTheme();
+    const isDesktop = useMediaQuery(theme.breakpoints.up('lg'));
 
     const fontOptions = [
         'Arial', 'Times New Roman', 'Courier New', 'Georgia', 'Verdana',
@@ -889,6 +892,57 @@ const CertificateEditor: React.FC = () => {
             setIsUploading(false);
         }
     };
+
+    if (!isDesktop) {
+        return (
+             <div className="!my-auto min-h-lvh flex items-center justify-center  p-4">
+                <Card className="max-w-md w-full text-center">
+                    <CardContent className="p-8">
+                        <div className="mb-6">
+                            <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <svg className="w-10 h-10 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                </svg>
+                            </div>
+                            <h2 className="text-2xl font-bold text-primary mb-2">
+                                Desktop Only
+                            </h2>
+                            <p className="text-muted-foreground mb-4">
+                                Certificate Editor requires a desktop or laptop for optimal experience
+                            </p>
+                        </div>
+                        
+                        <div className="space-y-3 text-sm text-muted-foreground">
+                            <div className="flex items-center justify-center space-x-2">
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                </svg>
+                                <span>Better canvas editing experience</span>
+                            </div>
+                            <div className="flex items-center justify-center space-x-2">
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                </svg>
+                                <span>Precise text positioning</span>
+                            </div>
+                            <div className="flex items-center justify-center space-x-2">
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                </svg>
+                                <span>Advanced formatting tools</span>
+                            </div>
+                        </div>
+
+                        <div className="mt-6 p-4 bg-blue-50 rounded-lg">
+                            <p className="text-sm text-blue-800">
+                                💡 Please access this page from a desktop or laptop computer
+                            </p>
+                        </div>
+                    </CardContent>
+                </Card>
+            </div>
+        );
+    }
 
     return (
         <div className={`certificate-editor ${fontMap['Roboto'].className} container mx-auto p-6 max-w-6xl bg-black`}>
