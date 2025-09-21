@@ -82,7 +82,7 @@ const Forms = ({
 
     const handleUpload = async (file: File, name: string) => {
         try {
-            console.log(forms.verifiedUser)
+            // console.log(forms.verifiedUser)
             const { createNew } = await import('@/utils/FetchFromApi');
             const { data } = await createNew(
                 {
@@ -94,7 +94,7 @@ const Forms = ({
                 'drive/files/upload',
                 setIsDisabled
             );
-            console.log('Uploaded file data:', data);
+            // console.log('Uploaded file data:', data);
 
             if (data && data.id) {
                 // Get existing drive data from localStorage
@@ -112,7 +112,7 @@ const Forms = ({
                 // Generate URLs only for files under the current field (name)
                 const fieldFiles = existingDriveData[name] || {};
                 const updatedFiles = Object.keys(fieldFiles).map(fileId => {
-                    console.log('File ID:', fileId); // Logs "1WjGnLJ4Qve053udiIcIlQV8kugnevOYx"
+                    // console.log('File ID:', fileId); // Logs "1WjGnLJ4Qve053udiIcIlQV8kugnevOYx"
                     return `https://drive.google.com/uc?export=view&id=${fileId}`;
                 });
 

@@ -72,7 +72,7 @@ export const POST = async (request: NextRequest) => {
             sheetId,
 
             // check for login requirement
-            isLoginRequired,
+            // isLoginRequired,
 
 
             // We are only sending current user from client side when the certificate is issued by the admin.
@@ -82,7 +82,7 @@ export const POST = async (request: NextRequest) => {
             formId
 
         } = await request.json();
-        if (!session && isLoginRequired) return NextResponse.json({ message: 'Please login' }, { status: 401 });
+        let isLoginRequired=true
         await connect()
         let isAccepting = false;
         const fetch = async () => {
@@ -92,10 +92,12 @@ export const POST = async (request: NextRequest) => {
             const snapshot = await get(child(ref(realTimeDatabase), `forms/${formId}`))
             if (!snapshot.exists()) throw new Error("No such form exists");
             isAccepting = await (snapshot.val())?.['Accepting Response']
+            isLoginRequired = await (snapshot.val())?.['verifiedUser']
         }
         await fetch()
-
-
+        
+        if (!session && isLoginRequired) return NextResponse.json({ message: 'Please login' }, { status: 401 });
+        
         if (!session) {
             const randomUserId = crypto.randomBytes(16).toString("hex");
             session = {
