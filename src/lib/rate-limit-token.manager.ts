@@ -199,7 +199,7 @@ export const dataFetch = async <T>(
                 // });
 
                 const rateLimitError = await response.json();
-                console.log(rateLimitError)
+                // console.log(rateLimitError)
                 // Retry with exponential backoff if attempts remaining
                 // if (attemptNumber < maxRetries) {
                 //     const delay = retryAfter ? parseInt(retryAfter) * 1000 : retryDelay * attemptNumber;
