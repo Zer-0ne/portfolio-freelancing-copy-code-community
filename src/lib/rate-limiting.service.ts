@@ -3,7 +3,7 @@ import { CryptoService } from "@/lib/encryption.service";
 
 // Enhanced multi-window rate limit configuration with burst handling
 const RATE_LIMITS = {
-  SECOND: { windowMs: 1000, maxRequests: 20, burstAllowance: 10 },
+  SECOND: { windowMs: 1000, maxRequests: 20, burstAllowance: 3 },
   MINUTE: { windowMs: 60 * 1000, maxRequests: 100, burstAllowance: 25 },
   TEN_MINUTE: { windowMs: 10 * 60 * 1000, maxRequests: 500, burstAllowance: 50 }
 };
@@ -69,6 +69,14 @@ interface DeviceRateLimitPayload {
   };
 }
 
+// 🔥 NEW: Dynamic cleanup scheduling interface
+interface ScheduledCleanup {
+  deviceFingerprint: string;
+  violationTimestamp: number;
+  cleanupTime: number;
+  violationCount: number;
+}
+
 // Enhanced monitoring and storage
 const usedTokens = new Map<string, { 
   timestamp: number; 
@@ -84,6 +92,12 @@ const circuitBreakers = new Map<string, {
   lastFailure: number;
   nextAttempt: number;
 }>();
+
+// 🚀 DYNAMIC CLEANUP SYSTEM
+const scheduledCleanups: ScheduledCleanup[] = [];
+let cleanupTimeoutId: NodeJS.Timeout | null = null;
+let adaptiveCleanupInterval = 10000; // Start with 10 seconds
+let adaptiveTimeoutId: NodeJS.Timeout | null = null;
 
 // Performance monitoring
 interface SystemMetrics {
@@ -126,11 +140,191 @@ function markTokenAsUsed(tokenHash: string, deviceFingerprint: string, timestamp
   });
 }
 
+// 🚀 DYNAMIC CLEANUP: Schedule individual violation cleanup
+function scheduleViolationCleanup(
+  deviceFingerprint: string, 
+  violationTimestamp: number, 
+  violationCount: number
+): void {
+  
+  // Calculate when this specific violation should be cleaned
+  const backoffDelay = Math.min(
+    Math.pow(SECURITY_CONFIG.EXPONENTIAL_BACKOFF_BASE, violationCount) * 1000,
+    SECURITY_CONFIG.MAX_BACKOFF_MS
+  );
+  
+  const cleanupTime = violationTimestamp + backoffDelay;
+  
+  const scheduledCleanup: ScheduledCleanup = {
+    deviceFingerprint,
+    violationTimestamp,
+    cleanupTime,
+    violationCount
+  };
+  
+  // Insert in sorted order (earliest cleanup first)
+  const insertIndex = scheduledCleanups.findIndex(sc => sc.cleanupTime > cleanupTime);
+  if (insertIndex === -1) {
+    scheduledCleanups.push(scheduledCleanup);
+  } else {
+    scheduledCleanups.splice(insertIndex, 0, scheduledCleanup);
+  }
+  
+  console.log(`⏰ Scheduled cleanup for device in ${Math.ceil(backoffDelay/1000)} seconds`);
+  
+  // Reschedule the cleanup timer with the earliest time
+  rescheduleCleanupTimer();
+}
+
+// 🚀 DYNAMIC TIMER: Adjusts to next cleanup
+function rescheduleCleanupTimer(): void {
+  // Clear existing timer
+  if (cleanupTimeoutId) {
+    clearTimeout(cleanupTimeoutId);
+    cleanupTimeoutId = null;
+  }
+  
+  // Find next cleanup time
+  const now = Date.now();
+  const nextCleanup = scheduledCleanups.find(sc => sc.cleanupTime > now);
+  
+  if (nextCleanup) {
+    const delay = Math.max(100, nextCleanup.cleanupTime - now); // Minimum 100ms
+    
+    cleanupTimeoutId = setTimeout(() => {
+      processDueCleanups();
+    }, delay);
+    
+    console.log(`🔄 Next cleanup scheduled in ${Math.ceil(delay/1000)} seconds`);
+  }
+}
+
+// 🚀 PROCESS DUE CLEANUPS: Handle all expired violations
+function processDueCleanups(): void {
+  const now = Date.now();
+  const dueCleanups: ScheduledCleanup[] = [];
+  
+  // Find all cleanups that are due
+  while (scheduledCleanups.length > 0 && scheduledCleanups[0].cleanupTime <= now) {
+    dueCleanups.push(scheduledCleanups.shift()!);
+  }
+  
+  // Process each due cleanup
+  for (const cleanup of dueCleanups) {
+    cleanupSpecificViolation(cleanup.deviceFingerprint, cleanup.violationTimestamp);
+  }
+  
+  if (dueCleanups.length > 0) {
+    console.log(`🧹 Dynamic cleanup: Processed ${dueCleanups.length} violation cleanups`);
+  }
+  
+  // Schedule next cleanup if any remaining
+  rescheduleCleanupTimer();
+}
+
+// 🚀 CLEAN SPECIFIC VIOLATION: Remove individual violation
+function cleanupSpecificViolation(deviceFingerprint: string, violationTimestamp: number): void {
+  const violations = deviceViolationHistory.get(deviceFingerprint) || [];
+  const filteredViolations = violations.filter(v => v.timestamp !== violationTimestamp);
+  
+  if (filteredViolations.length !== violations.length) {
+    if (filteredViolations.length === 0) {
+      deviceViolationHistory.delete(deviceFingerprint);
+      console.log(`✨ All violations cleared for device ${deviceFingerprint}`);
+    } else {
+      deviceViolationHistory.set(deviceFingerprint, filteredViolations);
+      console.log(`✨ Specific violation cleaned for device ${deviceFingerprint}`);
+    }
+  }
+}
+
+// 🚀 ADAPTIVE INTERVAL: Smart cleanup that adapts to shortest backoff
+function updateAdaptiveCleanupInterval(): void {
+  const now = Date.now();
+  let shortestBackoff = 60000; // Default 1 minute
+  
+  // Find shortest backoff time among all violations
+  for (const [device, violations] of deviceViolationHistory) {
+    for (const violation of violations) {
+      const backoffDelay = Math.min(
+        Math.pow(SECURITY_CONFIG.EXPONENTIAL_BACKOFF_BASE, violation.consecutiveCount) * 1000,
+        SECURITY_CONFIG.MAX_BACKOFF_MS
+      );
+      const remainingTime = (violation.timestamp + backoffDelay) - now;
+      
+      if (remainingTime > 0 && remainingTime < shortestBackoff) {
+        shortestBackoff = remainingTime;
+      }
+    }
+  }
+  
+  // Adaptive interval: 25% of shortest backoff, min 1 second, max 30 seconds
+  const newInterval = Math.max(1000, Math.min(30000, Math.floor(shortestBackoff * 0.25)));
+  
+  if (newInterval !== adaptiveCleanupInterval) {
+    adaptiveCleanupInterval = newInterval;
+    console.log(`🎯 Adaptive cleanup interval updated to ${adaptiveCleanupInterval/1000} seconds`);
+    
+    // Restart with new interval
+    if (adaptiveTimeoutId) {
+      clearTimeout(adaptiveTimeoutId);
+    }
+    startAdaptiveCleanup();
+  }
+}
+
+function startAdaptiveCleanup(): void {
+  adaptiveTimeoutId = setTimeout(() => {
+    cleanupExpiredTokens();
+    
+    // Auto-recovery for circuit breakers
+    const now = Date.now();
+    for (const [device, breaker] of circuitBreakers) {
+      if (breaker.state === CircuitBreakerState.OPEN && 
+          now - breaker.lastFailure > SECURITY_CONFIG.MAX_BACKOFF_MS * 2) {
+        breaker.state = CircuitBreakerState.CLOSED;
+        breaker.failures = 0;
+        circuitBreakers.set(device, breaker);
+        console.log(`🔄 Auto-recovery: Circuit breaker closed for ${device}`);
+      }
+    }
+    
+    // Update interval for next cleanup
+    updateAdaptiveCleanupInterval();
+  }, adaptiveCleanupInterval);
+}
+
+// Real-time violation management
+function isViolationExpired(violation: RateLimitViolation, currentTime: number): boolean {
+  const violationBackoffTime = Math.min(
+    Math.pow(SECURITY_CONFIG.EXPONENTIAL_BACKOFF_BASE, violation.consecutiveCount) * 1000,
+    SECURITY_CONFIG.MAX_BACKOFF_MS
+  );
+  const violationExpiry = violation.timestamp + violationBackoffTime;
+  return currentTime > violationExpiry;
+}
+
+function cleanupExpiredViolations(deviceFingerprint: string, currentTime: number): void {
+  const violations = deviceViolationHistory.get(deviceFingerprint) || [];
+  const activeViolations = violations.filter(v => !isViolationExpired(v, currentTime));
+  
+  if (activeViolations.length !== violations.length) {
+    if (activeViolations.length === 0) {
+      deviceViolationHistory.delete(deviceFingerprint);
+      console.log(`🧹 Real-time cleanup: All violations cleared for device`);
+    } else {
+      deviceViolationHistory.set(deviceFingerprint, activeViolations);
+      console.log(`🧹 Real-time cleanup: ${violations.length - activeViolations.length} violations cleared`);
+    }
+  }
+}
+
 function cleanupExpiredTokens(): void {
   const now = Date.now();
   const expiredTime = now - SECURITY_CONFIG.TOKEN_LIFETIME_MS;
   
   let cleanedCount = 0;
+  let cleanedContexts = 0;
   
   for (const [tokenHash, data] of usedTokens) {
     if (data.timestamp < expiredTime) {
@@ -144,13 +338,14 @@ function cleanupExpiredTokens(): void {
     const filteredViolations = violations.filter(v => v.timestamp > expiredTime);
     if (filteredViolations.length === 0) {
       deviceViolationHistory.delete(device);
+      cleanedContexts++;
     } else {
       deviceViolationHistory.set(device, filteredViolations);
     }
   }
   
-  if (cleanedCount > 0) {
-    console.log(`🧹 Cleanup completed: ${cleanedCount} tokens cleaned`);
+  if (cleanedCount > 0 || cleanedContexts > 0) {
+    console.log(`🧹 Cleanup completed: ${cleanedCount} tokens, ${cleanedContexts} contexts`);
   }
 }
 
@@ -165,6 +360,7 @@ function calculateBackoffDelay(violationCount: number): number {
   return Math.floor(delay + jitter);
 }
 
+// Enhanced suspicious activity detection with real-time cleanup
 function detectSuspiciousActivity(
   payload: DeviceRateLimitPayload, 
   currentTime: number
@@ -173,7 +369,10 @@ function detectSuspiciousActivity(
   const reasons: string[] = [];
   let suspiciousScore = 0;
   
-  // Check for rapid consecutive violations
+  // 🚀 CRITICAL: Clean expired violations BEFORE checking
+  cleanupExpiredViolations(payload.deviceFingerprint, currentTime);
+  
+  // Check for rapid consecutive violations (now with cleaned data)
   const violations = deviceViolationHistory.get(payload.deviceFingerprint) || [];
   const recentViolations = violations.filter(v => currentTime - v.timestamp < 60000);
   
@@ -341,8 +540,6 @@ export async function decryptDeviceData(encryptedData: string): Promise<DeviceRa
     const tokenHash = generateTokenHash(payload.tokenId, payload.deviceFingerprint, payload.timestamp);
     
     if (isTokenUsed(tokenHash)) {
-      // console.log('🚨 TOKEN REUSE DETECTED:', tokenHash);
-      
       const violations = deviceViolationHistory.get(payload.deviceFingerprint) || [];
       violations.push({
         timestamp: now,
@@ -396,6 +593,7 @@ export async function createInitialDeviceToken(
   return await encryptDeviceData(initialPayload);
 }
 
+// 🚀 ENHANCED: Real-time validation with dynamic cleanup
 export async function validateDeviceRateLimit(
   encryptedToken: string,
   deviceFingerprint: string,
@@ -421,19 +619,18 @@ export async function validateDeviceRateLimit(
   
   const now = Date.now();
   
+  // 🔥 CRITICAL: Real-time cleanup before validation
+  cleanupExpiredViolations(deviceFingerprint, now);
+  
   if (requestMetrics) {
     systemMetrics = requestMetrics;
   }
-  
-  // console.log('🔍 Enhanced validation started for device:', deviceFingerprint);
   
   // Check circuit breaker first
   const circuitState = getCircuitBreakerState(deviceFingerprint);
   if (circuitState === CircuitBreakerState.OPEN) {
     const breaker = circuitBreakers.get(deviceFingerprint)!;
-    const backoffDelay = breaker.nextAttempt - now;
-    
-    // console.log('⚡ Circuit breaker OPEN, request blocked');
+    const backoffDelay = Math.max(0, breaker.nextAttempt - now);
     
     return {
       isAllowed: false,
@@ -450,7 +647,7 @@ export async function validateDeviceRateLimit(
       errorDetails: {
         code: 'CIRCUIT_BREAKER_OPEN',
         message: 'Too many consecutive failures. Please wait before retrying.',
-        retryAfter: backoffDelay
+        retryAfter: Math.ceil(backoffDelay / 1000)
       }
     };
   }
@@ -459,8 +656,6 @@ export async function validateDeviceRateLimit(
   
   // Handle invalid/compromised tokens
   if (!payload || payload.deviceFingerprint !== deviceFingerprint) {
-    // console.log('🚨 Creating new session due to:', !payload ? 'invalid/reused token' : 'fingerprint mismatch');
-    
     updateCircuitBreaker(deviceFingerprint, false);
     
     const adaptiveMultiplier = getAdaptiveLimitMultiplier();
@@ -510,7 +705,7 @@ export async function validateDeviceRateLimit(
     };
   }
   
-  // Enhanced suspicious activity detection
+  // Enhanced suspicious activity detection (now with real-time cleanup)
   const suspiciousAnalysis = detectSuspiciousActivity(payload, now);
   
   if (suspiciousAnalysis.isSuspicious) {
@@ -519,7 +714,7 @@ export async function validateDeviceRateLimit(
     updateCircuitBreaker(deviceFingerprint, false);
     
     const backoffDelay = calculateBackoffDelay(payload.securityFlags.consecutiveViolations + 1);
-    console.log('backoffDelay: ',backoffDelay)
+    console.log('backoffDelay: ', backoffDelay);
     
     return {
       isAllowed: false,
@@ -540,12 +735,10 @@ export async function validateDeviceRateLimit(
       errorDetails: {
         code: 'SUSPICIOUS_ACTIVITY',
         message: 'Suspicious activity detected. Request blocked for security.',
-        retryAfter: backoffDelay
+        retryAfter: Math.ceil(backoffDelay / 1000)
       }
     };
   }
-  
-  // console.log('✅ Using existing session with enhanced validation');
   
   // Mark current token as used
   const currentTokenHash = generateTokenHash(payload.tokenId, payload.deviceFingerprint, payload.timestamp);
@@ -590,17 +783,19 @@ export async function validateDeviceRateLimit(
     const violations = payload.securityFlags.consecutiveViolations + 1;
     backoffDelay = calculateBackoffDelay(violations);
     
-    // Record violation
+    // Record violation and schedule its cleanup
     const deviceViolations = deviceViolationHistory.get(deviceFingerprint) || [];
-    deviceViolations.push({
+    const newViolation: RateLimitViolation = {
       timestamp: now,
       violationType: limitedBy!,
       consecutiveCount: violations,
       suspiciousScore: suspiciousAnalysis.score
-    });
+    };
+    deviceViolations.push(newViolation);
     deviceViolationHistory.set(deviceFingerprint, deviceViolations);
     
-    // console.log(`🚫 Rate limit exceeded (${limitedBy}), backoff: ${backoffDelay}ms`);
+    // 🚀 SCHEDULE DYNAMIC CLEANUP for this specific violation
+    scheduleViolationCleanup(deviceFingerprint, now, violations);
     
     updateCircuitBreaker(deviceFingerprint, false);
   } else {
@@ -681,7 +876,7 @@ export async function validateDeviceRateLimit(
     result.errorDetails = {
       code: `RATE_LIMIT_EXCEEDED_${limitedBy?.toUpperCase()}`,
       message: `Rate limit exceeded for ${limitedBy} window. Exponential backoff applied.`,
-      retryAfter: backoffDelay
+      retryAfter: Math.ceil(backoffDelay / 1000)
     };
   }
   
@@ -724,7 +919,7 @@ export async function emergencyOverride(
         break;
     }
     
-    // console.log(`🚨 Emergency override ${action} applied for device:`, deviceFingerprint);
+    console.log(`🚨 Emergency override ${action} applied for device:`, deviceFingerprint);
     return true;
   } catch (error) {
     console.error('Emergency override failed:', error);
@@ -732,19 +927,19 @@ export async function emergencyOverride(
   }
 }
 
-// Enhanced cleanup interval
-setInterval(() => {
-  cleanupExpiredTokens();
+// 🚀 INITIALIZE DYNAMIC CLEANUP SYSTEM
+function initializeDynamicCleanup(): void {
+  console.log('🚀 Initializing dynamic cleanup system');
   
-  // Auto-recovery for circuit breakers
-  const now = Date.now();
-  for (const [device, breaker] of circuitBreakers) {
-    if (breaker.state === CircuitBreakerState.OPEN && 
-        now - breaker.lastFailure > SECURITY_CONFIG.MAX_BACKOFF_MS * 2) {
-      breaker.state = CircuitBreakerState.CLOSED;
-      breaker.failures = 0;
-      circuitBreakers.set(device, breaker);
-      console.log(`🔄 Auto-recovery: Circuit breaker closed for ${device}`);
-    }
-  }
-}, 2 * 60 * 1000); // Every 2 minutes
+  // Start adaptive cleanup
+  startAdaptiveCleanup();
+  
+  // Also keep a safety net global cleanup every 2 minutes
+  setInterval(() => {
+    cleanupExpiredTokens();
+    console.log('🛡️ Safety net cleanup executed');
+  }, 2 * 60 * 1000);
+}
+
+// Initialize the dynamic system
+initializeDynamicCleanup();

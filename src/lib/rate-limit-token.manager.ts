@@ -130,7 +130,7 @@ export const dataFetch = async <T>(
         fetchOptions?: Data
     } = {}
 ): Promise<T | null> => {
-    const { maxRetries = 2, retryDelay = 3000, skipRateLimit = false } = options;
+    const { maxRetries = 2, retryDelay = 1000, skipRateLimit = false } = options;
 
     try {
         // Get stored cookies and tokens
@@ -198,20 +198,22 @@ export const dataFetch = async <T>(
                 //     route
                 // });
 
+                const rateLimitError = await response.json();
+                console.log(rateLimitError)
                 // Retry with exponential backoff if attempts remaining
-                if (attemptNumber < maxRetries) {
-                    const delay = retryAfter ? parseInt(retryAfter) * 1000 : retryDelay * attemptNumber;
-                    // console.log(`Retrying in ${delay}ms (attempt ${attemptNumber + 1}/${maxRetries})`);
+                // if (attemptNumber < maxRetries) {
+                //     const delay = retryAfter ? parseInt(retryAfter) * 1000 : retryDelay * attemptNumber;
+                //     // console.log(`Retrying in ${delay}ms (attempt ${attemptNumber + 1}/${maxRetries})`);
 
-                    await new Promise(resolve => setTimeout(resolve, delay));
-                    return attemptRequest(attemptNumber + 1);
-                } else {
-                    // Max retries exceeded, return rate limit error
-                    const rateLimitError = await response.json();
-                    console.error('Max retries exceeded for rate limited request:', rateLimitError);
-                    throw new Error(`Rate limit exceeded: ${rateLimitError.message}`);
-                    // return 
-                }
+                //     await new Promise(resolve => setTimeout(resolve, delay));
+                //     return attemptRequest(attemptNumber + 1);
+                // } else {
+                //     // Max retries exceeded, return rate limit error
+                //     console.error('Max retries exceeded for rate limited request:', rateLimitError);
+                //     throw new Error(`Rate limit exceeded: ${rateLimitError.message}`);
+                //     // return 
+                // }
+                throw new Error(`Rate limit exceeded: ${rateLimitError.message}`);
             }
 
             // Update rate limiting token from successful responses
