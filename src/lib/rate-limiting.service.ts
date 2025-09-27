@@ -3,8 +3,8 @@ import { CryptoService } from "@/lib/encryption.service";
 
 // Enhanced multi-window rate limit configuration with burst handling
 const RATE_LIMITS = {
-  SECOND: { windowMs: 1000, maxRequests: 3, burstAllowance: 1 },
-  MINUTE: { windowMs: 60 * 1000, maxRequests: 20, burstAllowance: 5 },
+  SECOND: { windowMs: 1000, maxRequests: 20, burstAllowance: 10 },
+  MINUTE: { windowMs: 60 * 1000, maxRequests: 100, burstAllowance: 25 },
   TEN_MINUTE: { windowMs: 10 * 60 * 1000, maxRequests: 500, burstAllowance: 50 }
 };
 
@@ -514,11 +514,12 @@ export async function validateDeviceRateLimit(
   const suspiciousAnalysis = detectSuspiciousActivity(payload, now);
   
   if (suspiciousAnalysis.isSuspicious) {
-    // console.log('🚨 SUSPICIOUS ACTIVITY DETECTED:', suspiciousAnalysis.reasons);
+    console.log('🚨 SUSPICIOUS ACTIVITY DETECTED:', suspiciousAnalysis.reasons);
     
     updateCircuitBreaker(deviceFingerprint, false);
     
     const backoffDelay = calculateBackoffDelay(payload.securityFlags.consecutiveViolations + 1);
+    console.log('backoffDelay: ',backoffDelay)
     
     return {
       isAllowed: false,

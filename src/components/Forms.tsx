@@ -226,7 +226,7 @@ const Forms = ({
                 sheetId: forms?.sheetId,
                 isLoginRequired: forms?.verifiedUser ?? true,
                 sequence: desiredSequences && [...desiredSequences, { name: 'selectedTemplate' }]
-            }, 'form', );
+            }, 'form', setIsDisabled);
             return setData(undefined);
         } catch (error) {
             console.log(error);

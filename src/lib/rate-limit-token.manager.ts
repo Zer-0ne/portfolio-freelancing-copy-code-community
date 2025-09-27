@@ -250,7 +250,7 @@ export const dataFetch = async <T>(
         return await attemptRequest(1);
 
     } catch (error) {
-        console.error(`DataFetch error for ${method} ${route}:`, error);
+        console.error(`DataFetch error for ${method} ${route}:`, (error as Error).message);
 
         // Return null for consistent error handling
         // Calling functions can check for null response
@@ -320,7 +320,7 @@ export const POST = async (data: Data, route: string, method?: "PATCH",) => {
         return result
     } catch (error) {
         // setIsDisabled && setIsDisabled(false)
-        console.log('error', error)
+        console.log('error', (error as Error).message)
         // return toast.update(Toast, update('Something went wrong!', 'error'))
         return { message: (error as Error).message }
     }
