@@ -130,7 +130,7 @@ export const dataFetch = async <T>(
         fetchOptions?: Data
     } = {}
 ): Promise<T | null> => {
-    const { maxRetries = 3, retryDelay = 1000, skipRateLimit = false } = options;
+    const { maxRetries = 2, retryDelay = 3000, skipRateLimit = false } = options;
 
     try {
         // Get stored cookies and tokens
