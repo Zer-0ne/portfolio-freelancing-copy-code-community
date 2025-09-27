@@ -1,4 +1,5 @@
 'use client'
+import { apiRequestClient } from '@/lib/fetch-from-api'
 import { realTimeDatabase } from '@/utils/Firebase'
 import { Data } from '@/utils/Interfaces'
 import { controls } from '@/utils/constant'
@@ -16,6 +17,9 @@ const page = () => {
             console.log(error)
         }
     }
+    const dataFetch = async () => {
+        await apiRequestClient.post({},'protected')
+    }
     useEffect(() => {
         fetch()
     }, [])
@@ -24,6 +28,7 @@ const page = () => {
             className='container self-center mx-[auto] p-5 flex flex-1 flex-col gap-3'
         >
             <h2 className='text-3xl'>Controls</h2>
+            <button onClick={dataFetch}>send</button>
             {
                 controls.map((item, index) => (
                     <Button key={index} item={item} setData={setData} data={data as Data} />

@@ -210,7 +210,7 @@ const Forms = ({
         e.preventDefault();
         try {
             if (data && !data['certificate'] && isCertificateForm) return alert("There is no active events");
-            const { createNew } = await import('@/utils/FetchFromApi');
+            const { apiRequestClient } = await import('@/lib/fetch-from-api');
             const formData = { ...data as Data };
             // if (isAdmin && isCertificateForm) {
             //     formData.isTemplateCustom = useCustomTemplate;
@@ -219,14 +219,14 @@ const Forms = ({
             //     }
             // }
             formData.selectedTemplate = selectedTemplate || '';
-            await createNew({
+            await apiRequestClient.post({
                 functionality: 'update',
                 fields: formData,
                 formId: forms._id,
                 sheetId: forms?.sheetId,
                 isLoginRequired: forms?.verifiedUser ?? true,
                 sequence: desiredSequences && [...desiredSequences, { name: 'selectedTemplate' }]
-            }, 'form', setIsDisabled);
+            }, 'form', );
             return setData(undefined);
         } catch (error) {
             console.log(error);

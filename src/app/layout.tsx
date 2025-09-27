@@ -8,6 +8,7 @@ import ReduxProdiver from '@/provider/ReduxProdiver'
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 import { ThemeProvider } from '@/provider/theme-provider';
+import { Toaster as SonnerToast } from 'sonner'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -84,6 +85,10 @@ export default function RootLayout({
                 draggable
                 pauseOnHover
                 theme="dark"
+              />
+              <SonnerToast 
+                theme='dark'
+                position='top-right'
               />
               {children}
               <Analytics />

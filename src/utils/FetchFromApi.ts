@@ -5,6 +5,7 @@ import { deleteObject, getDownloadURL, listAll, ref, uploadString } from "fireba
 import { storage } from "./Firebase";
 import { toast } from "react-toastify";
 import { update } from "./ToastConfig";
+import { getOrigin } from "@/lib/rate-limit-token.manager";
 
 // create user 
 export const createUser = async (data: Data, method?: "PATCH") => {
@@ -123,7 +124,7 @@ export const userInfo = async (id: string, method: string = 'GET') => {
         }
         const baseUrl = process.env.BASE_URL;
         // const url = new URL(`/api/user/${encodeURIComponent(id)}`, baseUrl);
-        const res = await fetch(`/api/user/${id}`, {
+        const res = await fetch(`${await getOrigin()}/api/user/${id}`, {
             method: `${method}`,
             cache: 'no-store'
         })
@@ -137,7 +138,7 @@ export const userInfo = async (id: string, method: string = 'GET') => {
         // }
     } catch (error) {
         // console.log(error)
-        console.error("Error fetching user info:", error);
+        console.error("Error fetching user info client side:", error);
         return null;
     }
 }
@@ -645,3 +646,5 @@ export const getFileURLRecursively = async (url: string): Promise<string> => {
     }
     return ''; // Return undefined if no URL is found
 };
+
+

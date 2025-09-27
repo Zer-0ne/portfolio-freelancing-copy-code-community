@@ -1,5 +1,6 @@
 'use client'
 import { DrawerDialogDemo } from '@/components/dev-card';
+import { dataFetch } from '@/lib/rate-limit-token.manager';
 import dynamic from 'next/dynamic'
 import * as React from "react";
 
@@ -11,6 +12,14 @@ const HomePage = dynamic(() => import('@/Pages/HomePage'))
 
 // Main Home Component with fixed positioning
 export default function Home() {
+  React.useEffect(() => {
+    const fetchData = async () => {
+      const data = await dataFetch('api/protected', 'GET')
+      console.log(data)
+    }
+    fetchData()
+  }, [])
+
   return (
     <div className="relative w-full h-screen overflow-hidden">
       {/* Background Layer */}
